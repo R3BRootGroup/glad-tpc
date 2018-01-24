@@ -1,0 +1,4 @@
+
+Set(R3BGTPC_SOURCE_DIR ${R3BROOT_SOURCE_DIR}/glad-tpc)
+
+
