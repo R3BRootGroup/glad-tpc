@@ -11,7 +11,6 @@ set(INCLUDE_DIRECTORIES
 #put here all directories where header files are located
 ${R3BROOT_SOURCE_DIR}/r3bbase
 ${R3BROOT_SOURCE_DIR}/r3bdata
-${R3BROOT_SOURCE_DIR}/passive
 ${R3BGTPC_SOURCE_DIR}/gtpc
 ${R3BGTPC_SOURCE_DIR}/gtpcdata
 )
@@ -45,11 +44,6 @@ CHANGE_FILE_EXTENSION(*.cxx *.h HEADERS "${SRCS}")
 set(LINKDEF GTPCLinkDef.h)
 set(LIBRARY_NAME R3BGTPC)
 set(DEPENDENCIES
-    R3Bbase R3BPassive R3BGTPCData)
-
-if(FAIRDB_FOUND)
-set(DEPENDENCIES
-    ${DEPENDENCIES} FairDB)
-endif(FAIRDB_FOUND)
+    R3Bbase R3BGTPCData)
 
 GENERATE_LIBRARY()

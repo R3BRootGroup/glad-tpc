@@ -82,14 +82,14 @@ void create_tpc_geo(const char* geoTag = "v0.0")
     dy = 30.00000;
     dz = 100.0000;
     TGeoShape* pGTPCBox = new TGeoBBox("GTPCBox", dx, dy, dz);
-    TGeoVolume* pGTPCLog = new TGeoVolume("GTPCLog", pATBox, pMed2);
-    pATLog->SetVisLeaves(kTRUE);
+    TGeoVolume* pGTPCLog = new TGeoVolume("GTPCLog", pGTPCBox, pMed2);
+    pGTPCLog->SetVisLeaves(kTRUE);
 
     TGeoRotation* rot0 = new TGeoRotation("");
-    TGeoCombiTrans* pMatrix0 = new TGeoCombiTrans(0., 0., 0., rot0);
+    TGeoCombiTrans* pMatrix0 = new TGeoCombiTrans(0., 0., 350., rot0);
     TGeoCombiTrans* pMatrix1 = new TGeoCombiTrans(0., 0., 20., rot0);
 
-    world->AddNode(pATLog, 0, pMatrix0);
+    world->AddNode(pGTPCLog, 0, pMatrix0);
 
     top->AddNode(world, 0, pMatrix1);
 
