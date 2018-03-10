@@ -26,6 +26,10 @@ link_directories( ${LINK_DIRECTORIES})
 
 set(SRCS
 R3BGTPCPoint.cxx
+#R3BGTPCHitSim.cxx
+#R3BGTPCDigi.cxx
+#R3BGTPCData.cxx
+#R3BGTPCRawEvtSim.cxx
 #R3BGTPCMappedData.cxx
 #R3BGTPCCalData.cxx
 )

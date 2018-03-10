@@ -1,32 +1,26 @@
-// -------------------------------------------------------------------------
-// -----                        R3BGTPC source file                 -----
-// ----- Created 24/01/18  by H. Alvarez-Pol (hector.alvarez@usc.es)   -----
-// -------------------------------------------------------------------------
+#include <iostream>
+#include <stdlib.h>
 #include "R3BGTPC.h"
-#include "FairGeoInterface.h"
-#include "FairGeoLoader.h"
-#include "FairGeoNode.h"
-#include "FairGeoRootBuilder.h"
-#include "FairRootManager.h"
-#include "FairRun.h"
-#include "FairRuntimeDb.h"
-#include "FairVolume.h"
 #include "R3BGTPCPoint.h"
 #include "R3BMCStack.h"
+#include "FairRootManager.h"
+#include "FairRuntimeDb.h"
+#include "FairRun.h"
+#include "FairVolume.h"
 #include "TClonesArray.h"
-#include "TGeoCompositeShape.h"
 #include "TGeoMCGeometry.h"
-#include "TGeoManager.h"
-#include "TGeoMaterial.h"
-#include "TGeoMatrix.h"
-#include "TGeoMedium.h"
-#include "TMCProcess.h"
+#include "TParticle.h"
+#include "TVirtualMC.h"
 #include "TObjArray.h"
+#include "TMCProcess.h"
+
+// includes for modeling
+#include "TGeoManager.h"
 #include "TParticle.h"
 #include "TVirtualMC.h"
 #include "TVirtualMCStack.h"
-#include <iostream>
-#include <stdlib.h>
+
+#include "TGeoMedium.h"
 
 using std::cout;
 using std::cerr;
@@ -34,207 +28,204 @@ using std::endl;
 
 #define U_MEV 931.4940954
 
-// -----   Default constructor
-R3BGTPC::R3BGTPC()
-  : R3BGTPC("") {
+// -----   Default constructor   -------------------------------------------
+R3BGTPC::R3BGTPC() : R3BGTPC("") {
 }
+// -------------------------------------------------------------------------
 
 R3BGTPC::R3BGTPC(const TString& geoFile, const TGeoTranslation& trans, const TGeoRotation& rot)
   : R3BGTPC(geoFile, { trans, rot }) {
 }
+// -------------------------------------------------------------------------
 
-// -----   Standard constructor
 R3BGTPC::R3BGTPC(const TString& geoFile, const TGeoCombiTrans& combi)
-  : R3BDetector("R3BGTPC", kGTPC, geoFile, combi)
-  , fGTPCCollection(new TClonesArray("R3BGTPCPoint"))
-  , fPosIndex(0)
-  , kGeoSaved(kFALSE)
-  , flGeoPar(new TList())
-{
-  flGeoPar->SetName(GetName());
-  ResetParameters();
+  : R3BDetector("R3BGTPC", kGTPC, geoFile, combi) {
+  fGTPCPointCollection = new TClonesArray("R3BGTPCPoint");
 }
 
+// -----   Destructor   ----------------------------------------------------
 R3BGTPC::~R3BGTPC() {
-  if (flGeoPar) {
-    delete flGeoPar;
-  }
-  if (fGTPCCollection) {
-    fGTPCCollection->Delete();
-    delete fGTPCCollection;
+  if (fGTPCPointCollection) {
+    fGTPCPointCollection->Delete();
+    delete fGTPCPointCollection;
   }
 }
+// -------------------------------------------------------------------------
 
+void R3BGTPC::FinishRun() {
+  ;
+}
+
+// -------------------------------------------------------------------------
 void R3BGTPC::Initialize() {
   FairDetector::Initialize();
-
   LOG(INFO) << "R3BGTPC: initialisation" << FairLogger::endl;
-  LOG(DEBUG) << "-I- R3BGTPC: Vol (McId) def" << gMC->VolId("TwinLog") << FairLogger::endl;
+  LOG(DEBUG) << "-I- R3BGTPC: Vol (McId) def" << FairLogger::endl;
+  LOG(INFO) << "R3BGTPC: GTPC_box Vol. (McId) " << gMC->VolId("GTPC_box") << FairLogger::endl;
+  LOG(INFO) << "R3BGTPC: GTPCGas Vol. (McId) " << gMC->VolId("GTPCGas") << FairLogger::endl;
+}
 
-  //TGeoVolume* vol = gGeoManager->GetVolume("GTPCWorld");
-  //vol->SetVisibility(kFALSE);
+//____________________________________________________________
+void R3BGTPC::SetSpecialPhysicsCuts() {
+  LOG(INFO) << "-I- R3BGTPC: Adding customized Physics cut ... " << FairLogger::endl;
+  
+  if (gGeoManager) {
+    TGeoMedium* pmix = gGeoManager->GetMedium("test");
+    if (pmix) {
+      // Setting processes for Gas
+      //gMC->Gstpar(pmix->GetId(), "LOSS", 3);
+      //gMC->Gstpar(pmix->GetId(), "STRA", 1.0);
+      //gMC->Gstpar(pmix->GetId(), "PAIR", 1.0);
+      //gMC->Gstpar(pmix->GetId(), "COMP", 1.0);
+      //gMC->Gstpar(pmix->GetId(), "PHOT", 1.0);
+      //gMC->Gstpar(pmix->GetId(), "ANNI", 1.0);
+      //gMC->Gstpar(pmix->GetId(), "BREM", 1.0);
+      //gMC->Gstpar(pmix->GetId(), "HADR", 1.0);
+      //gMC->Gstpar(pmix->GetId(), "DRAY", 1.0);
+      //gMC->Gstpar(pmix->GetId(), "DCAY", 1.0);
+      //gMC->Gstpar(pmix->GetId(), "MULS", 1.0);
+      //gMC->Gstpar(pmix->GetId(), "RAYL", 1.0);
+      
+      // Setting Energy-CutOff for Gas Only, 0.01mm
+      Double_t cutE = 1e-6; // GeV-> 1 eV
+      
+      LOG(INFO) << "-I- R3BGTPC: Medium Id " << pmix->GetId() << " Energy Cut-Off : " << cutE << " GeV" << FairLogger::endl;
+      
+      // Si
+      gMC->Gstpar(pmix->GetId(), "CUTGAM", cutE); /** gammas (GeV)*/
+      gMC->Gstpar(pmix->GetId(), "CUTELE", cutE); /** electrons (GeV)*/
+      gMC->Gstpar(pmix->GetId(), "CUTNEU", cutE); /** neutral hadrons (GeV)*/
+      gMC->Gstpar(pmix->GetId(), "CUTHAD", cutE); /** charged hadrons (GeV)*/
+      gMC->Gstpar(pmix->GetId(), "CUTMUO", cutE); /** muons (GeV)*/
+      gMC->Gstpar(pmix->GetId(), "BCUTE", cutE);  /** electron bremsstrahlung (GeV)*/
+      gMC->Gstpar(pmix->GetId(), "BCUTM", cutE);  /** muon and hadron bremsstrahlung(GeV)*/
+      gMC->Gstpar(pmix->GetId(), "DCUTE", cutE);  /** delta-rays by electrons (GeV)*/
+      gMC->Gstpar(pmix->GetId(), "DCUTM", cutE);  /** delta-rays by muons (GeV)*/
+      gMC->Gstpar(pmix->GetId(), "PPCUTM", -1.);  /** direct pair production by muons (GeV)*/
+    }
+  } //!gGeoManager
 }
 
 // -----   Public method ProcessHits  --------------------------------------
-Bool_t R3BGTPC::ProcessHits(FairVolume* vol) {
+Bool_t R3BGTPC::ProcessHits(FairVolume* vol) { 
+  TLorentzVector pos;
+  TLorentzVector mom;
+  gMC->TrackPosition(pos);
+  gMC->TrackMomentum(mom);
 
-
-  if (gMC->IsTrackEntering() ) {
-    gGeoManager->cd(gMC->CurrentVolPath());
-    Int_t nodeId = gGeoManager->GetNodeId();
+  Int_t theTrackStatus = GetTrackStatus(gMC->IsNewTrack(),
+					gMC->IsTrackDisappeared(),
+					gMC->IsTrackStop(),
+					gMC->IsTrackAlive(),
+					gMC->IsTrackEntering(),
+					gMC->IsTrackExiting(),
+					gMC->IsTrackInside(),
+					gMC->IsTrackOut());
+  
+  Int_t parentTrackID = gMC->GetStack()->GetCurrentParentTrackNumber();
+  TString particleName = gMC->GetStack()->GetCurrentTrack()->GetName();
+  //_______________only care about primary particle and decayed particle
+  if(parentTrackID==-1 || (parentTrackID==0 && particleName!="e-")) {
+    Int_t size = fGTPCPointCollection->GetEntriesFast();
+    new((*fGTPCPointCollection)[size]) 
+      R3BGTPCPoint(gMC->GetStack()->GetCurrentTrackNumber(), //trackID
+		   vol->getModId(), //check if getModId or CurrentVolOffID(1,modID)
+		   pos.Vect(), //pos from gMC->TrackPosition(pos);
+		   mom.Vect(), //mom from gMC->TrackMomentum(pos);
+		   gMC->TrackTime(), //time in s
+		   gMC->TrackLength(), //length
+		   gMC->Edep(), //eloss
+		   gMC->CurrentEvent(), //EventID
+		   parentTrackID, //parentTrackID
+		   gMC->GetStack()->GetCurrentTrack()->GetMother(0), //primaryParticleID
+		   theTrackStatus, //trackStatus from GetTrackStatus(...)
+		   gMC->TrackPid(), //PDGCode
+		   vol->getModId(),  //moduleID
+		   vol->getCopyNo(), //detCopyID
+		   particleName, //particleName
+		   vol->GetName(), //volName (or vol->getRealName();??)
+		   TMCProcessName[gMC->ProdProcess(0)], //processName
+		   gMC->TrackCharge(), //charge
+		   gMC->TrackMass(), //mass
+		   (gMC->Etot() - gMC->TrackMass()), //kineticEnergy
+		   gMC->TrackStep(), //trackStep
+		   kTRUE); // isAccepted
   }
-  if (gMC->IsTrackEntering()) {
-    fELoss = 0.;
-    fNSteps = 0; // FIXME
-    fTime = gMC->TrackTime() * 1.0e09;
-    fLength = gMC->TrackLength();
-    gMC->TrackPosition(fPosIn);
-    gMC->TrackMomentum(fMomIn);
-    fEinc = gMC->Etot() - gMC->TrackMass(); // be aware!! Relativistic mass!
-  }
-
-  // Sum energy loss for all steps in the active volume
-  Double_t dE = gMC->Edep() * 1000.;                          // in MeV
-  Double_t post_E = (gMC->Etot() - gMC->TrackMass()) * 1000.; // in MeV
-  TString ptype = gMC->GetStack()->GetCurrentTrack()->GetName();
-
-  Double_t M_in = gMC->TrackMass() * 1000.;
-  Double_t fA_in = M_in / U_MEV;
-  Double_t fZ_in = gMC->TrackCharge();
-
-  fELoss += dE / 1000.; // back to GeV
-
-  if (dE > 0) {
-
-    fNSteps++;
-
-    // Set additional parameters at exit of active volume. Create R3BGTPCPoint.
-    if (gMC->IsTrackExiting() || gMC->IsTrackStop() || gMC->IsTrackDisappeared()) {
-
-      fTrackID = gMC->GetStack()->GetCurrentTrackNumber();
-      fParentTrackID = gMC->GetStack()->GetCurrentParentTrackNumber();
-      fVolumeID = vol->getMCid();
-      fDetCopyID = vol->getCopyNo();
-      fTrackPID = gMC->TrackPid();
-      fUniqueID = gMC->GetStack()->GetCurrentTrack()->GetUniqueID();
-
-      gMC->TrackPosition(fPosOut);
-      gMC->TrackMomentum(fMomOut);
-
-      if (fELoss == 0.)
-	return kFALSE;
-
-
-      AddPoint(fTrackID,
-               fVolumeID,
-               fDetCopyID,
-               fZ_in,
-               fA_in,
-               TVector3(fPosIn.X(), fPosIn.Y(), fPosIn.Z()),
-               TVector3(fPosOut.X(), fPosOut.Y(), fPosOut.Z()),
-               TVector3(fMomIn.Px(), fMomIn.Py(), fMomIn.Pz()),
-               TVector3(fMomOut.Px(), fMomOut.Py(), fMomOut.Pz()),
-               fTime,
-               fLength,
-               fELoss);
-
-      // Increment number of Points for this track
-      R3BStack* stack = (R3BStack*)gMC->GetStack();
-      stack->AddPoint(kGTPC);
-
-      ResetParameters();
-    }
-  }
-
-
+  
+  // Increment number of LandPoints for this track
+  R3BStack* stack = (R3BStack*)gMC->GetStack();
+  stack->AddPoint(kGTPC);
+  
   return kTRUE;
 }
 
-// -----   Public method EndOfEvent   -----------------------------------------
+// ----    Public method BeginOfEvent   -----------------------------------------
 void R3BGTPC::BeginEvent() {
+  ;
 }
 
 // -----   Public method EndOfEvent   -----------------------------------------
 void R3BGTPC::EndOfEvent() {
-  if (fVerboseLevel)
-    Print();
-
-  fGTPCCollection->Clear();
-
-  ResetParameters();
+  if (fVerboseLevel) Print();
+  Reset(); 
 }
+// ----------------------------------------------------------------------------
 
 // -----   Public method Register   -------------------------------------------
 void R3BGTPC::Register() {
   FairRootManager::Instance()->Register("GTPCPoint", GetName(),
-					fGTPCCollection, kTRUE);
+					fGTPCPointCollection, kTRUE);
 }
+// ----------------------------------------------------------------------------
 
 // -----   Public method GetCollection   --------------------------------------
 TClonesArray* R3BGTPC::GetCollection(Int_t iColl) const {
-    if (iColl == 0)
-        return fGTPCCollection;
-    else
-        return NULL;
+  if(iColl == 0) {
+    return fGTPCPointCollection;
+  }
+  return nullptr;
 }
+// ----------------------------------------------------------------------------
 
 // -----   Public method Print   ----------------------------------------------
 void R3BGTPC::Print(Option_t* option) const {
-  Int_t nHits = fGTPCCollection->GetEntriesFast();
-  LOG(INFO) << "R3BGTPC: " << nHits << " points registered in this event" << FairLogger::endl;
+  Int_t nhits = fGTPCPointCollection->GetEntriesFast();
+  LOG(INFO) << "R3BGTPC: " << nhits << " points registered in this event"
+	    << FairLogger::endl;
 }
+// ----------------------------------------------------------------------------
 
 // -----   Public method Reset   ----------------------------------------------
 void R3BGTPC::Reset() {
-  fGTPCCollection->Clear();
-  ResetParameters();
+  fGTPCPointCollection->Clear();    
 }
 
-// -----   Public method CopyClones   -----------------------------------------
-void R3BGTPC::CopyClones(TClonesArray* cl1, TClonesArray* cl2, Int_t offset) {
-  Int_t nEntries = cl1->GetEntriesFast();
-  LOG(INFO) << "R3BGTPC: " << nEntries << " entries to add" << FairLogger::endl;
-  TClonesArray& clref = *cl2;
-  R3BGTPCPoint* oldpoint = NULL;
-  for (Int_t i = 0; i < nEntries; i++) {
-    oldpoint = (R3BGTPCPoint*)cl1->At(i);
-    Int_t index = oldpoint->GetTrackID() + offset;
-    oldpoint->SetTrackID(index);
-    new (clref[fPosIndex]) R3BGTPCPoint(*oldpoint);
-    fPosIndex++;
-  }
-  LOG(INFO) << "R3BGTPC: " << cl2->GetEntriesFast() << " merged entries" << FairLogger::endl;
-}
-
-// -----   Private method AddPoint   --------------------------------------------
-R3BGTPCPoint* R3BGTPC::AddPoint(Int_t trackID,
-					    Int_t detID,
-					    Int_t volid,
-					    Double_t Z,
-					    Double_t A,
-					    TVector3 posIn,
-					    TVector3 posOut,
-					    TVector3 momIn,
-					    TVector3 momOut,
-					    Double_t time,
-					    Double_t length,
-					    Double_t eLoss) {
-  TClonesArray& clref = *fGTPCCollection;
-  Int_t size = clref.GetEntriesFast();
-  if (fVerboseLevel > 1)
-    LOG(INFO) << "R3BGTPC: Adding Point at (" << posIn.X() << ", " << posIn.Y() << ", " << posIn.Z()
-	      << ") cm,  detector " << detID << ", track " << trackID << ", energy loss " << eLoss * 1e06 << " keV"
-              << FairLogger::endl;
-  return new (clref[size]) R3BGTPCPoint(trackID, detID, volid, Z, A, posIn, posOut, momIn, momOut, time, length, eLoss);
-}
-
-// -----  Public method CheckIfSensitive  ----------------------------------
+//_________________________________________________________
 Bool_t R3BGTPC::CheckIfSensitive(std::string name) {
-  if (TString(name).Contains("GTPCLog")) {
-        LOG(INFO) << "Found GLAD TPC geometry from ROOT file: " << name << FairLogger::endl;
-        return kTRUE;
-    }
+  LOG(INFO) << "R3BGTPC::CheckIfSensitive " << name << FairLogger::endl;
+  
+  if(TString(name).Contains("GTPCGas")) {
+    return kTRUE;
+  }
   return kFALSE;
+}
+
+Int_t R3BGTPC::GetTrackStatus(bool NewTrack,
+			      bool TrackDisappeared,
+			      bool TrackStop,
+			      bool TrackAlive,
+			      bool TrackEntering,
+			      bool TrackExiting,
+			      bool TrackInside,
+			      bool TrackOut) {
+  int trackstatus =
+    1*TrackOut+10*TrackInside+
+    100*TrackExiting+1000*TrackEntering+
+    10000*TrackAlive + 100000*TrackStop +
+    1000000*TrackDisappeared + 10000000*NewTrack;
+  
+  return trackstatus;
+  
 }
 
 ClassImp(R3BGTPC)

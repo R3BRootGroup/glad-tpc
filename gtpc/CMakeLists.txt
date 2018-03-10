@@ -28,6 +28,8 @@ link_directories( ${LINK_DIRECTORIES})
 set(SRCS
 #Put here your sourcefiles
 R3BGTPC.cxx
+#R3BGTPCDigitizer.cxx
+R3BGTPCSetup.cxx
 #R3BGTPCHitPar.cxx
 #R3BGTPCCalPar.cxx
 #R3BGTPCMappedPar.cxx

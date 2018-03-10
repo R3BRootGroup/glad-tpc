@@ -1,0 +1,46 @@
+TargetRadius 2.8
+TargetLength 15.
+ChamberInnerRadius 3.7
+ChamberThickness 0.1
+ChamberLength 20.
+InnerRohacellThickness 0.1
+KaptonThickness 0.0125
+OuterRohacellThickness 0.2
+TPCRadiusExt 10.
+WindowThickness 0.0150
+//____Cubic TPC
+TPCLx 50.
+TPCLy 20.
+TPCLz 100.
+//___Position 
+//////////TargetAngle -14.
+TargetAngle 0.
+TargetOffsetX 0.
+TargetOffsetY 0.
+TargetOffsetZ 113.4
+//////////GladAngle -14.
+GladAngle 0.
+GladOffsetX 0.
+GladOffsetY 0.
+GladOffsetZ 230.06
+///////////FieldAngle -14.
+FieldAngle 0.
+FieldOffsetX 0.
+FieldOffsetY 0.
+FieldOffsetZ 113.4
+//______
+OutputFileName test
+
+//200*200*300 2*2mm pad-->500*500*1000 5*5mm pad
+//MINOS is defined successively by (all values have to be given in millimeters):
+//	- a target: TargetRadius, TargetLength
+//	- a chamber: ChamberInnerRadius, ChamberThickness, ChamberLength
+//	- inner Rohacell: inner radius = ChamberInnerRadius + ChamberThickness, InnerRohacellThickness, length = ChamberLength
+//	- Kapton: inner radius = ChamberInnerRadius + ChamberThickness + InnerRohacellThickness, KaptonThickness, length = ChamberLength
+//	- outer Rohacell: inner radius = ChamberInnerRadius + ChamberThickness + InnerRohacellThickness + KaptonThickness, OuterRohacellThickness, length = ChamberLength
+//	- TPC gas: inner radius = ChamberInnerRadius + ChamberThickness + InnerRohacellThickness + KaptonThickness + OuterRohacellThickness, TPCOuterRadius, length = ChamberLength
+//	- a Mylar window delimiting the volume target: WindowThickness
+// angle is in deg, rotate with Z axis
+//offset is in cm in x/y/z direction
+//230.06cm Glad rotation center
+//113.4cm magfield center

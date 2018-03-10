@@ -47,7 +47,7 @@ void run_sim()
     FairRuntimeDb* rtdb = run->GetRuntimeDb();
 
     // -----   Create media   -------------------------------------------------
-    run->SetMaterials("media_r3b.geo"); // Materials
+    run->SetMaterials("media_tpc.geo"); // Materials
 
     // -----   Create R3B geometry --------------------------------------------
     // R3B Cave definition
@@ -78,7 +78,7 @@ void run_sim()
     califa->SelectGeometryVersion(10);
     // Selecting the Non-uniformity of the crystals (1 means +-1% max deviation)
     califa->SetNonUniformity(1.0);
-    //run->AddModule(califa);
+    run->AddModule(califa);
 
     // Fi4 detector
     run->AddModule(new R3BFi4("fi4_v17a.geo.root", {-73.274339-TMath::Tan(TMath::DegToRad()*16.7)*100, 0.069976, 513.649524+100.}, {"" ,-90.,16.7,90.}));
@@ -102,8 +102,9 @@ void run_sim()
     // run->AddModule(new R3BNeuland("neuland_test.geo.root", { 0., 0., 1400. + 12 * 5. }));
 
     // --- GLAD-TPC detectors ---
-    run->AddModule(new R3BGTPC("gladTPC_v0.0.geo.root", { 0., 0., 20. }));
-
+    run->AddModule(new R3BGTPC("gladTPC_v1.geo.root"));
+    //run->AddModule(new R3BGTPC("gladTPC_v1.geo.root", { 0, 0, -100. }, { "", -90., +0., 90. }));
+    
     // -----   Create R3B  magnetic field ----------------------------------------
     // NB: <D.B>
     // If the Global Position of the Magnet is changed

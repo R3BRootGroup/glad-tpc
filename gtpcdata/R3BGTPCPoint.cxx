@@ -3,51 +3,44 @@
 // -------------------------------------------------------------------------
 
 #include "R3BGTPCPoint.h"
-
 #include <iostream>
 
 using std::cout;
 using std::endl;
-using std::flush;
-
 
 // -----   Default constructor   -------------------------------------------
 R3BGTPCPoint::R3BGTPCPoint() : FairMCPoint() {
-  fX_out      = fY_out  = fZ_out  = 0.;
-  fPx_out     = fPy_out = fPz_out = 0.;
-  fZFF        = fAFF = 0.;
+  fParentTrackID = fTrackStatus = 0;
+  fPrimaryParticleID = fDetCopyID = 0;  
+  fPDGCode = fModuleID = 0;     
+  fCharge = fMass = fKineticEnergy = fTrackStep = 0.0;    
+  fIsAccepted = kFALSE; 
 }
 // -------------------------------------------------------------------------
-
-
 
 // -----   Standard constructor   ------------------------------------------
-R3BGTPCPoint::R3BGTPCPoint(Int_t trackID, Int_t detID, Int_t detCopyID,
-                         Double_t Z, Double_t A,
-			 TVector3 posIn,
-			 TVector3 posOut, TVector3 momIn, TVector3 momOut,
-			 Double_t tof, Double_t length, Double_t eLoss)
-  : FairMCPoint(trackID, detID, posIn, momIn, tof, length, eLoss) {
-  fDetCopyID = detCopyID;
-  fX_out  = posOut.X();
-  fY_out  = posOut.Y();
-  fZ_out  = posOut.Z();
-  fPx_out = momOut.Px();
-  fPy_out = momOut.Py();
-  fPz_out = momOut.Pz();
-  fZFF = Z;
-  fZFF = A;
+R3BGTPCPoint::R3BGTPCPoint(Int_t trackID, Int_t detID, TVector3 pos,
+			   TVector3 mom, Double_t tof, Double_t length, 
+			   Double_t eLoss, const UInt_t EventId,
+			   Int_t parentTrackID, Int_t primaryParticleID, 
+			   Int_t trackStatus, Int_t PDGCode, Int_t moduleID, 
+			   Int_t detCopyID, TString particleName, TString volName, 
+			   TString processName, Double_t charge, Double_t mass, 
+			   Double_t kineticEnergy, Double_t trackStep, 
+			   Bool_t isAccepted)
+  : FairMCPoint(trackID, detID, pos, mom, tof, length, eLoss) {
+  fParentTrackID = fTrackStatus = 0;
+  fPrimaryParticleID = fDetCopyID = 0;  
+  fPDGCode = fModuleID = 0;     
+  fCharge = fMass = fKineticEnergy = fTrackStep = 0.0;    
+  fIsAccepted = kFALSE; 
 }
 // -------------------------------------------------------------------------
 
-
-
 // -----   Destructor   ----------------------------------------------------
-R3BGTPCPoint::~R3BGTPCPoint() { }
+R3BGTPCPoint::~R3BGTPCPoint() { 
+}
 // -------------------------------------------------------------------------
-
-
-
 
 // -----   Public method Print   -------------------------------------------
 void R3BGTPCPoint::Print(const Option_t* opt) const {
@@ -61,38 +54,5 @@ void R3BGTPCPoint::Print(const Option_t* opt) const {
        << " cm,  Energy loss " << fELoss*1.0e06 << " keV" << endl;
 }
 // -------------------------------------------------------------------------
-
-
-
-// -----   Point x coordinate from linear extrapolation   ------------------
-Double_t R3BGTPCPoint::GetX(Double_t z) const {
-  //  cout << fZ << " " << z << " " << fZ_out << endl;
-  if ( (fZ_out-z)*(fZ-z) >= 0. ) return (fX_out+fX)/2.;
-  Double_t dz = fZ_out - fZ;
-  return ( fX + (z-fZ) / dz * (fX_out-fX) );
-}
-// -------------------------------------------------------------------------
-
-
-
-// -----   Point y coordinate from linear extrapolation   ------------------
-Double_t R3BGTPCPoint::GetY(Double_t z) const {
-  if ( (fZ_out-z)*(fZ-z) >= 0. ) return (fY_out+fY)/2.;
-  Double_t dz = fZ_out - fZ;
-  //  if ( TMath::Abs(dz) < 1.e-3 ) return (fY_out+fY)/2.;
-  return ( fY + (z-fZ) / dz * (fY_out-fY) );
-}
-// -------------------------------------------------------------------------
-
-
-
-// -----   Public method IsUsable   ----------------------------------------
-Bool_t R3BGTPCPoint::IsUsable() const {
-  Double_t dz = fZ_out - fZ;
-  if ( TMath::Abs(dz) < 1.e-4 ) return kFALSE;
-  return kTRUE;
-}
-// -------------------------------------------------------------------------
-
 
 ClassImp(R3BGTPCPoint)

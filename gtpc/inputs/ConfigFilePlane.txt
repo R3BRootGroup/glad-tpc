@@ -1,0 +1,17 @@
+NX 50
+NY 100
+Width 50.
+Length 100.
+sigL   0.0186
+sigT   0.0195
+driftV 0.0048
+Ionis  25.0
+Gain  3600.
+Theta 1.
+NoiseRMS 2500.
+Threshold 0.
+TimeBin 20.0
+ShapingTime 200.
+
+//sigL   0.0186 cm/sqrt(cm)
+//sigT   0.0195
