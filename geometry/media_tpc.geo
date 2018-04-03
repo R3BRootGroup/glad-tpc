@@ -1,5 +1,55 @@
 // --- General Media Defs. for TPC
 //----------------------------------------------------------
+// Source: http://fairroot.gsi.de/?q=node/34
+//
+// The following parameters are needed:
+//
+// * int ncomp       - number of components in the material (ncomp= 1 for a basic material and <1 or >1 for a mixture
+//                     If ncomp > 0 the array wm contains the proportion by weight of each material in the mixture.
+//                     If ncomp < 0 the array wm contains the proportion by number of atoms of each kind.
+//                     For more detailed information see NLMAT in Geant3 routine GSMIXT
+// * float aw[ncomp] - atomic weights A for the components
+// * float an[ncomp] - atomic numbers Z for the components
+// * float dens      - density DENS in g cm(**-3)
+// * float wm[ncomp] - weights WMAT of each component in a mixture (only for a mixture)
+// * int   sensflag  - sensitivity flag ISVOL
+// * int   fldflag   - fieldflag IFIELD
+// * float fld       - maximum field value FIELDM in kilogauss
+// * float epsil     - boundary crossing precision EPSIL
+// * int   npckov    - number of values used to define the optical properties of the medium.
+//
+// The variable npckov is 0 for all media except some special media used for the
+// Rich where the tracking of the Cerenkov photons is necessary. These media have
+// additinal parameters
+//
+// * float ppckov[npckov] - photon momentum in eV
+// * float absco[npckov]  - absorption length in case of dielectric and of absorption  probabilities in case of a metal
+// * float effic[npckov]  - detection efficiency
+// * float rindex[npckov] - refraction index for a dielectric, rindex[0]=0 for a metal
+//
+// Remark: In the present program version a mixture may contain a maximum of 5
+// components. If this is not sufficient one has to change MAXCOMP in
+// hgeomedium.h.
+//
+// The following parameters are normally not read. The default values are -1 and
+// the real values are automatically calculated by Geant. If you want to set these
+// values by yourself, you must type the keyword AUTONULL in your media file.
+// After this keyword all media must contain these additional 4 parameters before
+// the Cerenkov (int npckov).
+//
+// * float madfld  - maximum angular deviation TMAXFD due to field
+// * float maxstep - maximum step permitted STEMAX
+// * float maxde   - maximum fractional energy loss DEEMAX
+// * float minstep - minimum value for step STMIN
+//
+//
+// example)
+//
+// air 3 14.01 16. 39.95.  7.  9.  18. 1.205e-3  .755  .231  .014
+// 0 1 3.  .001
+// 0
+//
+//----------------------------------------------------------
 Air                3  14.01  16.  39.95  7.  8.  18.  1.205e-3  .78 .21  .01
                    1  1  20.  .001
                    0
@@ -12,7 +62,7 @@ vacuum             1  1.e-16  1.e-16  1.e-16
                    0  1  20.  .001
                    0
 
-LH2                1  1.01   1.   0.0715 
+LH2                1  1.01   1.   0.0715
                    1  1  20.  .001
                    0
 
@@ -57,11 +107,11 @@ mylar              3   12.01   1.01   16.0   6.   1.   8.   1.397   0.624935   0
 
 rohacell           4  12.01   1.01   16.0    14.01  6.   1.   8.   7.  0.075   0.6014  0.0805  0.3154  0.00276
                    1  1  20.  .001
-                   0 
+                   0
 
-kapton             4  12.01   1.01   16.0    14.01  6.   1.   8.   7.  1.42   0.691133  0.026362  0.209235  0.073270 
+kapton             4  12.01   1.01   16.0    14.01  6.   1.   8.   7.  1.42   0.691133  0.026362  0.209235  0.073270
                    1  1  20.  .001
-                   0 
+                   0
 
 inox               3  12.01   55.9   52.0   6.   26.   24.    8.02   0.001   0.829   0.17
                    1  1  20.  .001
@@ -80,9 +130,11 @@ Ar                 1  39.948   18.  0.0016581
                    1  1  20.  .001
                    0
 
+
 mix                4  12.01   19.0   1.01   39.948   6.  9.   1.   18.   0.0019836   0.0452577   0.129531   0.005211558   0.82
                    1  1  20.  .001
                    0
+
 
 NaI                2  22.989770  126.904470  11.  53.  3.670  0.15337  0.84663
                    0  1  20.  .001
@@ -96,7 +148,7 @@ BC408              2  1.00794  12.0107  1.  6.  1.032  0.084  0.916
 copper             1  63.54  29.  8.96
                    0  0  20.  .001
                    0
-G10                4  12.01 1.008 16. 28.09 6.  1.  8.  14. 1.7 0.259 
+G10                4  12.01 1.008 16. 28.09 6.  1.  8.  14. 1.7 0.259
 0.288 0.248 0.205
                    0  0  20.  .001
                    0
@@ -147,7 +199,7 @@ RPCglass           -2  28.09  16.  14.  8.  2.55  1.  2.
                    0  0  20.  .001
                    0
 
-CsI               -2  132.9054  126.9045 55.  53. 4.53  0.511549  0.488451 
+CsI               -2  132.9054  126.9045 55.  53. 4.53  0.511549  0.488451
                   1  1  20. .00001
              	  2
 		  1.77       50000.            1.0        1.0003
@@ -176,7 +228,7 @@ sulfurhexafluoride -2  32.06 19. 16. 9. 2.7e-3 1 6
                    0  0  20.  .001
                    0
 
-RPCgas             4  12.01  1.008  19.0  32.06  6. 1. 9. 16.  3.75E-3  
+RPCgas             4  12.01  1.008  19.0  32.06  6. 1. 9. 16.  3.75E-3
 .227 .248 .511 .014
                    1  0  20.  .001
                    0
@@ -184,7 +236,7 @@ RPCgas             4  12.01  1.008  19.0  32.06  6. 1. 9. 16.  3.75E-3
 copper             1  63.54  29.  8.96
                    0  0  20.  .001
                    0
-G10                4  12.01 1.008 16. 28.09 6.  1.  8.  14. 1.7 0.259 
+G10                4  12.01 1.008 16. 28.09 6.  1.  8.  14. 1.7 0.259
 0.288 0.248 0.205
                    0  0  20.  .001
                    0

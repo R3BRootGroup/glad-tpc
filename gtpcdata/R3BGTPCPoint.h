@@ -96,16 +96,16 @@ class R3BGTPCPoint : public FairMCPoint {
   void SetIsAccepted(Bool_t bo)  { fIsAccepted = bo; }    
   
   /** Output to screen **/
-  virtual void Print(const Option_t* opt) const;
+  virtual void Print(const Option_t* opt = "") const;
   
  protected:
   
-  Int_t fParentTrackID;         ///< Parent track ID ???how to get it???
-  Int_t fPrimaryParticleID;     ///< Primary Particle ID ???how to get it???
-  Int_t fTrackStatus;           ///< Status of the track ???how to get it???
+  Int_t fParentTrackID;         ///< Parent track ID 
+  Int_t fPrimaryParticleID;     ///< Primary Particle ID 
+  Int_t fTrackStatus;           ///< Status of the track 
   Int_t fPDGCode;               ///< PDG of the particle transported
-  Int_t fModuleID;              ///< Module ID ???how to get it???
-  Int_t fDetCopyID;             ///< Detector Copy ID ???how to get it???
+  Int_t fModuleID;              ///< Module ID 
+  Int_t fDetCopyID;             ///< Detector Copy ID 
   TString fParticleName;        ///< Name of the particle specified by pdg
   TString fVolName;             ///< Volume name for a given volume identifier id
   TString fProcessName;         ///< Process that has produced the secondary particles in the current step

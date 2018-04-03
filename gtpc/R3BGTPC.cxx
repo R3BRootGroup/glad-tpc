@@ -70,7 +70,7 @@ void R3BGTPC::SetSpecialPhysicsCuts() {
   LOG(INFO) << "-I- R3BGTPC: Adding customized Physics cut ... " << FairLogger::endl;
   
   if (gGeoManager) {
-    TGeoMedium* pmix = gGeoManager->GetMedium("test");
+    TGeoMedium* pmix = gGeoManager->GetMedium("mix");
     if (pmix) {
       // Setting processes for Gas
       //gMC->Gstpar(pmix->GetId(), "LOSS", 3);
@@ -87,7 +87,7 @@ void R3BGTPC::SetSpecialPhysicsCuts() {
       //gMC->Gstpar(pmix->GetId(), "RAYL", 1.0);
       
       // Setting Energy-CutOff for Gas Only, 0.01mm
-      Double_t cutE = 1e-6; // GeV-> 1 eV
+      Double_t cutE = 1e-6; // GeV-> 1 keV
       
       LOG(INFO) << "-I- R3BGTPC: Medium Id " << pmix->GetId() << " Energy Cut-Off : " << cutE << " GeV" << FairLogger::endl;
       
@@ -121,7 +121,7 @@ Bool_t R3BGTPC::ProcessHits(FairVolume* vol) {
 					gMC->IsTrackExiting(),
 					gMC->IsTrackInside(),
 					gMC->IsTrackOut());
-  
+
   Int_t parentTrackID = gMC->GetStack()->GetCurrentParentTrackNumber();
   TString particleName = gMC->GetStack()->GetCurrentTrack()->GetName();
   //_______________only care about primary particle and decayed particle
@@ -150,7 +150,7 @@ Bool_t R3BGTPC::ProcessHits(FairVolume* vol) {
 		   (gMC->Etot() - gMC->TrackMass()), //kineticEnergy
 		   gMC->TrackStep(), //trackStep
 		   kTRUE); // isAccepted
-  }
+    }
   
   // Increment number of LandPoints for this track
   R3BStack* stack = (R3BStack*)gMC->GetStack();

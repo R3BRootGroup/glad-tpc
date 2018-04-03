@@ -1,0 +1,309 @@
+///////////////////////////////////////////////////////////////////
+//*-- AUTHOR : Hector Alvarez-Pol
+//*-- Date: 04/20018
+//*-- Last Update: 02/04/18
+//*-- Copyright: GENP (Univ. Santiago de Compostela)
+// --------------------------------------------------------------
+// This macro plots the output of the glad-tpc projector:
+//    - plots the R3BGTPCProjPoint which contains the virtual
+//      pads calculated after the projection of the track.
+// --------------------------------------------------------------
+// How to run this program:
+// - Run this macro inside root:
+//      root[0] .L readVPadPlane.C
+//      root[1] reader("inputFile")
+//      root[2] guiForPads(0)
+// --------------------------------------------------------------
+//////////////////////////////////////////////////////////////////
+#include <TSystem.h>
+#include <TFile.h>
+#include <TStyle.h>
+#include <TH2D.h>
+#include <TCanvas.h>
+#include <TLatex.h>
+#include <TControlBar.h>
+#include <TTimer.h>
+
+using namespace std;
+
+const char* inputSimFile_g;
+Int_t event_g = 0;
+TTimer* timer;
+Int_t shown=0;
+
+void reader(const char* inputSimFile, Int_t event=0);
+
+void guiForPads(Int_t firstEvent=0) {
+  // This macro shows one event and the derivative in both sides of
+  // the twon ionization chamber (left and right labels have no meaning)
+  //.L readTree.C;
+  
+  event_g=firstEvent;
+  TControlBar *menu = new TControlBar("vertical","GLADTPC Pads Viewer",800,650);
+  menu->AddButton("      First      ","reader(inputSimFile_g,0)","First event");
+  menu->AddButton("      Go to event...      ","reader(inputSimFile_g,-2)","Write the event number on interpreter");
+  menu->AddButton("      Next       ","reader(inputSimFile_g,event_g)","Next event");
+  menu->AddButton("      Previous       ","reader(inputSimFile_g,event_g-2)","Previous event");
+  menu->AddButton("      Run continuously       ","loop()","Press and see the events...");
+  menu->AddButton("      Stop       ","loopStop()","Stops the exhibition");
+  menu->AddButton("      See all the events   ","reader(inputSimFile_g,-1)","See all the events added");
+  menu->AddButton("      Quit       ",".q","Quit Root");
+  gROOT->SaveContext();
+  menu->Show();
+  reader(inputSimFile_g,0);
+}
+
+void loop(){
+  timer = new TTimer(1000);
+  timer->SetCommand("reader(inputSimFile_g,event_g)");
+  timer->TurnOn();
+  cout <<" loop() recalled"<<endl;
+}
+
+void loopStop(){
+  timer->Stop();
+}
+
+void reader(const char* inputSimFile, Int_t event){
+
+ char hname[255];
+  //SETUP
+  //SET THIS VALUES AS IT WAS IN THE R3BGTPCProjector code
+  Double_t fHalfSizeTPC_X = 25; //50cm in X (row)
+  Double_t fHalfSizeTPC_Y = 10; //20cm in Y (time)
+  Double_t fHalfSizeTPC_Z = 50; //100cm in Z (column)
+  Double_t fSizeOfVirtualPad = 1; //1: pads of 1cm^2 , 10: pads of 1mm^2
+  //END OF SETUP
+
+  gROOT->SetStyle("Default");
+  gStyle->SetPalette(kSolar);
+  //gStyle->SetPalette(kDarkRainBow);
+  gStyle->SetOptTitle(0);
+  gStyle->SetOptStat(0);
+  gStyle->SetOptFit(0);
+  
+  if(!shown){
+    cout << "Reading input simulation file " << inputSimFile << endl;
+    cout << " for event " << event << " (- 1 means all events)." << endl;}
+  inputSimFile_g = inputSimFile;
+  event_g = event;
+  
+  //HERE THE HISTOGRAMS ARE DEFINED...
+  //IT IS POSSIBLE TO CHANGE THE RANGE AND THE BINNING
+  UInt_t histoBins = 2*fHalfSizeTPC_X*fSizeOfVirtualPad;
+  UInt_t histoBins2 = 2*fHalfSizeTPC_Z*fSizeOfVirtualPad;
+  
+  if(!shown){
+    cout << "Values taken for the visualization" << endl
+	 << "bins in X: " <<  histoBins<< endl
+	 << "bins in Z: " <<  histoBins2<< endl
+	 << "X size (half-length of box): " <<  fHalfSizeTPC_X << endl
+	 << "Y size (half-length of box (drift)): " <<  fHalfSizeTPC_Y << endl
+       << "Z size (half-length of box): " <<  fHalfSizeTPC_Z << endl;
+  }
+  
+  TH2D* htrackInPads=0;
+  TH2D* hdriftTimeInPads=0;
+  TH2D* hdepth1InPads=0;
+  TH2D* hdepth2InPads=0;
+  TH1S **h1_ProjPoint_TimeExample=0;
+  //THStack *hs = new THStack("hs","Stacked time histograms using kSolar palette");
+
+
+  htrackInPads =
+    new TH2D("htrackInPads",
+	     "All tracks in the XZ Pads Plane",
+	     histoBins, 0, 2*fHalfSizeTPC_X*fSizeOfVirtualPad,
+	     histoBins2, 0, 2*fHalfSizeTPC_Z*fSizeOfVirtualPad);// in [pad number]
+  htrackInPads->SetYTitle("Z [pad number]");
+  htrackInPads->SetXTitle("X [pad number]");
+  
+  hdriftTimeInPads =
+    new TH2D("hdriftTimeInPads",
+	     "All tracks in the XZ Pads Plane with drift time",
+	     histoBins, 0, 2*fHalfSizeTPC_X*fSizeOfVirtualPad,
+	     histoBins2, 0, 2*fHalfSizeTPC_Z*fSizeOfVirtualPad);// in [pad number]
+  hdriftTimeInPads->SetYTitle("Z [pad number]");
+  hdriftTimeInPads->SetXTitle("X [pad number]");
+  
+  hdepth1InPads =
+    new TH2D("hdepth1InPads",
+	     "track In the Drift-Z Pads Plane",
+	     histoBins, 0, 40, //REPLACE FOR A CORRECT TIME ESTIMATION
+	     histoBins2, 0, 2*fHalfSizeTPC_Z*fSizeOfVirtualPad);
+  hdepth1InPads->SetYTitle("Z [pad number]");
+  hdepth1InPads->SetXTitle("(drift) time [ns]");
+  
+  hdepth2InPads =
+    new TH2D("hdepth2InPads",
+	     "track In the Drift-X Pads Plane",
+	     histoBins, 0,40, //REPLACE FOR A CORRECT TIME ESTIMATION
+	     histoBins, 0, 2*fHalfSizeTPC_X*fSizeOfVirtualPad);
+  hdepth2InPads->SetYTitle("X [pad number]");
+  hdepth2InPads->SetXTitle("(drift) time [ns]");
+  
+  
+  TFile *simFile = TFile::Open(inputSimFile);
+  TTree *TEvt = (TTree*)simFile->Get("evt");
+  Int_t nevents = TEvt->GetEntries();
+  
+  if(!shown) {
+    cout << "nevents=" << nevents << endl;
+  }
+  if(event==-2)  {
+    Int_t num=0;
+    cout << "Set the event number you wanna see: " <<endl;
+    cin >> num;
+    if(num>nevents) {
+      cout << "Warning: Event larger than tree size!" <<endl;
+    }
+    else event = num;
+  }
+  
+  //GTPCProjPoints
+  TClonesArray* gtpcProjPointCA;
+  R3BGTPCProjPoint* ppoint = new R3BGTPCProjPoint;
+  gtpcProjPointCA = new TClonesArray("R3BGTPCProjPoint",5);
+  TBranch *branchGTPCProjPoint = TEvt->GetBranch("GTPCProjPoint");
+  branchGTPCProjPoint->SetAddress(&gtpcProjPointCA);
+
+  Int_t padsPerEvent = 0;
+  Int_t nb = 0;
+  Int_t beamPadsWithSignalPerEvent, productPadsWithSignalPerEvent;
+  Double_t xPad, zPad, tPad;
+  Int_t numberOfTimeHistos = 0;
+
+  if(h1_ProjPoint_TimeExample) delete [] h1_ProjPoint_TimeExample;
+  if(event!=-1){ //only one event to be displayed
+    gtpcProjPointCA->Clear();
+    nb += TEvt->GetEvent(event);
+    padsPerEvent = gtpcProjPointCA->GetEntries();
+    if(padsPerEvent>0) {
+      h1_ProjPoint_TimeExample = new TH1S*[padsPerEvent];
+      for(Int_t h=0;h<padsPerEvent;h++){
+	ppoint = (R3BGTPCProjPoint*) gtpcProjPointCA->At(h);
+	
+	xPad = ppoint->GetVirtualPadID()%(Int_t)(2*fHalfSizeTPC_X*fSizeOfVirtualPad);
+	zPad = (ppoint->GetVirtualPadID() - xPad)/(2*fHalfSizeTPC_X*fSizeOfVirtualPad);
+	tPad = ((TH1S*)(ppoint->GetTimeDistribution()))->GetMean();
+	
+	htrackInPads->Fill(xPad,zPad,ppoint->GetCharge());
+	hdriftTimeInPads->Fill(xPad,zPad,tPad);
+	hdepth1InPads->Fill(tPad,zPad,ppoint->GetCharge());
+	hdepth2InPads->Fill(tPad,xPad,ppoint->GetCharge());
+	
+	sprintf(hname,"pad %i",ppoint->GetVirtualPadID());
+	h1_ProjPoint_TimeExample[h] = (TH1S*)((ppoint->GetTimeDistribution()))->Clone(hname);
+      }
+      numberOfTimeHistos=padsPerEvent;
+    }
+    else {  event_g++;
+      return; //no pads
+    }
+  }
+  else { //all events
+    for(Int_t i=0;i<nevents;i++){
+      if(i%1000 == 0) printf("Event:%d\n",i);
+      gtpcProjPointCA->Clear();
+      nb += TEvt->GetEvent(i);
+      padsPerEvent = gtpcProjPointCA->GetEntries();
+      if(h1_ProjPoint_TimeExample) delete [] h1_ProjPoint_TimeExample;
+      if(padsPerEvent>0) {
+	for(Int_t h=0;h<padsPerEvent;h++){
+	  ppoint = (R3BGTPCProjPoint*) gtpcProjPointCA->At(h);
+	  
+	  xPad = ppoint->GetVirtualPadID()%(Int_t)(2*fHalfSizeTPC_X*fSizeOfVirtualPad);
+	  zPad = (ppoint->GetVirtualPadID() - xPad)/(2*fHalfSizeTPC_X*fSizeOfVirtualPad);
+	  tPad = ((TH1S*)(ppoint->GetTimeDistribution()))->GetMean();
+	  
+	  htrackInPads->Fill(xPad,zPad,ppoint->GetCharge());
+	  hdriftTimeInPads->Fill(xPad,zPad,tPad);  //NOTE: THAT IS ACCUMULATED TIME!!
+	  hdepth1InPads->Fill(tPad,zPad,ppoint->GetCharge());
+	  hdepth2InPads->Fill(tPad,xPad,ppoint->GetCharge());
+	}	
+      }
+    }
+  }
+
+
+  TCanvas* c3 = new TCanvas("c3","Pads in pad (XZ) plane",0,0,600,900);
+  TLatex l;
+  l.SetTextAlign(12);
+  l.SetTextSize(0.05);
+  
+  c3->SetFillColor(0);
+  c3->Divide(2,3);
+  c3->Draw();
+  TVirtualPad * c3_1 = c3->cd(1);
+  c3_1->SetLogz();
+  htrackInPads->Draw("ZCOL");
+  
+  l.SetTextAlign(12);
+  l.SetTextSize(0.05);
+  l.DrawLatex(0.2*fHalfSizeTPC_X*fSizeOfVirtualPad,2.04*fHalfSizeTPC_Z*fSizeOfVirtualPad,"Color code: induced charge");
+  
+  TVirtualPad * c3_2 = c3->cd(2);
+  //c3_2->SetLogz();
+  hdriftTimeInPads->Draw("ZCOL");
+  
+  TLatex l2;
+  l2.SetTextAlign(12);
+  l2.SetTextSize(0.05);
+  l2.DrawLatex(0.2*fHalfSizeTPC_X*fSizeOfVirtualPad,2.04*fHalfSizeTPC_Z*fSizeOfVirtualPad,"Color code: drift time");
+  
+  TVirtualPad * c3_3 = c3->cd(3);
+  c3_3->SetLogz();
+  hdepth1InPads->Draw("ZCOL");
+  
+  l.SetTextAlign(12);
+  l.SetTextSize(0.05);
+  l.DrawLatex(5,2.04*fHalfSizeTPC_Z*fSizeOfVirtualPad,"Color code: induced charge");
+  
+  TVirtualPad * c3_4 = c3->cd(4);
+  c3_4->SetLogz();
+  hdepth2InPads->Draw("ZCOL");
+  
+  l.SetTextAlign(12);
+  l.SetTextSize(0.05);
+  l.DrawLatex(5,2.04*fHalfSizeTPC_X*fSizeOfVirtualPad,"Color code: induced charge");
+  
+  gPad->Modified();
+  gPad->Update();
+
+  if(h1_ProjPoint_TimeExample){
+    TVirtualPad * c3_5 = c3->cd(5);
+    //c3_5->SetLogz();  
+    h1_ProjPoint_TimeExample[0]->SetMaximum(200);
+    h1_ProjPoint_TimeExample[0]->Draw();
+    //hs->Add(h1_ProjPoint_TimeExample[0]);
+    //for(Int_t j=0;j<numberOfTimeHistos;j++){
+    //h1_ProjPoint_TimeExample[j]->SetLineColor(kViolet+j);
+    //hs->Add(h1_ProjPoint_TimeExample[j]);
+    //h1_ProjPoint_TimeExample[j]->Draw("SAME");
+    //}
+    //hs->Draw("");
+    
+    gPad->Modified();
+    gPad->Update();
+    
+    TVirtualPad * c3_6 = c3->cd(6);
+    h1_ProjPoint_TimeExample[0]->SetMaximum(200);
+    h1_ProjPoint_TimeExample[0]->Draw();
+    for(Int_t j=0;j<numberOfTimeHistos;j++){
+      h1_ProjPoint_TimeExample[j]->SetLineColor(kViolet+j);
+      h1_ProjPoint_TimeExample[j]->SetFillColorAlpha(kViolet+j,0.25);
+      h1_ProjPoint_TimeExample[j]->Draw("SAME");
+    }
+    
+    l.SetTextAlign(12);
+    l.SetTextSize(0.05);
+    l.DrawLatex(1,50,"All pads");
+  }
+  
+  gPad->Modified();
+  gPad->Update();
+  
+  cout <<" Event number "<< event <<" shown with "<<  numberOfTimeHistos << " projPoints. "<<endl;
+  event_g++;
+  shown=1;
+}
