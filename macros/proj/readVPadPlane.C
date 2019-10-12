@@ -69,10 +69,10 @@ void reader(const char* inputSimFile, Int_t event){
  char hname[255];
   //SETUP
   //SET THIS VALUES AS IT WAS IN THE R3BGTPCProjector code
-  Double_t fHalfSizeTPC_X = 25; //50cm in X (row)
-  Double_t fHalfSizeTPC_Y = 10; //20cm in Y (time)
-  Double_t fHalfSizeTPC_Z = 50; //100cm in Z (column)
-  Double_t fSizeOfVirtualPad = 1; //1: pads of 1cm^2 , 10: pads of 1mm^2
+  Double_t fHalfSizeTPC_X = 40; //50cm in X (row)
+  Double_t fHalfSizeTPC_Y = 15; //20cm in Y (time)
+  Double_t fHalfSizeTPC_Z = 100; //100cm in Z (column)
+  Double_t fSizeOfVirtualPad = 100; //1: pads of 1cm^2 , 10: pads of 1mm^2
   //END OF SETUP
 
   gROOT->SetStyle("Default");

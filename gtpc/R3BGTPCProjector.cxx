@@ -10,13 +10,16 @@
 
 R3BGTPCProjector::R3BGTPCProjector() : FairTask("R3BGTPCProjector") {
   fEIonization = 15.e-9;  // [GeV]
-  fDriftVelocity = 0.0005; // [cm/ns]
-  fTransDiff = 0.00000001; // [cm^2/ns]
-  fLongDiff  = 0.0000001;  // [cm^2/ns]
+  fDriftVelocity = 0.005; // [cm/ns]
+  fTransDiff = 0.0000001; // [cm^2/ns]
+  fLongDiff  = 0.000001;  // [cm^2/ns]
   fFanoFactor = 2; 
   fHalfSizeTPC_X = 0.;  //to be filled during Init()
   fHalfSizeTPC_Y = 0.;  //to be filled during Init()
   fHalfSizeTPC_Z = 0.;  //to be filled during Init()
+
+  //NOTE HAPOL INTRODUCE OFFSETS (AS IN LANGEVINTEST)
+
   fSizeOfVirtualPad = 1.; //1 means pads of 1cm^2, 10 means pads of 1mm^2, ...
 }
 
@@ -87,10 +90,10 @@ InitStatus R3BGTPCProjector::Init() {
 void R3BGTPCProjector::SetDriftParameters(Double_t ion, Double_t driftv, 
 					  Double_t tDiff, Double_t lDiff, 
 					  Double_t fanoFactor) {
-  fEIonization = ion;       // [eV]    15/1000000000; [GeV]
-  fDriftVelocity = driftv;  // [mm/ns]
-  fTransDiff = tDiff;       // [mm^(-1/2)] ~0.010
-  fLongDiff = lDiff;        // [mm^(-1/2)] ~0.025
+  fEIonization = ion;       // [GeV]
+  fDriftVelocity = driftv;  // [cm/ns]
+  fTransDiff = tDiff;       // [cm^(-1/2)]
+  fLongDiff = lDiff;        // [cm^(-1/2)]
   fFanoFactor = fanoFactor; //
 }
 
@@ -122,7 +125,8 @@ void R3BGTPCProjector::Exec(Option_t*) {
     evtID=aPoint->GetEventID();
     if(aPoint->GetTrackStatus() == 11000 || 
        aPoint->GetTrackStatus() == 10010010  || 
-       aPoint->GetTrackStatus() == 10010000) { 
+       aPoint->GetTrackStatus() == 10010000 || 
+       aPoint->GetTrackStatus() == 10011000 ) { 
       //entering the gas volume or new track inside the gas (is 10010010 or 10010000??)
       presentTrackID = aPoint->GetTrackID();
       xPre = aPoint->GetX(); yPre = aPoint->GetY(); zPre = aPoint->GetZ();
@@ -131,6 +135,7 @@ void R3BGTPCProjector::Exec(Option_t*) {
     }
     else { //any other case
       if(presentTrackID != aPoint->GetTrackID()) {
+	cout << aPoint->GetTrackStatus()<< "  "  << endl;
 	LOG(FATAL) << "R3BGTPCProjector::Exec: Problem 2 in point logic" << FairLogger::endl;
 	break;
       }
@@ -147,7 +152,7 @@ void R3BGTPCProjector::Exec(Option_t*) {
       energyDep = aPoint->GetEnergyLoss();
       timeBeforeDrift = aPoint->GetTime(); 
     }
-    
+
     electrons = energyDep/fEIonization;
     //electron number fluctuates as the square root of the 
     //Fano factor times the number of electrons
@@ -165,13 +170,13 @@ void R3BGTPCProjector::Exec(Option_t*) {
     driftDistance = yApprox + fHalfSizeTPC_Y;
     sigmaLongAtPadPlane = sqrt(driftDistance*2*fLongDiff/fDriftVelocity);
     sigmaTransvAtPadPlane = sqrt(driftDistance*2*fTransDiff/fDriftVelocity);
-
+    
     for(Int_t ele=1;ele<=generatedElectrons;ele++){
       driftTime = ((yPre+stepY*ele)+fHalfSizeTPC_Y)/fDriftVelocity;
       projX =  gRandom->Gaus(xPre+stepX*ele,sigmaTransvAtPadPlane);
       projZ =  gRandom->Gaus(zPre+stepZ*ele,sigmaTransvAtPadPlane);
       projTime = gRandom->Gaus(driftTime+timeBeforeDrift,sigmaLongAtPadPlane/fDriftVelocity);
-
+      
       //obtain padID for projX, projZ (simple algorithm) 
       //the algorithm assigns a pad number which depends on the XZ size of the chamber, 
       //according to the fSizeOfVirtualPad parameter: if it is 1, the pad size is cm^2

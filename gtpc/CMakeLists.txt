@@ -13,6 +13,7 @@ ${R3BROOT_SOURCE_DIR}/r3bbase
 ${R3BROOT_SOURCE_DIR}/r3bdata
 ${R3BGTPC_SOURCE_DIR}/gtpc
 ${R3BGTPC_SOURCE_DIR}/gtpcdata
+${R3BROOT_SOURCE_DIR}/field
 )
 
 include_directories( ${INCLUDE_DIRECTORIES})
@@ -30,6 +31,8 @@ set(SRCS
 R3BGTPC.cxx
 R3BGTPCSetup.cxx
 R3BGTPCProjector.cxx
+R3BGTPCLangevin.cxx
+R3BGTPCLangevinTest.cxx
 #R3BGTPCHitPar.cxx
 #R3BGTPCCalPar.cxx
 #R3BGTPCMappedPar.cxx

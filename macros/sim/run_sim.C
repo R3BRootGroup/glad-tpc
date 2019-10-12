@@ -2,11 +2,11 @@ void run_sim()
 {
     TString transport = "TGeant4";
 
-    TString outFile = "sim.root";
-    TString parFile = "par.root";
+    TString outFile = "sim_show.root";
+    TString parFile = "par_show.root";
 
     Bool_t magnet = kTRUE;
-    Float_t fieldScale = -0.6;
+    Float_t fieldScale = 1;
 
     TString generator1 = "box";
     TString generator2 = "ascii";
@@ -14,7 +14,7 @@ void run_sim()
     TString generator = generator1;
     TString inputFile = "";
 
-    Int_t nEvents = 50;
+    Int_t nEvents = 10;
     Bool_t storeTrajectories = kTRUE;
     Int_t randomSeed = 335566; // 0 for time-dependent random numbers
 
@@ -64,7 +64,7 @@ void run_sim()
     run->AddModule(new R3BGladMagnet("glad_v17_flange.geo.root")); // GLAD should not be moved or rotated
 
     // PSP
-    run->AddModule(new R3BPsp("psp_v13a.geo.root", {}, -221., -89., 94.1));
+    //run->AddModule(new R3BPsp("psp_v13a.geo.root", {}, -221., -89., 94.1));
 
     // R3B SiTracker Cooling definition
     //run->AddModule(new R3BVacVesselCool(targetType, "vacvessel_v14a.geo.root"));
@@ -84,19 +84,19 @@ void run_sim()
     run->AddModule(new R3BFi4("fi4_v17a.geo.root", {-73.274339-TMath::Tan(TMath::DegToRad()*16.7)*100, 0.069976, 513.649524+100.}, {"" ,-90.,16.7,90.}));
 
     // Fi6 detector
-    run->AddModule(new R3BFi6("fi6_v17a.geo.root", {-73.274339-TMath::Tan(TMath::DegToRad()*16.7)*500, 0.069976, 513.649524+500.}, {"" ,-90.,16.7,90.}));
+    //run->AddModule(new R3BFi6("fi6_v17a.geo.root", {-73.274339-TMath::Tan(TMath::DegToRad()*16.7)*500, 0.069976, 513.649524+500.}, {"" ,-90.,16.7,90.}));
 
     // Fi5 detector
-    run->AddModule(new R3BFi5("fi5_v17a.geo.root", {-73.274339-TMath::Tan(TMath::DegToRad()*16.7)*300, 0.069976, 513.649524+300.}, {"" ,-90.,16.7,90.}));
+    //run->AddModule(new R3BFi5("fi5_v17a.geo.root", {-73.274339-TMath::Tan(TMath::DegToRad()*16.7)*300, 0.069976, 513.649524+300.}, {"" ,-90.,16.7,90.}));
 
     // sfi detector
-    run->AddModule(new R3Bsfi("sfi_v17a.geo.root", {0, 0, -200}));
+    //run->AddModule(new R3Bsfi("sfi_v17a.geo.root", {0, 0, -200}));
 
     // Tof
-    run->AddModule(new R3BTof("tof_v17a.geo.root", { -417.359574, 2.400000, 960.777114 }, { "", -90., +31., 90. }));
+    //run->AddModule(new R3BTof("tof_v17a.geo.root", { -417.359574, 2.400000, 960.777114 }, { "", -90., +31., 90. }));
 
     // dTof
-    run->AddModule(new R3BdTof("dtof_v17a.geo.root", { -155.824045+(2.7*10)*TMath::Cos(16.7*TMath::DegToRad()), 0.523976, 761.870346 }, { "", -90., +16.7, 90. }));
+    //run->AddModule(new R3BdTof("dtof_v17a.geo.root", { -155.824045+(2.7*10)*TMath::Cos(16.7*TMath::DegToRad()), 0.523976, 761.870346 }, { "", -90., +16.7, 90. }));
 
     // NeuLAND
     // run->AddModule(new R3BNeuland("neuland_test.geo.root", { 0., 0., 1400. + 12 * 5. }));
@@ -128,17 +128,24 @@ void run_sim()
     if (generator.CompareTo("box") == 0)
     {
         // 2- Define the BOX generator
-        Int_t pdgId = 2212;     // proton beam
-        Double32_t theta1 = 0.; // polar angle distribution
-        Double32_t theta2 = 2.;
-        Double32_t momentum = 2.0;
-        FairBoxGenerator* boxGen = new FairBoxGenerator(pdgId, 1);
+        Int_t pdgId = 22;     // pion+ beam
+        Double32_t theta1 = 40; // polar angle distribution
+        Double32_t theta2 = 120.;
+        Double32_t momentum = 0.05;
+        FairBoxGenerator* boxGen = new FairBoxGenerator(pdgId, 5);
         boxGen->SetThetaRange(theta1, theta2);
-        boxGen->SetPRange(momentum, momentum * 1.2);
+        boxGen->SetPRange(momentum, momentum * 2.0);
         boxGen->SetPhiRange(0, 360);
         boxGen->SetXYZ(0.0, 0.0, -1.5);
         primGen->AddGenerator(boxGen);
 
+        /*FairBoxGenerator* boxGen2 = new FairBoxGenerator(-pdgId, 1);// pion- beam
+        boxGen2->SetThetaRange(theta1, theta2);
+        boxGen2->SetPRange(momentum, momentum * 20.);
+        boxGen2->SetPhiRange(0, 360);
+        boxGen2->SetXYZ(0.0, 0.0, -1.5);
+        primGen->AddGenerator(boxGen2);
+*/
         // 128-Sn fragment
         R3BIonGenerator* ionGen = new R3BIonGenerator(50, 128, 50, 10, 0., 0., 1.3);
         ionGen->SetSpotRadius(0.1, -300., 0.);

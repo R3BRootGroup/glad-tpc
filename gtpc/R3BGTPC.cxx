@@ -150,11 +150,13 @@ Bool_t R3BGTPC::ProcessHits(FairVolume* vol) {
 		   (gMC->Etot() - gMC->TrackMass()), //kineticEnergy
 		   gMC->TrackStep(), //trackStep
 		   kTRUE); // isAccepted
+    
     }
   
+  //DOES NOT WORK!!!! ASK!
   // Increment number of LandPoints for this track
-  R3BStack* stack = (R3BStack*)gMC->GetStack();
-  stack->AddPoint(kGTPC);
+  //R3BStack* stack = (R3BStack*)gMC->GetStack();
+  //stack->AddPoint(kGTPC);
   
   return kTRUE;
 }

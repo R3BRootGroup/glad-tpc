@@ -3,11 +3,11 @@ void run_proj() {
   timer.Start();
 
   // Input file: simulation
-  TString inFile = "../sim/sim.root";
+  TString inFile = "../sim/sim2.root";
   // Input file: parameters
-  TString parFile = "../sim/par.root";
+  TString parFile = "../sim/par2.root";
   // Output file
-  TString outFile = "proj.root";
+  TString outFile = "proj_borrame.root";
 
   // -----   Create analysis run   ----------------------------------------
   FairRunAna* fRun = new FairRunAna();

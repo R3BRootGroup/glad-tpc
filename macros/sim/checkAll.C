@@ -8,7 +8,7 @@
 //  -------------------------------------------------------------------------
 //
 //   Usage:
-//      > root -l checkResults.C
+//      > root -l checkAll.C
 //
 //     BUT FIRST, select in the //SETTINGS section the simulation features
 //	(the macro will plot and text information as a function of these settings)
@@ -23,7 +23,7 @@ void checkAll() {
   Bool_t checkMCTracks=kTRUE; //Defines Histogram for MCTracks
   Bool_t checkPoints=kTRUE; //Defines Histogram for Points
 
-  sprintf(title1,"%s","sim.root"); //INPUT FILE
+  sprintf(title1,"%s","sim2.root"); //INPUT FILE
   TFile *file1 = TFile::Open(title1);
 
   Double_t maxE = 100; //max energy in plots
