@@ -34,24 +34,24 @@ R3BGTPCLangevinTest::~R3BGTPCLangevinTest(){
 void R3BGTPCLangevinTest::SetParContainers() {
   FairRunAna* run = FairRunAna::Instance();
   if (!run){
-    LOG(FATAL) << "R3BGTPCLangevinTest::SetParContainers: No analysis run" << FairLogger::endl;
+    LOG(FATAL) << "R3BGTPCLangevinTest::SetParContainers: No analysis run";
     return;
   }
   FairRuntimeDb* rtdb = run->GetRuntimeDb();
   if (!rtdb) {
-    LOG(FATAL) << "R3BGTPCLangevinTest::SetParContainers: No runtime database" << FairLogger::endl;
+    LOG(FATAL) << "R3BGTPCLangevinTest::SetParContainers: No runtime database";
     return;
   }
   //PREPARE PROPER PARAMETER CONTAINERS
   /*fGTPCGeoPar = (R3BGTPCGeoPar*)rtdb->getContainer("R3BGTPCGeoPar");
     if (!fGTPCGeoPar) {
-    LOG(FATAL) << "R3BGTPCLangevinTest::SetParContainers: No R3BGTPCGeoPar" << FairLogger::endl;
+    LOG(FATAL) << "R3BGTPCLangevinTest::SetParContainers: No R3BGTPCGeoPar";
     return;
     }
   */
   /*fGTPCGasPar = (R3BGTPCGasPar*)rtdb->getContainer("R3BGTPCGasPar");
     if (!fGTPCGasPar) {
-    LOG(FATAL) << "R3BGTPCLangevinTest::SetParContainers: No R3BGTPCGasPar" << FairLogger::endl;
+    LOG(FATAL) << "R3BGTPCLangevinTest::SetParContainers: No R3BGTPCGasPar";
     return;
     }
   */
@@ -60,12 +60,12 @@ void R3BGTPCLangevinTest::SetParContainers() {
 InitStatus R3BGTPCLangevinTest::Init() {
   FairRootManager* ioman = FairRootManager::Instance();
   if (!ioman) {
-    LOG(FATAL) << "R3BGTPCLangevinTest::Init: No FairRootManager" << FairLogger::endl;
+    LOG(FATAL) << "R3BGTPCLangevinTest::Init: No FairRootManager";
     return kFATAL;
   }
   // Input: TClonesArray of R3BGTPCPoints
   if ((TClonesArray*)ioman->GetObject("GTPCPoint") == nullptr) {
-    LOG(FATAL) << "R3BGTPCLangevinTest::Init No GTPCPoint!" << FairLogger::endl;
+    LOG(FATAL) << "R3BGTPCLangevinTest::Init No GTPCPoint!";
     return kFATAL;
   }
   fGTPCPoints = (TClonesArray*)ioman->GetObject("GTPCPoint");
@@ -106,11 +106,11 @@ void R3BGTPCLangevinTest::Exec(Option_t*) {
 
   fGTPCProjPoint->Clear("C");
 
-  LOG(INFO) << "R3BGTPCLangevinTest: test" << FairLogger::endl;
+  LOG(INFO) << "R3BGTPCLangevinTest: test";
   Int_t nPoints = fGTPCPoints->GetEntries();
 
   //if(nPoints<2){
-  //  LOG(INFO) << "Not enough hits for digitization! (<2)" << FairLogger::endl;
+  //  LOG(INFO) << "Not enough hits for digitization! (<2)";
   //  return;
   //}
 
@@ -193,7 +193,7 @@ void R3BGTPCLangevinTest::Exec(Option_t*) {
       //else if(evtID==3) ele_y_init = TargetOffsetY - fHalfSizeTPC_Y + 20; //20cm above the padplane
       //else if(evtID==4) ele_y_init = TargetOffsetY - fHalfSizeTPC_Y + 25; //25cm above the padplane
       else {
-	LOG(INFO) << "Event ID larger than neccesary for the grid test." << FairLogger::endl;
+	LOG(INFO) << "Event ID larger than neccesary for the grid test.";
 	return;
       }
 
@@ -219,7 +219,7 @@ void R3BGTPCLangevinTest::Exec(Option_t*) {
 	driftTimeStep = 100; // 100ns TODO set as variable or move to parameter container
 
 	LOG(DEBUG) << "R3BGTPCLangevinTest::Exec, INITIAL VALUES: timeBeforeDrift="<< accDriftTime << " [ns]"
-		   << " ele_x=" << ele_x <<" ele_y=" << ele_y <<" ele_z=" << ele_z << " [cm]" << FairLogger::endl;
+		   << " ele_x=" << ele_x <<" ele_y=" << ele_y <<" ele_z=" << ele_z << " [cm]";
 
 	//cout <<  "R3BGTPCLangevinTest::Exec, INITIAL VALUES: timeBeforeDrift="<< accDriftTime << " [ns]"
 	//     << " ele_x=" << ele_x <<" ele_y=" << ele_y <<" ele_z=" << ele_z << " [cm]" << endl;
@@ -244,7 +244,7 @@ void R3BGTPCLangevinTest::Exec(Option_t*) {
 	  vDrift_z = cteMult * (mu*(-E_y*B_x) + mu*mu*productEB*B_z);//cte * (Ez + mu*(E_x*B_y-E_y*B_x) + mu*mu*productEB*B_z); SI
 
 	  LOG(DEBUG) << "R3BGTPCLangevinTest::Exec, timeBeforeDrift=vDrift_x=" << vDrift_x
-		     <<" vDrift_y=" << vDrift_y <<" vDrift_z=" << vDrift_z <<  " [m/s]"<< FairLogger::endl;
+		     <<" vDrift_y=" << vDrift_y <<" vDrift_z=" << vDrift_z <<  " [m/s]";
 
 	  //adjusting the last step before the pad plane
 	  if(ele_y-1.E-7*vDrift_y*driftTimeStep<-fHalfSizeTPC_Y)
@@ -260,7 +260,7 @@ void R3BGTPCLangevinTest::Exec(Option_t*) {
 	  accDriftTime = accDriftTime + driftTimeStep;
 
 	  LOG(DEBUG) << "R3BGTPCLangevinTest::Exec, accDriftTime="<< accDriftTime << " [ns]"
-		     << " ele_x=" << ele_x <<" ele_y=" << ele_y <<" ele_z=" << ele_z << " [cm]" << FairLogger::endl;
+		     << " ele_x=" << ele_x <<" ele_y=" << ele_y <<" ele_z=" << ele_z << " [cm]";
 
 
 	}
@@ -315,7 +315,7 @@ void R3BGTPCLangevinTest::Exec(Option_t*) {
       }
     }
   }
-  LOG(INFO) << "R3BGTPCLangevinTest: produced " << fGTPCProjPoint->GetEntries() << " projPoints" << FairLogger::endl;
+  LOG(INFO) << "R3BGTPCLangevinTest: produced " << fGTPCProjPoint->GetEntries() << " projPoints";
 }
 
 void R3BGTPCLangevinTest::Finish() {

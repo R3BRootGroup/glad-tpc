@@ -59,16 +59,16 @@ void R3BGTPC::FinishRun() {
 // -------------------------------------------------------------------------
 void R3BGTPC::Initialize() {
   FairDetector::Initialize();
-  LOG(INFO) << "R3BGTPC: initialisation" << FairLogger::endl;
-  LOG(DEBUG) << "-I- R3BGTPC: Vol (McId) def" << FairLogger::endl;
-  LOG(INFO) << "R3BGTPC: GTPC_box Vol. (McId) " << gMC->VolId("GTPC_box") << FairLogger::endl;
-  LOG(INFO) << "R3BGTPC: GTPCGas Vol. (McId) " << gMC->VolId("GTPCGas") << FairLogger::endl;
+  LOG(INFO) << "R3BGTPC: initialisation";
+  LOG(DEBUG) << "-I- R3BGTPC: Vol (McId) def";
+  LOG(INFO) << "R3BGTPC: GTPC_box Vol. (McId) " << gMC->VolId("GTPC_box");
+  LOG(INFO) << "R3BGTPC: GTPCGas Vol. (McId) " << gMC->VolId("GTPCGas");
 }
 
 //____________________________________________________________
 void R3BGTPC::SetSpecialPhysicsCuts() {
-  LOG(INFO) << "-I- R3BGTPC: Adding customized Physics cut ... " << FairLogger::endl;
-  
+  LOG(INFO) << "-I- R3BGTPC: Adding customized Physics cut ... ";
+
   if (gGeoManager) {
     TGeoMedium* pmix = gGeoManager->GetMedium("mix");
     if (pmix) {
@@ -85,12 +85,12 @@ void R3BGTPC::SetSpecialPhysicsCuts() {
       //gMC->Gstpar(pmix->GetId(), "DCAY", 1.0);
       //gMC->Gstpar(pmix->GetId(), "MULS", 1.0);
       //gMC->Gstpar(pmix->GetId(), "RAYL", 1.0);
-      
+
       // Setting Energy-CutOff for Gas Only, 0.01mm
       Double_t cutE = 1e-6; // GeV-> 1 keV
-      
-      LOG(INFO) << "-I- R3BGTPC: Medium Id " << pmix->GetId() << " Energy Cut-Off : " << cutE << " GeV" << FairLogger::endl;
-      
+
+      LOG(INFO) << "-I- R3BGTPC: Medium Id " << pmix->GetId() << " Energy Cut-Off : " << cutE << " GeV";
+
       // Si
       gMC->Gstpar(pmix->GetId(), "CUTGAM", cutE); /** gammas (GeV)*/
       gMC->Gstpar(pmix->GetId(), "CUTELE", cutE); /** electrons (GeV)*/
@@ -107,7 +107,7 @@ void R3BGTPC::SetSpecialPhysicsCuts() {
 }
 
 // -----   Public method ProcessHits  --------------------------------------
-Bool_t R3BGTPC::ProcessHits(FairVolume* vol) { 
+Bool_t R3BGTPC::ProcessHits(FairVolume* vol) {
   TLorentzVector pos;
   TLorentzVector mom;
   gMC->TrackPosition(pos);
@@ -127,7 +127,7 @@ Bool_t R3BGTPC::ProcessHits(FairVolume* vol) {
   //_______________only care about primary particle and decayed particle
   if(parentTrackID==-1 || (parentTrackID==0 && particleName!="e-")) {
     Int_t size = fGTPCPointCollection->GetEntriesFast();
-    new((*fGTPCPointCollection)[size]) 
+    new((*fGTPCPointCollection)[size])
       R3BGTPCPoint(gMC->GetStack()->GetCurrentTrackNumber(), //trackID
 		   vol->getModId(), //check if getModId or CurrentVolOffID(1,modID)
 		   pos.Vect(), //pos from gMC->TrackPosition(pos);
@@ -150,14 +150,14 @@ Bool_t R3BGTPC::ProcessHits(FairVolume* vol) {
 		   (gMC->Etot() - gMC->TrackMass()), //kineticEnergy
 		   gMC->TrackStep(), //trackStep
 		   kTRUE); // isAccepted
-    
+
     }
-  
+
   //DOES NOT WORK!!!! ASK!
   // Increment number of LandPoints for this track
   //R3BStack* stack = (R3BStack*)gMC->GetStack();
   //stack->AddPoint(kGTPC);
-  
+
   return kTRUE;
 }
 
@@ -169,7 +169,7 @@ void R3BGTPC::BeginEvent() {
 // -----   Public method EndOfEvent   -----------------------------------------
 void R3BGTPC::EndOfEvent() {
   if (fVerboseLevel) Print();
-  Reset(); 
+  Reset();
 }
 // ----------------------------------------------------------------------------
 
@@ -192,20 +192,19 @@ TClonesArray* R3BGTPC::GetCollection(Int_t iColl) const {
 // -----   Public method Print   ----------------------------------------------
 void R3BGTPC::Print(Option_t* option) const {
   Int_t nhits = fGTPCPointCollection->GetEntriesFast();
-  LOG(INFO) << "R3BGTPC: " << nhits << " points registered in this event"
-	    << FairLogger::endl;
+  LOG(INFO) << "R3BGTPC: " << nhits << " points registered in this event";
 }
 // ----------------------------------------------------------------------------
 
 // -----   Public method Reset   ----------------------------------------------
 void R3BGTPC::Reset() {
-  fGTPCPointCollection->Clear();    
+  fGTPCPointCollection->Clear();
 }
 
 //_________________________________________________________
 Bool_t R3BGTPC::CheckIfSensitive(std::string name) {
-  LOG(INFO) << "R3BGTPC::CheckIfSensitive " << name << FairLogger::endl;
-  
+  LOG(INFO) << "R3BGTPC::CheckIfSensitive " << name;
+
   if(TString(name).Contains("GTPCGas")) {
     return kTRUE;
   }
@@ -225,9 +224,9 @@ Int_t R3BGTPC::GetTrackStatus(bool NewTrack,
     100*TrackExiting+1000*TrackEntering+
     10000*TrackAlive + 100000*TrackStop +
     1000000*TrackDisappeared + 10000000*NewTrack;
-  
+
   return trackstatus;
-  
+
 }
 
 ClassImp(R3BGTPC)
