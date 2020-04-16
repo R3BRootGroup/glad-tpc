@@ -1,0 +1,78 @@
+CONTENTS:
+		
+
+readProjPoints.C: general Macro for checking the projPoints from the projector 
+	
+readVPadPlane.C: plots the R3BGTPCProjPoint which contains the virtual pads calculated after the projection of the track.
+
+run_readVPadPlane.C: helper macro to run readVPadPlane.C with an input file
+run_readVPadPlane_lang.C: the same
+
+run_proj.C: for the simple projection (modified after for input and output file)
+
+run_lang.C: for the langevin (modified after for input and output file)
+
+
+TEST files: test on a large geometry to evaluate deformation
+ run_lang_test.C: macro for the test geometry
+ results_0 to results_4 contain the results at different distances from pad plane.
+ map_lang.C, plot_canvas.C and showshowDeviation.C (in results_#) are macros for the analysis of the data
+
+
+TOMC files: test on a large geometry on the magnet coordinates (rotated chamber wrt R3B coordinate system)
+ run_lang_test.C
+
+NOTE ON COORDINATES: 
+ Following R3BGladFieldMap.cxx:  fPosX = 0.0; fPosY = 0.0; fPosZ = 163.4; fYAngle = -14.;
+ THIS SHOULD BE THE CENTER OF THE FIELD MAP, BUT IT IS NOT SYMMETRIC IN THE MAGNET COORDINATES!!!
+ I DID A CHECK: in the code of LangevinTest I ask for the field in coordinates:
+  - (0, 0, 163.4) I get the exact magnetic field corresponding to (0,0,0) in the field file. 
+  - (50*sin(14),0,163.4+50*cos(14)) I got the exact field corresponding to (0,0,50), ... 
+ SO THE FILE IS IN THE RIGTH POSITION, BUT THE GEOMETRY IS NOT!!! (cause the point (0, 0, 163.4) is not centered in the case!)
+ Its difficult to understand the transformation in create_tpc_geo_TOMC.C... It seems to work opposite to what expected. 
+ Manually I put a 200cm long chamber starting in the (0,0,0) position of the map field or (0, 0, 163.4) in target coordinates.
+ For that, I have used 
+ Double_t TPCLx = 40; //halfsizes
+ Double_t TPCLy = 20;
+ Double_t TPCLz = 100;
+ Double_t TargetAngle=-14;
+ Double_t TargetOffsetX=40;   
+ Double_t TargetOffsetY=0;
+ Double_t TargetOffsetZ=260;   
+
+ BUT this are not the expected values... the offset should be 100*sin(14)= 24.19 and 63.4+100*cos(14)=260.49, 
+ but this was far to the right, more taking into account that the real center of the map point seems to be shifted to the left!!!
+
+
+
+
+
+
+OLD, remove mostly due to the difficulty in the interpretation of the deviations
+
+ana_lang.C: macro for analysis of differences in pad plane between simple projection and langevin. OLD, replaced by _test
+
+RUNNING for the protons example (see /Users/hapol/R3B/GLAD-TPC/2019_03_26_langevin)
+run_proj.C: for the simple projection (modified after for input and output file)
+proj.root			
+output_proj.txt REMOVED, last line: Real time: 667.8s, CPU time: 625.8s		
+run_lang.C: for the langevin (modified after for input and output file)
+lang.root					
+output_lang.txt	 REMOVED, last line: Real time: 1.194e+04s, CPU time: 1.184e+04s
+
+RUNNING for the pions example (see /Users/hapol/R3B/GLAD-TPC/2019_03_26_langevin)
+run_proj.C: for the simple projection
+proj2.root			
+output_proj2.txt REMOVED, lasta line: Real time: 1577.s, CPU time: 1545.s		
+run_lang.C: for the langevin
+lang2.root: obtained with timeStep:1000ns, full statistics			
+output_lang2.txt: REMOVED, last line: Real time: 5.239e+05s, CPU time: 2.193e+05s
+
+run_lang_temp.C: for the langevin, temporal cases with less statistics or short timeStep
+lang2_temp.root: 100 entries using timeStep:1000ns,		
+lang2_tempST.root: 100 entries using timeStep:100ns,		
+proj2_temp1000.root: 1000 entries 
+output_proj2_temp1000.txt: REMOVED, last line: RReal time: 17.11s, CPU time: 16.25s
+lang2_temp1000.root: 1000 entries using timeStep:500ns,
+output_lang2_temp1000.txt: REMOVED, last line: Real time: 4192.s, CPU time: 4118.s
+	
