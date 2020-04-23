@@ -1,9 +1,9 @@
-void run_sim()
+void run_sim(Int_t nEvents = 0)
 {
     TString transport = "TGeant4";
 
-    TString outFile = "sim_show.root";
-    TString parFile = "par_show.root";
+    TString outFile = "sim.root";
+    TString parFile = "par.root";
 
     Bool_t magnet = kTRUE;
     Float_t fieldScale = 1;
@@ -14,7 +14,10 @@ void run_sim()
     TString generator = generator1;
     TString inputFile = "";
 
-    Int_t nEvents = 10;
+    Bool_t fUserPList = false;       // Use of R3B special physics list
+    Bool_t fCalifaDigitizer = true; // Apply hit digitizer task
+    Bool_t fCalifaHitFinder = true; // Apply hit finder task
+
     Bool_t storeTrajectories = kTRUE;
     Int_t randomSeed = 335566; // 0 for time-dependent random numbers
 
@@ -46,6 +49,12 @@ void run_sim()
     run->SetOutputFile(outFile.Data()); // Output file
     FairRuntimeDb* rtdb = run->GetRuntimeDb();
 
+    //  R3B Special Physics List in G4 case
+    if ((fUserPList) && (transport.CompareTo("TGeant4") == 0))
+    {
+        run->SetUserConfig("g4R3bConfig.C");
+        run->SetUserCuts("SetCuts.C");
+    }
     // -----   Create media   -------------------------------------------------
     run->SetMaterials("media_tpc.geo"); // Materials
 
@@ -74,11 +83,12 @@ void run_sim()
     //run->AddModule(new R3BSTaRTra("startra_v16-300_2layers.geo.root", { 0., 0., 20. }));
 
     // CALIFA
-    R3BCalifa* califa = new R3BCalifa("califa_10_v8.11.geo.root");
-    califa->SelectGeometryVersion(10);
+    R3BCalifa* califa = new R3BCalifa("califa_2020.geo.root");
+    califa->SelectGeometryVersion(2020);
     // Selecting the Non-uniformity of the crystals (1 means +-1% max deviation)
-    califa->SetNonUniformity(1.0);
+    Double_t fCalifaNonU = 1.0; // Non-uniformity: 1 means +-1% max deviation
     run->AddModule(califa);
+
 
     // Fi4 detector
     run->AddModule(new R3BFi4("fi4_v17a.geo.root", {-73.274339-TMath::Tan(TMath::DegToRad()*16.7)*100, 0.069976, 513.649524+100.}, {"" ,-90.,16.7,90.}));
@@ -128,11 +138,11 @@ void run_sim()
     if (generator.CompareTo("box") == 0)
     {
         // 2- Define the BOX generator
-        Int_t pdgId = 22;     // pion+ beam
-        Double32_t theta1 = 40; // polar angle distribution
-        Double32_t theta2 = 120.;
-        Double32_t momentum = 0.05;
-        FairBoxGenerator* boxGen = new FairBoxGenerator(pdgId, 5);
+        Int_t pdgId = 2212;     // proton
+        Double32_t theta1 = 0; // polar angle distribution
+        Double32_t theta2 = 1.;
+        Double32_t momentum = 1.;
+        FairBoxGenerator* boxGen = new FairBoxGenerator(pdgId, 1);
         boxGen->SetThetaRange(theta1, theta2);
         boxGen->SetPRange(momentum, momentum * 2.0);
         boxGen->SetPhiRange(0, 360);
@@ -223,6 +233,26 @@ void run_sim()
 
     FairLogger::GetLogger()->SetLogVerbosityLevel("LOW");
     FairLogger::GetLogger()->SetLogScreenLevel("INFO");
+
+    // ----- Initialize CalifaDigitizer task (from Point Level to Cal Level)
+    if (fCalifaDigitizer)
+    {
+        R3BCalifaDigitizer* califaDig = new R3BCalifaDigitizer();
+        califaDig->SetNonUniformity(fCalifaNonU);
+        califaDig->SetExpEnergyRes(6.); // 5. means 5% at 1 MeV
+        califaDig->SetComponentRes(6.);
+        califaDig->SetDetectionThreshold(0.0); // in GeV!! 0.000010 means 10 keV
+        run->AddTask(califaDig);
+    }
+
+    // ----- Initialize Califa HitFinder task (from CrystalCal Level to Hit Level)
+    if (fCalifaHitFinder)
+    {
+        R3BCalifaCrystalCal2Hit* califaHF = new R3BCalifaCrystalCal2Hit();
+        califaHF->SetCrystalThreshold(0.000010);  // in GeV!! 0.000010 means 10 KeV
+        califaHF->SetSquareWindowAlg(0.25, 0.25); //[0.25 around 14.3 degrees, 3.2 for the complete calorimeter]
+        run->AddTask(califaHF);
+    }
 
     // -----   Initialize simulation run   ------------------------------------
     run->Init();

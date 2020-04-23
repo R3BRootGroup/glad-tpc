@@ -23,7 +23,7 @@ void checkAll() {
   Bool_t checkMCTracks=kTRUE; //Defines Histogram for MCTracks
   Bool_t checkPoints=kTRUE; //Defines Histogram for Points
 
-  sprintf(title1,"%s","sim2.root"); //INPUT FILE
+  sprintf(title1,"%s","sim.root"); //INPUT FILE
   TFile *file1 = TFile::Open(title1);
 
   Double_t maxE = 100; //max energy in plots
@@ -98,7 +98,7 @@ void checkAll() {
   Long64_t nevents = TEvt->GetEntries();
   if(textOutput) cout << "INFO:  The number of events is "<< nevents << endl;
 
-  TVector3 momentum;
+  ROOT::Math::PxPyPzMVector momentum;
   Int_t pointsPerEvent = 0;
   Int_t MCtracksPerEvent = 0;
   Int_t primaries = 0;
@@ -142,7 +142,7 @@ void checkAll() {
       for(Int_t h=0;h<MCtracksPerEvent;h++){
 	if(track[h]->GetMotherId()<0){
 	  primaries++;
-	  track[h]->GetMomentum(momentum);
+	  momentum = track[h]->GetMomentumMass();
 	  if(graphicalOutput) {
 	    h1_MC_PDG->Fill(track[h]->GetPdgCode());
 	    h1_MC_Ene->Fill(track[h]->GetEnergy()*1000-track[h]->GetMass()*1000);
@@ -151,7 +151,7 @@ void checkAll() {
 	  }
 	}
 	else{
-	  track[h]->GetMomentum(momentum);
+	  momentum = track[h]->GetMomentumMass();
 	  h1_MC_PDGSec->Fill(track[h]->GetPdgCode());
 	  h1_MC_EneSec->Fill(track[h]->GetEnergy()*1000-track[h]->GetMass()*1000);
 	  h1_MC_ThetaSec->Fill(momentum.Theta());

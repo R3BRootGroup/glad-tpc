@@ -41,8 +41,11 @@ class R3BGTPCLangevin : public FairTask {
 
   /** Set parameters -- To be removed when parameter containers are ready **/
   void SetDriftParameters(Double_t ion, Double_t driftv,
-        Double_t tDiff, Double_t lDiff,
-        Double_t fanoFactor);
+			  Double_t tDiff, Double_t lDiff,
+			  Double_t fanoFactor);
+
+  void SetSizeOfVirtualPad(Double_t size);
+
  protected:
 
   /** Virtual method Init **/

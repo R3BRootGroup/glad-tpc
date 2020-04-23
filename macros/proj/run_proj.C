@@ -3,11 +3,11 @@ void run_proj() {
   timer.Start();
 
   // Input file: simulation
-  TString inFile = "../sim/sim2.root";
+  TString inFile = "../sim/sim.root";
   // Input file: parameters
-  TString parFile = "../sim/par2.root";
+  TString parFile = "../sim/par.root";
   // Output file
-  TString outFile = "proj_borrame.root";
+  TString outFile = "proj.root";
 
   // -----   Create analysis run   ----------------------------------------
   FairRunAna* fRun = new FairRunAna();
@@ -22,6 +22,8 @@ void run_proj() {
   rtdb->print();
 
   R3BGTPCProjector* pro = new R3BGTPCProjector();
+  pro->SetDriftParameters(15.e-9, 0.005, 0.0000001, 0.000001, 2);
+  pro->SetSizeOfVirtualPad(1); //1 means pads of 1cm^2, 10 means pads of 1mm^2, ...
 
   fRun->AddTask(pro);
 

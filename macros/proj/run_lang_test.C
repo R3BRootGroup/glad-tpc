@@ -1,13 +1,13 @@
-void run_CHECKFIELD() {
+void run_lang_test() {
   TStopwatch timer;
   timer.Start();
 
   // Input file: simulation
-  TString inFile = "../sim_test/sim_TOMC_100.root";
+  TString inFile = "../sim/sim.root";
   // Input file: parameters
-  TString parFile = "../sim_test/par_TOMC_100.root";
+  TString parFile = "../sim/par.root";
   // Output file
-  TString outFile = "lang_CHECKFIELD.root";
+  TString outFile = "lang_test.root";
 
   // -----   Create analysis run   ----------------------------------------
   FairRunAna* fRun = new FairRunAna();
@@ -22,6 +22,9 @@ void run_CHECKFIELD() {
   rtdb->print();
 
   R3BGTPCLangevinTest* lantest = new R3BGTPCLangevinTest();
+  lantest->SetDriftParameters(15.e-9, 0.0048, 0.00000216, 0.00000216, 2);
+  lantest->SetSizeOfVirtualPad(100); //1 means pads of 1cm^2, 10 means pads of 1mm^2, ...
+  lantest->SetNumberOfGeneratedElectrons(10);
 
   fRun->AddTask(lantest);
 

@@ -19,10 +19,10 @@ void ana_lang() {
 
   //SETTINGS
   //langevin results
-  sprintf(title1,"%s","lang2.root"); //INPUT FILE 1
+  sprintf(title1,"%s","lang.root"); //INPUT FILE 1
   TFile *file1 = TFile::Open(title1);
   //simple projection results
-  sprintf(title2,"%s","proj2.root"); //INPUT FILE 2
+  sprintf(title2,"%s","proj.root"); //INPUT FILE 2
   TFile *file2 = TFile::Open(title2);
 
   gROOT->SetStyle("Default");

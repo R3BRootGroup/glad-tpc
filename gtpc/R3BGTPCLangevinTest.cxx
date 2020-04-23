@@ -24,6 +24,7 @@ R3BGTPCLangevinTest::R3BGTPCLangevinTest() : FairTask("R3BGTPCLangevinTest") {
   fHalfSizeTPC_Y = 20.;  //
   fHalfSizeTPC_Z = 100.;  //
   fSizeOfVirtualPad = 100.; //1 means pads of 1cm^2, 10 means pads of 1mm^2, ...
+  fNumberOfGeneratedElectrons = 0;  //Number of electrons to generate in each point of the test
 }
 
 R3BGTPCLangevinTest::~R3BGTPCLangevinTest(){
@@ -102,6 +103,14 @@ void R3BGTPCLangevinTest::SetDriftParameters(Double_t ion, Double_t driftv,
   fFanoFactor = fanoFactor; // NOTUSED
 }
 
+void R3BGTPCLangevinTest::SetSizeOfVirtualPad(Double_t size) {
+  fSizeOfVirtualPad = size;  //1 means pads of 1cm^2, 10 means pads of 1mm^2, ...
+}
+
+void R3BGTPCLangevinTest::SetNumberOfGeneratedElectrons(Double_t ele) {
+  fNumberOfGeneratedElectrons = ele;  //Number of electrons to generate in each point of the test
+}
+
 void R3BGTPCLangevinTest::Exec(Option_t*) {
 
   fGTPCProjPoint->Clear("C");
@@ -121,7 +130,6 @@ void R3BGTPCLangevinTest::Exec(Option_t*) {
   Double_t projX, projZ, projTime;
   Double_t timeBeforeDrift = 0.;
   Bool_t virtualPadFound = kFALSE;
-  Int_t generatedElectrons = 0;
   Double_t driftDistance;
   Double_t sigmaLongAtPadPlane;  Double_t sigmaTransvAtPadPlane;
   Int_t evtID;
@@ -141,9 +149,6 @@ void R3BGTPCLangevinTest::Exec(Option_t*) {
   Double_t cteMult = 0; Double_t cteMod = 0; Double_t productEB = 0;
   Double_t sigmaLongStep;  Double_t sigmaTransvStep;  Double_t driftTimeStep;
   Double_t mu = 1.E+5 * fDriftVelocity/E_y;  // [m2 s-1 V-1] TODO check value, move to parameter container
-
-  //number of electrons per grid point
-  generatedElectrons = 0; //1.E+03;
 
   //from create_tpc_geo_test.C (geo in file R3BRoot/glad-tpc/geometry/gladTPC_test.geo.root)
   Double_t TargetOffsetX=40;
@@ -189,9 +194,9 @@ void R3BGTPCLangevinTest::Exec(Option_t*) {
         -sin(-TargetAngle)*(- fHalfSizeTPC_X + gridPoint_x * 5) + cos(-TargetAngle)*(gridPoint_z * 5);
       if(evtID==0) ele_y_init = -fHalfSizeTPC_Y + 2.5; //2.5cm above the padplane
       else if(evtID==1) ele_y_init = - fHalfSizeTPC_Y + 28.5; //28.5cm above the padplane
-      //else if(evtID==2) ele_y_init = TargetOffsetY - fHalfSizeTPC_Y + 15; //15cm above the padplane
-      //else if(evtID==3) ele_y_init = TargetOffsetY - fHalfSizeTPC_Y + 20; //20cm above the padplane
-      //else if(evtID==4) ele_y_init = TargetOffsetY - fHalfSizeTPC_Y + 25; //25cm above the padplane
+      else if(evtID==2) ele_y_init = TargetOffsetY - fHalfSizeTPC_Y + 15; //15cm above the padplane
+      else if(evtID==3) ele_y_init = TargetOffsetY - fHalfSizeTPC_Y + 20; //20cm above the padplane
+      else if(evtID==4) ele_y_init = TargetOffsetY - fHalfSizeTPC_Y + 25; //25cm above the padplane
       else {
 	LOG(INFO) << "Event ID larger than neccesary for the grid test.";
 	return;
@@ -209,7 +214,7 @@ void R3BGTPCLangevinTest::Exec(Option_t*) {
       sigmaTransvAtPadPlane = sqrt(driftDistance*2*fTransDiff/fDriftVelocity);
 
       //ele_x = ele_x_init; ele_y = ele_y_init; ele_z = ele_z_init;
-      for(Int_t ele=0;ele<generatedElectrons;ele++){
+      for(Int_t ele=0;ele<fNumberOfGeneratedElectrons;ele++){
         ele_x = ele_x_init; ele_y = ele_y_init; ele_z = ele_z_init;
 
         //CHECK... COMMENT ME

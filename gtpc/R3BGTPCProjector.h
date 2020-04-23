@@ -22,43 +22,45 @@
  *
  * For each event, get the R3BGTPCPoints and determine the projection on the pad plane
  *   Input:  Branch GTPCPoints = TClonesArray("R3BGTPCPoint")
- *   Output: Branch GTPCProjPoint = TClonesArray("R3BGTPCProjPoint") 
+ *   Output: Branch GTPCProjPoint = TClonesArray("R3BGTPCProjPoint")
  */
 
 class R3BGTPCProjector : public FairTask {
  public:
-  
+
   /** Default constructor **/
-  R3BGTPCProjector();  
-  
+  R3BGTPCProjector();
+
   /** Destructor **/
   ~R3BGTPCProjector();
-  
+
   /** Virtual method Exec **/
   void Exec(Option_t*);
-  
+
   /** Set parameters -- To be removed when parameter containers are ready **/
-  void SetDriftParameters(Double_t ion, Double_t driftv, 
-			  Double_t tDiff, Double_t lDiff, 
+  void SetDriftParameters(Double_t ion, Double_t driftv,
+			  Double_t tDiff, Double_t lDiff,
 			  Double_t fanoFactor);
-  
+
+  void SetSizeOfVirtualPad(Double_t size);
+
  protected:
-  
+
   /** Virtual method Init **/
   InitStatus Init();
-  
+
   /** Virtual method Finish **/
   void Finish();
-  
+
   /** Virtual method SetParContainers **/
   void SetParContainers();
-  
-  TClonesArray* fGTPCPoints;                 
-  TClonesArray* fGTPCProjPoint;  
-  
+
+  TClonesArray* fGTPCPoints;
+  TClonesArray* fGTPCProjPoint;
+
   //R3BGTPCGeoPar* fGTPCGeoPar; //!< Geometry parameter container (TODO)
   //R3BGTPCGasPar* fGTPCGasPar; //!< Gas parameter container (TODO)
-  
+
  private:
 
   //Mapping of  virtualPadID to ProjPoint object pointer

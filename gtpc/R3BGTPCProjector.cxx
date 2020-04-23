@@ -97,6 +97,10 @@ void R3BGTPCProjector::SetDriftParameters(Double_t ion, Double_t driftv,
   fFanoFactor = fanoFactor; //
 }
 
+void R3BGTPCProjector::SetSizeOfVirtualPad(Double_t size) {
+  fSizeOfVirtualPad = size;  //1 means pads of 1cm^2, 10 means pads of 1mm^2, ...
+}
+
 void R3BGTPCProjector::Exec(Option_t*) {
 
   fGTPCProjPoint->Clear("C");

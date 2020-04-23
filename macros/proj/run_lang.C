@@ -1,19 +1,19 @@
-void run_lang_test() {
+void run_lang() {
   TStopwatch timer;
   timer.Start();
 
   // Input file: simulation
-  TString inFile = "../sim/sim_test_100.root";
+  TString inFile = "../sim/sim.root";
   // Input file: parameters
-  TString parFile = "../sim/par_test_100.root";
+  TString parFile = "../sim/par.root";
   // Output file
-  TString outFile = "borrame.root";
+  TString outFile = "lang.root";
 
   // -----   Create analysis run   ----------------------------------------
   FairRunAna* fRun = new FairRunAna();
   fRun->SetSource(new FairFileSource(inFile));
   fRun->SetOutputFile(outFile.Data());
-  
+
   // -----   Runtime database   ---------------------------------------------
   FairRuntimeDb* rtdb = fRun->GetRuntimeDb();
   FairParRootFileIo* parIn = new FairParRootFileIo(kTRUE);
@@ -21,9 +21,11 @@ void run_lang_test() {
   rtdb->setFirstInput(parIn);
   rtdb->print();
 
-  R3BGTPCLangevinTest* lantest = new R3BGTPCLangevinTest();
+  R3BGTPCLangevin* lan = new R3BGTPCLangevin();
+  lan->SetDriftParameters(15.e-9, 0.005, 0.0000001, 0.000001, 2);
+  lan->SetSizeOfVirtualPad(1); //1 means pads of 1cm^2, 10 means pads of 1mm^2, ...
 
-  fRun->AddTask(lantest);
+  fRun->AddTask(lan);
 
   fRun->Init();
   fRun->Run(0, 0);

@@ -43,6 +43,10 @@ class R3BGTPCLangevinTest : public FairTask {
   void SetDriftParameters(Double_t ion, Double_t driftv,
         Double_t tDiff, Double_t lDiff,
         Double_t fanoFactor);
+
+  void SetSizeOfVirtualPad(Double_t size);
+  void SetNumberOfGeneratedElectrons(Double_t ele);
+
  protected:
 
   /** Virtual method Init **/
@@ -74,6 +78,8 @@ class R3BGTPCLangevinTest : public FairTask {
   Double_t fHalfSizeTPC_Y; //!< Half size Y of the TPC drift volume [cm]
   Double_t fHalfSizeTPC_Z; //!< Half size Z of the TPC drift volume [cm]
   Double_t fSizeOfVirtualPad;  //!< Number of virtual pad division per cm (default 1)
+
+  Int_t fNumberOfGeneratedElectrons;  //!< Number of electrons to generate in each point of the test
 
   ClassDef(R3BGTPCLangevinTest, 1)
 };
