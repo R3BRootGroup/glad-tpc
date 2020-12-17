@@ -30,6 +30,7 @@ set(SRCS
 #Put here your sourcefiles
 R3BGTPC.cxx
 R3BGTPCSetup.cxx
+R3BGHYDRASetup.cxx
 R3BGTPCProjector.cxx
 R3BGTPCLangevin.cxx
 R3BGTPCLangevinTest.cxx

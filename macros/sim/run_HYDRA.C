@@ -1,0 +1,251 @@
+void run_HYDRA(Int_t nEvents = 0)
+{
+    TString transport = "TGeant4";
+
+    TString outFile = "sim.root";
+    TString parFile = "par.root";
+
+    Bool_t magnet = kTRUE;
+    Float_t fieldScale = 1;
+
+    TString generator1 = "box";
+    TString generator2 = "ascii";
+    TString generator3 = "r3b"; 
+    TString generator = generator1;
+    TString inputFile = "";
+
+    Bool_t storeTrajectories = kTRUE;
+    Int_t randomSeed = 335566; // 0 for time-dependent random numbers
+
+    // Target type
+    TString target1 = "LeadTarget";
+    TString target2 = "Para";
+    TString target3 = "Para45";
+    TString target4 = "LiH";
+    TString targetType = target4;
+
+    // ------------------------------------------------------------------------
+    // Stable part ------------------------------------------------------------
+
+    TString dir = getenv("VMCWORKDIR");
+    char str[1000];
+    sprintf(str, "GEOMPATH=%s/glad-tpc/geometry", dir.Data());
+    putenv(str);
+
+    // ----    Debug option   -------------------------------------------------
+    gDebug = 0;
+
+    // -----   Timer   --------------------------------------------------------
+    TStopwatch timer;
+    timer.Start();
+
+    // -----   Create simulation run   ----------------------------------------
+    FairRunSim* run = new FairRunSim();
+    run->SetName(transport);            // Transport engine
+    run->SetOutputFile(outFile.Data()); // Output file
+    FairRuntimeDb* rtdb = run->GetRuntimeDb();
+
+    // -----   Create media   -------------------------------------------------
+    run->SetMaterials("media_tpc.geo"); // Materials
+
+    // -----   Create R3B geometry --------------------------------------------
+    // R3B Cave definition
+    FairModule* cave = new R3BCave("CAVE");
+    cave->SetGeometryFileName("r3b_cave.geo");
+    run->AddModule(cave);
+
+    // To skip the detector comment out the line with: run->AddModule(...
+
+    // Target
+    //run->AddModule(new R3BTarget(targetType, "target_" + targetType + ".geo.root"));
+
+    // GLAD
+    run->AddModule(new R3BGladMagnet("glad_v17_flange.geo.root")); // GLAD should not be moved or rotated
+
+    // --- GLAD-TPC detectors ---
+    //run->AddModule(new R3BGTPC("gladTPC_v1.geo.root"));
+		run->AddModule(new R3BGTPC("HYDRA_v1.geo.root"));
+    //run->AddModule(new R3BGTPC("gladTPC_v1.geo.root", { 0, 0, -100. }, { "", -90., +0., 90. }));
+
+    // -----   Create R3B  magnetic field ----------------------------------------
+    // NB: <D.B>
+    // If the Global Position of the Magnet is changed
+    // the Field Map has to be transformed accordingly
+    R3BGladFieldMap* magField = new R3BGladFieldMap("R3BGladMap");
+    magField->SetScale(fieldScale);
+
+    if (magnet == kTRUE)
+    {
+        run->SetField(magField);
+    }
+    else
+    {
+        run->SetField(NULL);
+    }
+
+    // -----   Create PrimaryGenerator   --------------------------------------
+    // 1 - Create the Main API class for the Generator
+    FairPrimaryGenerator* primGen = new FairPrimaryGenerator();
+
+    if (generator.CompareTo("box") == 0)
+    {
+        // 2- Define the BOX generator
+        Int_t pdgId = 2212;     // proton
+        Double32_t theta1 = 0; // polar angle distribution
+        Double32_t theta2 = 1.;
+        Double32_t momentum = 1.;
+        FairBoxGenerator* boxGen = new FairBoxGenerator(pdgId, 1);
+        boxGen->SetThetaRange(theta1, theta2);
+        boxGen->SetPRange(momentum, momentum * 2.0);
+        boxGen->SetPhiRange(0, 360);
+        boxGen->SetXYZ(0.0, 0.0, -1.5);
+        primGen->AddGenerator(boxGen);
+				//Define C12 Beam
+				double MC = 11200.0;//12u->1u=931.50*MeV/c^2
+		 		Double_t TC = 12*1900;//1.9*GeV/A
+				Double_t EC = MC + TC;
+				Double_t PC_abs = sqrt(TC*(TC+2.0*MC));
+				//TLorentzVector PC(0, 0, PC_abs, EC);
+
+				//R3BIonGenerator(Int_t z, Int_t a, Int_t q, Int_t mult, Double_t px, Double_t py, Double_t pz)
+ 				R3BIonGenerator* ionGen = new R3BIonGenerator(6, 12, 0, 1, 0., 0., PC_abs);
+				ionGen->SetMass(MC);
+        ionGen->SetSpotRadius(0.1, -300., 0.);//?????
+        //primGen->AddGenerator(ionGen);
+
+        /*FairBoxGenerator* boxGen2 = new FairBoxGenerator(-pdgId, 1);// pion- beam
+        boxGen2->SetThetaRange(theta1, theta2);
+        boxGen2->SetPRange(momentum, momentum * 20.);
+        boxGen2->SetPhiRange(0, 360);
+        boxGen2->SetXYZ(0.0, 0.0, -1.5);
+        primGen->AddGenerator(boxGen2);
+*/
+        // neutrons
+        FairBoxGenerator* boxGen_n = new FairBoxGenerator(2112, 3);
+        boxGen_n->SetThetaRange(theta1, theta2);
+        boxGen_n->SetPRange(momentum, momentum * 1.2);
+        boxGen_n->SetPhiRange(0, 360);
+        boxGen_n->SetXYZ(0.0, 0.0, -1.5);
+        //primGen->AddGenerator(boxGen_n);
+    }
+
+    if (generator.CompareTo("ascii") == 0)
+    {
+        R3BAsciiGenerator* gen = new R3BAsciiGenerator((dir + "/input/" + inputFile).Data());
+        primGen->AddGenerator(gen);
+    }
+
+    if (generator.CompareTo("r3b") == 0)
+    {
+        Int_t pdg = 2212;
+        Float_t beamEnergy = 1.;
+        R3BSpecificGenerator* pR3bGen = new R3BSpecificGenerator(pdg, beamEnergy);
+
+        // R3bGen properties
+        pR3bGen->SetBeamInteractionFlag("off");
+        pR3bGen->SetBeamInteractionFlag("off");
+        pR3bGen->SetRndmFlag("off");
+        pR3bGen->SetRndmEneFlag("off");
+        pR3bGen->SetBoostFlag("off");
+        pR3bGen->SetReactionFlag("on");
+        pR3bGen->SetGammasFlag("off");
+        pR3bGen->SetDecaySchemeFlag("off");
+        pR3bGen->SetDissociationFlag("off");
+        pR3bGen->SetBackTrackingFlag("off");
+        pR3bGen->SetSimEmittanceFlag("off");
+
+        // R3bGen Parameters
+        pR3bGen->SetSigmaBeamEnergy(1.e-03); // Sigma(Ebeam) GeV
+        pR3bGen->SetEnergyPrim(0.3);         // Particle Energy in MeV
+        Int_t fMultiplicity = 50;
+        pR3bGen->SetNumberOfParticles(fMultiplicity); // Mult.
+
+        // Reaction type
+        //        1: "Elas"
+        //        2: "iso"
+        //        3: "Trans"
+        pR3bGen->SetReactionType("Elas");
+
+        // Target  type
+        //        1: "LeadTarget"
+        //        2: "Parafin0Deg"
+        //        3: "Parafin45Deg"
+        //        4: "LiH"
+
+        pR3bGen->SetTargetType(targetType.Data());
+        Double_t thickness = (0.11 / 2.) / 10.;         // cm
+        pR3bGen->SetTargetHalfThicknessPara(thickness); // cm
+        pR3bGen->SetTargetThicknessLiH(3.5);            // cm
+        pR3bGen->SetTargetRadius(1.);                   // cm
+
+        pR3bGen->SetSigmaXInEmittance(1.);          // cm
+        pR3bGen->SetSigmaXPrimeInEmittance(0.0001); // cm
+
+        // Dump the User settings
+        pR3bGen->PrintParameters();
+        primGen->AddGenerator(pR3bGen);
+    }
+
+    run->SetGenerator(primGen);
+
+    run->SetStoreTraj(storeTrajectories);
+
+    FairLogger::GetLogger()->SetLogVerbosityLevel("LOW");
+    FairLogger::GetLogger()->SetLogScreenLevel("INFO");
+
+
+    // -----   Initialize simulation run   ------------------------------------
+    run->Init();
+    TVirtualMC::GetMC()->SetRandom(new TRandom3(randomSeed));
+
+    // ------  Increase nb of step for CALO
+    Int_t nSteps = -15000;
+    TVirtualMC::GetMC()->SetMaxNStep(nSteps);
+
+    // -----   Runtime database   ---------------------------------------------
+    R3BFieldPar* fieldPar = (R3BFieldPar*)rtdb->getContainer("R3BFieldPar");
+    if (NULL != magField)
+    {
+        fieldPar->SetParameters(magField);
+        fieldPar->setChanged();
+    }
+    Bool_t kParameterMerged = kTRUE;
+    FairParRootFileIo* parOut = new FairParRootFileIo(kParameterMerged);
+    parOut->open(parFile.Data());
+    rtdb->setOutput(parOut);
+    rtdb->saveOutput();
+    rtdb->print();
+
+
+    // -----   Start run   ----------------------------------------------------
+    if (nEvents > 0)
+    {
+        run->Run(nEvents);
+    }
+
+    // -----   Finish   -------------------------------------------------------
+    timer.Stop();
+    Double_t rtime = timer.RealTime();
+    Double_t ctime = timer.CpuTime();
+    cout << endl << endl;
+    cout << "Macro finished succesfully." << endl;
+    cout << "Output file is " << outFile << endl;
+    cout << "Parameter file is " << parFile << endl;
+    cout << "Real time " << rtime << " s, CPU time " << ctime << "s" << endl << endl;
+
+    cout << " Test passed" << endl;
+    cout << " All ok " << endl;
+
+    // Snap a picture of the geometry
+    // If this crashes, set "OpenGL.SavePicturesViaFBO: no" in your .rootrc
+
+/*
+    gStyle->SetCanvasPreferGL(kTRUE);
+    gGeoManager->GetTopVolume()->Draw("ogl");
+    TGLViewer* v = (TGLViewer*)gPad->GetViewer3D();
+    v->SetStyle(TGLRnrCtx::kOutline);
+    v->RequestDraw();
+    v->SavePicture("run_sim-side.png");
+    v->SetPerspectiveCamera(TGLViewer::kCameraPerspXOZ, 25., 0, 0, -90. * TMath::DegToRad(), 0. * TMath::DegToRad());
+    v->SavePicture("run_sim-top.png");*/
+}
