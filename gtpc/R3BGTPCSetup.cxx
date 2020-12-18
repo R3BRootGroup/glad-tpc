@@ -15,7 +15,8 @@ R3BGTPCSetup::~R3BGTPCSetup(){
 void R3BGTPCSetup::ReadConfigurationFile(string Config,int verbose) {
   string LineBuffer;
   string DataBuffer;
-  
+
+  // --------------------------------------------------------------------------
   bool cTargetRadius       = false;
   bool cTargetLength       = false;
   bool cChamberInnerRadius     = false;

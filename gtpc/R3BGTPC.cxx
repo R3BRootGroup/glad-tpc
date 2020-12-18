@@ -206,8 +206,8 @@ Bool_t R3BGTPC::CheckIfSensitive(std::string name) {
   LOG(INFO) << "R3BGTPC::CheckIfSensitive " << name;
 
   if(TString(name).Contains("GTPCGas")) {
-    return kTRUE;
-  }
+    																			return kTRUE;
+  																				}
   return kFALSE;
 }
 

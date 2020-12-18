@@ -21,6 +21,8 @@ class R3BGTPCSetup:public TObject {
   void ReadConfigurationFile(string,int);
   inline TString GetOutputFileName() {return OutputFileName;}
 
+  //---------------------------------------------------------------------------
+
   inline double GetTargetLength() {return TargetLength;}
   inline double GetTargetRadius() {return TargetRadius;}
   inline double GetChamberInnerRadius() {return ChamberInnerRadius;}
@@ -57,6 +59,12 @@ class R3BGTPCSetup:public TObject {
  protected:
   
   //initial conditions
+
+  //Defined by Simone----------------------------------------------------------
+  double ActiveRegionx, ActiveRegiony, ActiveRegionz;
+
+  //---------------------------------------------------------------------------
+
   double TargetRadius, TargetLength, ChamberInnerRadius, ChamberThickness;
   double ChamberLength, InnerRohacellThickness, KaptonThickness, OuterRohacellThickness;
   double TPCRadiusExt, WindowThickness;
