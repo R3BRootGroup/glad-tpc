@@ -15,7 +15,7 @@ R3BGHYDRASetup::~R3BGHYDRASetup(){
 void R3BGHYDRASetup::ReadConfigurationFile(string Config,int verbose) {
   string LineBuffer;
   string DataBuffer;
-  //Defined by Simone----------------------------------------------------------
+
 	bool cTargetRadius       = false;
   bool cTargetLength       = false;
   bool cTargetAngle        = false;
@@ -253,7 +253,7 @@ void R3BGHYDRASetup::ReadConfigurationFile(string Config,int verbose) {
 }
 
 void R3BGHYDRASetup::Print() {
-  //Defined by Simone----------------------------------------------------------
+
   cout << "TargetRadius = " << TargetRadius<<" cm"<<endl;
   cout << "TargetLength = " << TargetLength<<" cm"<<endl;
   cout << "TargetAngle = " << TargetAngle<<" deg"<<endl;
