@@ -1,10 +1,10 @@
-//____Target
+//____Target, not sure about Target Offset Z could be 20 cm more upstream TODO
 TargetRadius 0.25
 TargetLength 5.
 TargetAngle 0.
-TargetOffsetX -10.9
+TargetOffsetX -11.5
 TargetOffsetY 0.
-TargetOffsetZ -92.
+TargetOffsetZ -94.5
 //____Window
 Windowx 0.005
 Windowy 21.9

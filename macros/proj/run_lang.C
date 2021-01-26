@@ -1,40 +1,60 @@
-void run_lang() {
-  TStopwatch timer;
-  timer.Start();
+void run_lang(TString GEOTAG = "Prototype")
+{
+    TStopwatch timer;
+    timer.Start();
 
-  // Input file: simulation
-  TString inFile = "../sim/sim.root";
-  // Input file: parameters
-  TString parFile = "../sim/par.root";
-  // Output file
-  TString outFile = "lang.root";
+    // Input file: simulation
+    TString inFile;
+    // Input file: parameters
+    TString parFile;
+    // Output file
+    TString outFile;
 
-  // -----   Create analysis run   ----------------------------------------
-  FairRunAna* fRun = new FairRunAna();
-  fRun->SetSource(new FairFileSource(inFile));
-  fRun->SetOutputFile(outFile.Data());
+    // Input and outup file according to the GEOTAG
+    if (GEOTAG.CompareTo("Prototype") == 0)
+    {
+        cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
+        inFile = "../sim/Prototype/sim.root" parFile = "../sim/Prototype/par.root" outFile = "./Prototype/lang.root"
+    }
+    if (GEOTAG.CompareTo("Fullv1") == 0)
+    {
+        cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
+        inFile = "../sim/Fullv1/sim.root" parFile = "../sim/Fullv1/par.root" outFile = "./Fullv1/lang.root"
+    }
+    if (GEOTAG.CompareTo("Fullv2") == 0)
+    {
+        cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
+        inFile = "../sim/Fullv2/sim.root" parFile = "../sim/Fullv2/par.root" outFile = "./Fullv2/lang.root"
+    }
+    else
+        exit(0);
 
-  // -----   Runtime database   ---------------------------------------------
-  FairRuntimeDb* rtdb = fRun->GetRuntimeDb();
-  FairParRootFileIo* parIn = new FairParRootFileIo(kTRUE);
-  parIn->open(parFile.Data());
-  rtdb->setFirstInput(parIn);
-  rtdb->print();
+    // -----   Create analysis run   ----------------------------------------
+    FairRunAna* fRun = new FairRunAna();
+    fRun->SetSource(new FairFileSource(inFile));
+    fRun->SetOutputFile(outFile.Data());
 
-  R3BGTPCLangevin* lan = new R3BGTPCLangevin();
-  lan->SetDriftParameters(15.e-9, 0.005, 0.0000001, 0.000001, 2);
-  lan->SetSizeOfVirtualPad(1); //1 means pads of 1cm^2, 10 means pads of 1mm^2, ...
+    // -----   Runtime database   ---------------------------------------------
+    FairRuntimeDb* rtdb = fRun->GetRuntimeDb();
+    FairParRootFileIo* parIn = new FairParRootFileIo(kTRUE);
+    parIn->open(parFile.Data());
+    rtdb->setFirstInput(parIn);
+    rtdb->print();
 
-  fRun->AddTask(lan);
+    R3BGTPCLangevin* lan = new R3BGTPCLangevin();
+    lan->SetDriftParameters(15.e-9, 0.005, 0.0000001, 0.000001, 2);
+    lan->SetSizeOfVirtualPad(1); // 1 means pads of 1cm^2, 10 means pads of 1mm^2, ...
 
-  fRun->Init();
-  fRun->Run(0, 0);
-  delete fRun;
+    fRun->AddTask(lan);
 
-  timer.Stop();
+    fRun->Init();
+    fRun->Run(0, 0);
+    delete fRun;
 
-  cout << "Macro finished succesfully!" << endl;
-  cout << "Output file writen: " << outFile << endl;
-  cout << "Parameter file writen: " << parFile << endl;
-  cout << "Real time: " << timer.RealTime() << "s, CPU time: " << timer.CpuTime() << "s" << endl;
+    timer.Stop();
+
+    cout << "Macro finished succesfully!" << endl;
+    cout << "Output file writen: " << outFile << endl;
+    cout << "Parameter file writen: " << parFile << endl;
+    cout << "Real time: " << timer.RealTime() << "s, CPU time: " << timer.CpuTime() << "s" << endl;
 }

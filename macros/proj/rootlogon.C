@@ -1,7 +1,6 @@
 
 {
-  gSystem->Load("libR3BGTPC");
+    gSystem->Load("libR3BGTPC");
 
-  cout << "[INFO] projection macros directory for glad-tpc" << endl;
+    cout << "[INFO] projection macros directory for glad-tpc" << endl;
 }
-

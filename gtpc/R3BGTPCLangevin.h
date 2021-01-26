@@ -11,12 +11,11 @@
 #ifndef R3BGTPCLANGEVIN_H
 #define R3BGTPCLANGEVIN_H
 
-#include "TClonesArray.h"
 #include "FairTask.h"
-#include "R3BGTPCProjPoint.h"
 #include "R3BGTPCPoint.h"
+#include "R3BGTPCProjPoint.h"
+#include "TClonesArray.h"
 #include "TVirtualMC.h"
-
 
 /**
  * GTPC drift calculation using Langevin equation task
@@ -27,58 +26,54 @@
  *   Output: Branch GTPCProjPoint = TClonesArray("R3BGTPCProjPoint")
  */
 
-class R3BGTPCLangevin : public FairTask {
- public:
+class R3BGTPCLangevin : public FairTask
+{
+  public:
+    /** Default constructor **/
+    R3BGTPCLangevin();
 
-  /** Default constructor **/
-  R3BGTPCLangevin();
+    /** Destructor **/
+    ~R3BGTPCLangevin();
 
-  /** Destructor **/
-  ~R3BGTPCLangevin();
+    /** Virtual method Exec **/
+    void Exec(Option_t*);
 
-  /** Virtual method Exec **/
-  void Exec(Option_t*);
+    /** Set parameters -- To be removed when parameter containers are ready **/
+    void SetDriftParameters(Double_t ion, Double_t driftv, Double_t tDiff, Double_t lDiff, Double_t fanoFactor);
 
-  /** Set parameters -- To be removed when parameter containers are ready **/
-  void SetDriftParameters(Double_t ion, Double_t driftv,
-			  Double_t tDiff, Double_t lDiff,
-			  Double_t fanoFactor);
+    void SetSizeOfVirtualPad(Double_t size);
 
-  void SetSizeOfVirtualPad(Double_t size);
+  protected:
+    /** Virtual method Init **/
+    InitStatus Init();
 
- protected:
+    /** Virtual method Finish **/
+    void Finish();
 
-  /** Virtual method Init **/
-  InitStatus Init();
+    /** Virtual method SetParContainers **/
+    void SetParContainers();
 
-  /** Virtual method Finish **/
-  void Finish();
+    TClonesArray* fGTPCPoints;
+    TClonesArray* fGTPCProjPoint;
 
-  /** Virtual method SetParContainers **/
-  void SetParContainers();
+    // R3BGTPCGeoPar* fGTPCGeoPar; //!< Geometry parameter container (TODO)
+    // R3BGTPCGasPar* fGTPCGasPar; //!< Gas parameter container (TODO)
 
-  TClonesArray* fGTPCPoints;
-  TClonesArray* fGTPCProjPoint;
+  private:
+    // Mapping of  virtualPadID to ProjPoint object pointer
+    // std::map<Int_t, R3BGTPCProjPoint*> fProjPointMap;
 
-  //R3BGTPCGeoPar* fGTPCGeoPar; //!< Geometry parameter container (TODO)
-  //R3BGTPCGasPar* fGTPCGasPar; //!< Gas parameter container (TODO)
+    Double_t fEIonization;      //!< Effective ionization energy of gas [eV]
+    Double_t fDriftVelocity;    //!< Drift velocity in gas [cm/ns]
+    Double_t fTransDiff;        //!< Transversal diffusion coefficient [cm^2/ns]
+    Double_t fLongDiff;         //!< Longitudinal diffusion coefficient [cm^2/ns]
+    Double_t fFanoFactor;       //!< Fano factor to calculate electron number fluctuations
+    Double_t fHalfSizeTPC_X;    //!< Half size X of the TPC drift volume [cm]
+    Double_t fHalfSizeTPC_Y;    //!< Half size Y of the TPC drift volume [cm]
+    Double_t fHalfSizeTPC_Z;    //!< Half size Z of the TPC drift volume [cm]
+    Double_t fSizeOfVirtualPad; //!< Number of virtual pad division per cm (default 1)
 
- private:
-
-  //Mapping of  virtualPadID to ProjPoint object pointer
-  //std::map<Int_t, R3BGTPCProjPoint*> fProjPointMap;
-
-  Double_t fEIonization;   //!< Effective ionization energy of gas [eV]
-  Double_t fDriftVelocity; //!< Drift velocity in gas [cm/ns]
-  Double_t fTransDiff;     //!< Transversal diffusion coefficient [cm^2/ns]
-  Double_t fLongDiff;      //!< Longitudinal diffusion coefficient [cm^2/ns]
-  Double_t fFanoFactor;    //!< Fano factor to calculate electron number fluctuations
-  Double_t fHalfSizeTPC_X; //!< Half size X of the TPC drift volume [cm]
-  Double_t fHalfSizeTPC_Y; //!< Half size Y of the TPC drift volume [cm]
-  Double_t fHalfSizeTPC_Z; //!< Half size Z of the TPC drift volume [cm]
-  Double_t fSizeOfVirtualPad;  //!< Number of virtual pad division per cm (default 1)
-
-  ClassDef(R3BGTPCLangevin, 1)
+    ClassDef(R3BGTPCLangevin, 1)
 };
 
 #endif // R3BGTPCLANGEVIN_H

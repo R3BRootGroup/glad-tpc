@@ -1,7 +1,6 @@
 
 {
-  gSystem->Load("libR3BGTPC");
+    gSystem->Load("libR3BGTPC");
 
-  cout << "[INFO] simulation macros directory for glad-tpc" << endl;
+    cout << "[INFO] simulation macros directory for glad-tpc" << endl;
 }
-
