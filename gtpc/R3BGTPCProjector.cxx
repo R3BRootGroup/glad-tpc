@@ -87,7 +87,7 @@ InitStatus R3BGTPCProjector::Init()
          fCoefL    = fPar->GetCoefDiffusionLong()*sqrt(10.);  // [cm^(-1/2)] to [mm^(-1/2)]
     */
 
-    R3BGTPCSetup* setup = new R3BGTPCSetup(1);
+    R3BGTPCSetup* setup = new R3BGTPCSetup("Prototype",1);
     fHalfSizeTPC_X = setup->GetTPCLx() / 2.;
     fHalfSizeTPC_Y = setup->GetTPCLy() / 2.;
     fHalfSizeTPC_Z = setup->GetTPCLz() / 2.;
