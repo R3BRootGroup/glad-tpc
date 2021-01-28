@@ -14,17 +14,17 @@ void simHYDRA(Int_t nEvents = 0, TString GEOTAG = "Prototype")//n. events and GE
     {
         cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
         inputFile =
-            "/home/simone/Programs/R3B/R3BRoot/glad-tpc/gtpcgen/ASCII/input" + GEOTAG + "_3LH.dat";
+            "../../gtpcgen/ASCII/input" + GEOTAG + "_3LH.dat";
         outFile="./Prototype/sim.root";
         parFile="./Prototype/par.root";
 
     }
-        
+
     if (GEOTAG.CompareTo("Fullv1") == 0)
     {
         cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
         inputFile =
-            "/home/simone/Programs/R3B/R3BRoot/glad-tpc/gtpcgen/ASCII/input" + GEOTAG + "_3LH.dat";
+            "../../gtpcgen/ASCII/input" + GEOTAG + "_3LH.dat";
         parFile="./Fullv1/par.root";
         outFile="./Fullv1/sim.root";
 
@@ -33,7 +33,7 @@ void simHYDRA(Int_t nEvents = 0, TString GEOTAG = "Prototype")//n. events and GE
     {
         cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
         inputFile =
-            "/home/simone/Programs/R3B/R3BRoot/glad-tpc/gtpcgen/ASCII/input" + GEOTAG + "_3LH.dat";
+            "../../gtpcgen/ASCII/input" + GEOTAG + "_3LH.dat";
         parFile="./Fullv2/par.root";
         outFile="./Fullv2/sim.root";
 
@@ -79,9 +79,9 @@ void simHYDRA(Int_t nEvents = 0, TString GEOTAG = "Prototype")//n. events and GE
     run->AddModule(new R3BGladMagnet("glad_v17_flange.geo.root")); // GLAD should not be moved or rotated
 
     // --- GLAD-TPC detectors ---
-    if (GEOTAG.CompareTo("Prototype") == 0)	run->AddModule(new R3BGTPC("HYDRA_Prototype.geo.root")); 
-    if (GEOTAG.CompareTo("Fullv1") == 0)		run->AddModule(new R3BGTPC("HYDRA_Fullv1.geo.root"));    
-    if (GEOTAG.CompareTo("Fullv2") == 0)		run->AddModule(new R3BGTPC("HYDRA_Fullv2.geo.root"));            
+    if (GEOTAG.CompareTo("Prototype") == 0)	run->AddModule(new R3BGTPC("HYDRA_Prototype.geo.root"));
+    if (GEOTAG.CompareTo("Fullv1") == 0)		run->AddModule(new R3BGTPC("HYDRA_Fullv1.geo.root"));
+    if (GEOTAG.CompareTo("Fullv2") == 0)		run->AddModule(new R3BGTPC("HYDRA_Fullv2.geo.root"));
 
     // -----   Create R3B  magnetic field ----------------------------------------
     // NB: <D.B>
