@@ -33,8 +33,6 @@ R3BGTPCSetup.cxx
 R3BGTPCProjector.cxx
 R3BGTPCLangevin.cxx
 R3BGTPCLangevinTest.cxx
-#Defined by Simone
-R3BGTPCSetup.cxx
 #R3BGTPCHitPar.cxx
 #R3BGTPCCalPar.cxx
 #R3BGTPCMappedPar.cxx

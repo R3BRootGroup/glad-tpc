@@ -7,15 +7,14 @@ void simHYDRA(Int_t nEvents = 0, TString GEOTAG = "Prototype")//n. events and GE
 
     Bool_t magnet = kTRUE;
     Float_t fieldScale = 1;
-    // An example of different generators can be find in run_sim.C
     TString generator = "ascii";
-    TString inputFile;	//Probably I'll need to have different input file for the different generator
+    TString inputFile;
 
  if (GEOTAG.CompareTo("Prototype") == 0)
     {
         cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
         inputFile =
-            "/home/simone/Programs/R3B/R3BRoot/glad-tpc/gtpcdata/PrimaryGenerators/ASCII/input" + GEOTAG + "_3LH.dat";
+            "/home/simone/Programs/R3B/R3BRoot/glad-tpc/gtpcgen/ASCII/input" + GEOTAG + "_3LH.dat";
         outFile="./Prototype/sim.root";
         parFile="./Prototype/par.root";
 
@@ -25,7 +24,7 @@ void simHYDRA(Int_t nEvents = 0, TString GEOTAG = "Prototype")//n. events and GE
     {
         cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
         inputFile =
-            "/home/simone/Programs/R3B/R3BRoot/glad-tpc/gtpcdata/PrimaryGenerators/ASCII/input" + GEOTAG + "_3LH.dat";
+            "/home/simone/Programs/R3B/R3BRoot/glad-tpc/gtpcgen/ASCII/input" + GEOTAG + "_3LH.dat";
         parFile="./Fullv1/par.root";
         outFile="./Fullv1/sim.root";
 
@@ -34,7 +33,7 @@ void simHYDRA(Int_t nEvents = 0, TString GEOTAG = "Prototype")//n. events and GE
     {
         cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
         inputFile =
-            "/home/simone/Programs/R3B/R3BRoot/glad-tpc/gtpcdata/PrimaryGenerators/ASCII/input" + GEOTAG + "_3LH.dat";
+            "/home/simone/Programs/R3B/R3BRoot/glad-tpc/gtpcgen/ASCII/input" + GEOTAG + "_3LH.dat";
         parFile="./Fullv2/par.root";
         outFile="./Fullv2/sim.root";
 
