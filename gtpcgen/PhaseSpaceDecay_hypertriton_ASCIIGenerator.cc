@@ -2,6 +2,7 @@
  AUTHOR: SIMONE VELARDITA
  Creation date:27-Jan-2021
  HOW TO USE
+ Choose the right detector for GEOTAG
  root [0] .L PhaseSpaceDecay_hypertriton_ASCIIGenerator.cc+
  root [1] GenerateInputTree_PhaseSpaceDecay()*/
 
@@ -29,6 +30,17 @@ To create the ASCII file for R3BROOT everything must be in [ns], [cm] and [GeV]
 #include <stdlib.h> /* exit, EXIT_FAILURE */
 #include <string>
 #include <vector>
+//Loading bar
+#define PBSTR "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
+#define PBWIDTH 60
+void loadfunction(double &percentage)
+{
+    int val = (int) (percentage * 100);
+    int lpad = (int) (percentage * PBWIDTH);
+    int rpad = PBWIDTH - lpad;
+    printf("\r%3d%% [%.*s%*s]", val, lpad, PBSTR, rpad, "");
+    fflush(stdout);
+}
 
 using namespace std;
 
@@ -44,9 +56,9 @@ void GenerateInputTree_PhaseSpaceDecay()
     const char* geoTag2 = "Fullv2";
     GEOTAG = std::string(geoTag);
     // Number of total decays 
-    const int neve = 10000;
+    const int neve = 10000; //select the total number of events that you need
 		
-		//Parameters
+		//Decayed particles characteristics
     TRandom3 r3(0), E(0);
     const Int_t Abeam = 3;
     const Int_t Afrag = 3;
@@ -60,9 +72,9 @@ void GenerateInputTree_PhaseSpaceDecay()
     // Init Phase Space Decay
     double Mbeam = 2.99214; // 3LH -> D.H.Davis Nucl. Phys. A 754 (2006) 3
     TGenPhaseSpace Decay;
-
+		//output file
     ofstream asciifile;
-    //Target position according to the different detector
+    //Target position according to the different detectors
     TVector3 TargetPosition;
     if (GEOTAG == "Prototype")
     {
@@ -92,9 +104,8 @@ void GenerateInputTree_PhaseSpaceDecay()
     //____________________________________________________
     for (int i = 0; i < neve; ++i)
     {
-
-        if (i % 1000 == 0)
-            cout << "Event n. " << i << endl;
+    		double percentage=i/10000.;//neve has to be a double
+				loadfunction(percentage);
 
         double sig_E = 0.1344, mean_E = 1.555; //[GeV]
         double E_in = E.Gaus(mean_E, sig_E);
@@ -193,6 +204,7 @@ void GenerateInputTree_PhaseSpaceDecay()
     }
 
     asciifile.close();
+    cout<<"\n"<<endl;
 }
 
 /*

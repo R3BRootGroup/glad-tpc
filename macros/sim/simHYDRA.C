@@ -1,64 +1,79 @@
-void simHYDRA(Int_t nEvents = 0, TString GEOTAG = "Prototype")//n. events and GEOTAG to be definied in run_simHYDRA.c
+void simHYDRA(Int_t nEvents = 0, TString GEOTAG = "Prototype", TString GENERATOR= "good_evt")//n. events and GEOTAG to be definied in run_simHYDRA.c
 {
-    TString transport = "TGeant4";
-
-    TString outFile;
-    TString parFile;
-
-    Bool_t magnet = kTRUE;
-    Float_t fieldScale = 1;
-    TString generator = "ascii";
-    TString inputFile;
+ Bool_t storeTrajectories = kTRUE;
+ Bool_t magnet = kTRUE;
+ Float_t fieldScale = 1;
+    
+ TString transport = "TGeant4";
+ TString generator = GENERATOR;
+ TString inputFile;
+ TString outFile;
+ TString parFile;
 
  if (GEOTAG.CompareTo("Prototype") == 0)
     {
         cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
-        inputFile =
-            "../../gtpcgen/ASCII/input" + GEOTAG + "_3LH.dat";
         outFile="./Prototype/sim.root";
         parFile="./Prototype/par.root";
-
+        //for the output there is no distinction between generators because in the future I will use only one
+        if (generator.CompareTo("good_evt") == 0)
+        {
+         inputFile ="../../gtpcgen/ASCII/input" + GEOTAG + "_3LH.dat";
+        }
+        if (generator.CompareTo("bkg_evt") == 0)
+        {
+         inputFile ="../../gtpcgen/ASCII/input" + GEOTAG + "_bkg.dat";
+        }
     }
 
-    if (GEOTAG.CompareTo("Fullv1") == 0)
+ if (GEOTAG.CompareTo("Fullv1") == 0)
     {
         cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
-        inputFile =
-            "../../gtpcgen/ASCII/input" + GEOTAG + "_3LH.dat";
         parFile="./Fullv1/par.root";
         outFile="./Fullv1/sim.root";
-
+        if (generator.CompareTo("good_evt") == 0)
+        {
+         inputFile ="../../gtpcgen/ASCII/input" + GEOTAG + "_3LH.dat";
+        }
+        if (generator.CompareTo("bkg_evt") == 0)
+        {
+         inputFile ="../../gtpcgen/ASCII/input" + GEOTAG + "_bkg.dat";
+        }
     }
-    if (GEOTAG.CompareTo("Fullv2") == 0)
+    
+ if (GEOTAG.CompareTo("Fullv2") == 0)
     {
         cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
-        inputFile =
-            "../../gtpcgen/ASCII/input" + GEOTAG + "_3LH.dat";
         parFile="./Fullv2/par.root";
         outFile="./Fullv2/sim.root";
-
+        if (generator.CompareTo("good_evt") == 0)
+        {
+         inputFile ="../../gtpcgen/ASCII/input" + GEOTAG + "_3LH.dat";
+        }
+        if (generator.CompareTo("bkg_evt") == 0)
+        {
+         inputFile ="../../gtpcgen/ASCII/input" + GEOTAG + "_bkg.dat";
+        }
     }
-    //else exit(0);
 
-    Bool_t storeTrajectories = kTRUE;
-    Int_t randomSeed = 335566; // 0 for time-dependent random numbers
+ Int_t randomSeed = 335566; // 0 for time-dependent random numbers
 
-    // ------------------------------------------------------------------------
-    // Stable part ------------------------------------------------------------
+ // ------------------------------------------------------------------------
+ // Stable part ------------------------------------------------------------
 
-    TString dir = getenv("VMCWORKDIR");
-    char str[1000];
-    sprintf(str, "GEOMPATH=%s/glad-tpc/geometry", dir.Data());
-    putenv(str);
+ TString dir = getenv("VMCWORKDIR");
+ char str[1000];
+ sprintf(str, "GEOMPATH=%s/glad-tpc/geometry", dir.Data());
+ putenv(str);
 
-    // ----    Debug option   -------------------------------------------------
-    gDebug = 0;
+ // ----    Debug option   -------------------------------------------------
+ gDebug = 0;
 
-    // -----   Timer   --------------------------------------------------------
-    TStopwatch timer;
-    timer.Start();
+ // -----   Timer   --------------------------------------------------------
+ TStopwatch timer;
+ timer.Start();
 
-    // -----   Create simulation run   ----------------------------------------
+ // -----   Create simulation run   ----------------------------------------
     FairRunSim* run = new FairRunSim();
     run->SetName(transport);            // Transport engine
     run->SetOutputFile(outFile.Data()); // Output file
@@ -100,17 +115,11 @@ void simHYDRA(Int_t nEvents = 0, TString GEOTAG = "Prototype")//n. events and GE
     }
 
     // -----   Create PrimaryGenerator   --------------------------------------
-    // 1 - Create the Main API class for the Generator
     FairPrimaryGenerator* primGen = new FairPrimaryGenerator();
-
-    if (generator.CompareTo("ascii") == 0)
-    {
-        R3BAsciiGenerator* gen = new R3BAsciiGenerator((inputFile).Data());
-        primGen->AddGenerator(gen);
-    }
+		R3BAsciiGenerator* gen = new R3BAsciiGenerator((inputFile).Data());
+    primGen->AddGenerator(gen);
 
     run->SetGenerator(primGen);
-
     run->SetStoreTraj(storeTrajectories);
 
     FairLogger::GetLogger()->SetLogVerbosityLevel("LOW");
@@ -158,15 +167,15 @@ void simHYDRA(Int_t nEvents = 0, TString GEOTAG = "Prototype")//n. events and GE
     cout << " All ok " << endl;
 
     // Snap a picture of the geometry
-    // If this crashes, set "OpenGL.SavePicturesViaFBO: no" in your .rootrc
-
-    /*
-        gStyle->SetCanvasPreferGL(kTRUE);
+    // If this crashes, set "OpenGL.SavePicturesViaFBO: no" in your .rootrc or just comment
+				gStyle->SetCanvasPreferGL(kTRUE);
         gGeoManager->GetTopVolume()->Draw("ogl");
         TGLViewer* v = (TGLViewer*)gPad->GetViewer3D();
         v->SetStyle(TGLRnrCtx::kOutline);
+   			v->GetClipSet()->SetClipType(TGLClip::EType(1));
         v->RequestDraw();
         v->SavePicture("run_sim-side.png");
-        v->SetPerspectiveCamera(TGLViewer::kCameraPerspXOZ, 25., 0, 0, -90. * TMath::DegToRad(), 0. *
-       TMath::DegToRad()); v->SavePicture("run_sim-top.png");*/
+        //v->SetPerspectiveCamera(TGLViewer::kCameraPerspXOZ, 25., 0, 0, -90. * TMath::DegToRad(), 0. *TMath::DegToRad());
+        v->SetCurrentCamera(TGLViewer::kCameraOrthoXnOZ);
+        v->SavePicture("run_sim-top.png");
 }

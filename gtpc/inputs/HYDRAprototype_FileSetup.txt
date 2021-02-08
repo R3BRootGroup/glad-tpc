@@ -16,7 +16,7 @@ TPCLy 31.4
 TPCLz 47.8
 //____Active Region 
 ActiveRegionx 8.8
-ActiveRegiony 30.4
+ActiveRegiony 29.4
 ActiveRegionz 25.6
 //////////GladAngle -14.
 GladAngle 0.

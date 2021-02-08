@@ -24,20 +24,21 @@ void ana_lang(TString GEOTAG = "Prototype")
     if (GEOTAG.CompareTo("Prototype") == 0)
     {
         cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
-        title1 = "./Prototype/lang.root" title2 = "./Prototype/proj.root"
+        title1 = "./Prototype/lang.root";
+        title2 = "./Prototype/proj.root";
     }
     if (GEOTAG.CompareTo("Fullv1") == 0)
     {
         cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
-        title1 = "./Fullv1/lang.root" title2 = "./Fullv1/proj.root"
+        title1 = "./Fullv1/lang.root";
+        title2 = "./Fullv1/proj.root";
     }
     if (GEOTAG.CompareTo("Fullv2") == 0)
     {
         cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
-        title1 = "./Fullv2/lang.root" title2 = "./Fullv2/proj.root"
+        title1 = "./Fullv2/lang.root";
+        title2 = "./Fullv2/proj.root";
     }
-    else
-        exit(0);
 
     TFile* file1 = TFile::Open(title1); // langevin results
     TFile* file2 = TFile::Open(title2); // simple projection results

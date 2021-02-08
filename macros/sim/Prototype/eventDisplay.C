@@ -14,12 +14,8 @@ void eventDisplay()
     FairEventManager* fMan = new FairEventManager();
     FairMCTracks* Track = new FairMCTracks("Monte-Carlo Tracks");
     FairMCPointDraw* GTPCPoints = new FairMCPointDraw("GTPCPoints", kOrange, kFullSquare);
-    /* R3BHYDRAEventDisplay* HYDRAEvtVis = new R3BHYDRAEventDisplay("R3BHYDRAEventDisplay");
-     fMan->AddTask(HYDRAEvtVis);*/
-
+    
     fMan->AddTask(Track);
-
     fMan->AddTask(GTPCPoints);
-
     fMan->Init();
 }

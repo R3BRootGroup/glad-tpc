@@ -14,20 +14,24 @@ void run_proj(TString GEOTAG = "Prototype")
     if (GEOTAG.CompareTo("Prototype") == 0)
     {
         cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
-        inFile = "../sim/Prototype/sim.root" parFile = "../sim/Prototype/par.root" outFile = "./Prototype/proj.root"
+        inFile = "../sim/Prototype/sim.root";
+        parFile = "../sim/Prototype/par.root"; 
+        outFile = "./Prototype/proj.root";
     }
     if (GEOTAG.CompareTo("Fullv1") == 0)
     {
         cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
-        inFile = "../sim/Fullv1/sim.root" parFile = "../sim/Fullv1/par.root" outFile = "./Fullv1/proj.root"
+        inFile = "../sim/Fullv1/sim.root";
+        parFile = "../sim/Fullv1/par.root"; 
+        outFile = "./Fullv1/proj.root";
     }
     if (GEOTAG.CompareTo("Fullv2") == 0)
     {
         cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
-        inFile = "../sim/Fullv2/sim.root" parFile = "../sim/Fullv2/par.root" outFile = "./Fullv2/proj.root"
+        inFile = "../sim/Fullv2/sim.root";
+        parFile = "../sim/Fullv2/par.root";
+        outFile = "./Fullv2/proj.root";
     }
-    else
-        exit(0);
 
     // -----   Create analysis run   ----------------------------------------
     FairRunAna* fRun = new FairRunAna();
@@ -42,8 +46,9 @@ void run_proj(TString GEOTAG = "Prototype")
     rtdb->print();
 
     R3BGTPCProjector* pro = new R3BGTPCProjector();
+    //ionization[GeV], drift velocity[cm/ns], longDiff[cm^(-1/2)], transvDiff[cm^(-1/2)], Fanofactor
     pro->SetDriftParameters(15.e-9, 0.005, 0.0000001, 0.000001, 2);
-    pro->SetSizeOfVirtualPad(1); // 1 means pads of 1cm^2, 10 means pads of 1mm^2, ...
+    pro->SetSizeOfVirtualPad(10); // 1 means pads of 1cm^2, 10 means pads of 1mm^2...
 
     fRun->AddTask(pro);
 

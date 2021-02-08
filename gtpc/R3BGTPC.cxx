@@ -67,7 +67,7 @@ void R3BGTPC::Initialize()
     LOG(INFO) << "R3BGTPC: initialisation";
     LOG(DEBUG) << "-I- R3BGTPC: Vol (McId) def";
     LOG(INFO) << "R3BGTPC: GTPC_box Vol. (McId) " << gMC->VolId("GTPC_box");
-    LOG(INFO) << "R3BGTPC: GTPCGas Vol. (McId) " << gMC->VolId("GTPCGas");
+    LOG(INFO) << "R3BGTPC: Active_region Vol. (McId) " << gMC->VolId("Active_region");
 }
 
 //____________________________________________________________
@@ -121,7 +121,6 @@ Bool_t R3BGTPC::ProcessHits(FairVolume* vol)
     TLorentzVector mom;
     gMC->TrackPosition(pos);
     gMC->TrackMomentum(mom);
-
     Int_t theTrackStatus = GetTrackStatus(gMC->IsNewTrack(),
                                           gMC->IsTrackDisappeared(),
                                           gMC->IsTrackStop(),
@@ -134,7 +133,8 @@ Bool_t R3BGTPC::ProcessHits(FairVolume* vol)
     Int_t parentTrackID = gMC->GetStack()->GetCurrentParentTrackNumber();
     TString particleName = gMC->GetStack()->GetCurrentTrack()->GetName();
     //_______________only care about primary particle and decayed particle
-    if (parentTrackID == -1 || (parentTrackID == 0 && particleName != "e-"))
+   // if (parentTrackID == -1 || (parentTrackID == 0 && particleName != "e-"))
+    if (particleName != "e-")
     {
         Int_t size = fGTPCPointCollection->GetEntriesFast();
         new ((*fGTPCPointCollection)[size])
@@ -213,12 +213,9 @@ Bool_t R3BGTPC::CheckIfSensitive(std::string name)
 {
     LOG(INFO) << "R3BGTPC::CheckIfSensitive " << name;
 
-    if (TString(name).Contains("GTPCGas"))
+    if (TString(name).Contains("Active_region"))
     {
-        return kTRUE;
-    }
-    else if (TString(name).Contains("Active_region"))
-    {
+        LOG(INFO)<<name<<" is sensitive";
         return kTRUE;
     }
     return kFALSE;

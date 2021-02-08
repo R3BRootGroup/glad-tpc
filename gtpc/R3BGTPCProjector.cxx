@@ -11,11 +11,11 @@
 R3BGTPCProjector::R3BGTPCProjector()
     : FairTask("R3BGTPCProjector")
 {
-    fEIonization = 15.e-9;  // [GeV]
-    fDriftVelocity = 0.005; // [cm/ns]
-    fTransDiff = 0.0000001; // [cm^2/ns]
-    fLongDiff = 0.000001;   // [cm^2/ns]
-    fFanoFactor = 2;
+    fEIonization = 15.e-9;  // [GeV]-> typical value for a gas detector tens of eV
+    fDriftVelocity = 0.005; // [cm/ns]-> Minos TPC with a Efield=152 V/cm
+    fTransDiff = 0.0000001; // [cm^2/ns]?
+    fLongDiff = 0.000001;   // [cm^2/ns]?
+    fFanoFactor = 2;// TODO Journal of Applied Physics 82, 871 (1997); doi: 10.1063/1.365787->0.2
     fHalfSizeTPC_X = 0.; // to be filled during Init()
     fHalfSizeTPC_Y = 0.; // to be filled during Init()
     fHalfSizeTPC_Z = 0.; // to be filled during Init()
@@ -86,11 +86,16 @@ InitStatus R3BGTPCProjector::Init()
          fCoefT    = fPar->GetCoefDiffusionTrans()*sqrt(10.); // [cm^(-1/2)] to [mm^(-1/2)]
          fCoefL    = fPar->GetCoefDiffusionLong()*sqrt(10.);  // [cm^(-1/2)] to [mm^(-1/2)]
     */
-
-    R3BGTPCSetup* setup = new R3BGTPCSetup("Prototype",1);
+	  std::string geotag= "Prototype";
+	  std::string geotag1= "Fullv1";	  
+	  std::string geotag2= "Fullv2";	  
+ 		std::string GEOTAG = geotag;
+    R3BGTPCSetup* setup = new R3BGTPCSetup(GEOTAG,1);
+    cout << "\033[1;31m Warning\033[0m: The detector is-> " << GEOTAG << endl;
     fHalfSizeTPC_X = setup->GetTPCLx() / 2.;
     fHalfSizeTPC_Y = setup->GetTPCLy() / 2.;
     fHalfSizeTPC_Z = setup->GetTPCLz() / 2.;
+    cout<<"TPC dimensions:( "<<setup->GetTPCLx()<<", "<<setup->GetTPCLy()<<", "<<setup->GetTPCLz()<<") [cm]"<<endl;
     delete setup;
 
     return kSUCCESS;

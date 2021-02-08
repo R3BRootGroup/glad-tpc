@@ -32,6 +32,17 @@ To create the ASCII file for R3BROOT everything must be in [ns], [cm] and [GeV]
 #include <string>
 #include <vector>
 using namespace std;
+//Loading bar
+#define PBSTR "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
+#define PBWIDTH 60
+void loadfunction(double &percentage)
+{
+    int val = (int) (percentage * 100);
+    int lpad = (int) (percentage * PBWIDTH);
+    int rpad = PBWIDTH - lpad;
+    printf("\r%3d%% [%.*s%*s]", val, lpad, PBSTR, rpad, "");
+    fflush(stdout);
+}
 
 void Generate_background() 
 {
@@ -103,6 +114,9 @@ void Generate_background()
   
   //____________________________________________________
   for (int i = 0; i < Nentr; ++i) {
+  	
+  	double percentage=i/20455.;
+  	loadfunction(percentage);
 
 		//Vertex position
     float TargetRadius = 0.25, TargetLength = 5.0;
@@ -143,7 +157,7 @@ void Generate_background()
                     << "  " << pos_vec.y() << "  " << pos_vec.z() << "  "
                     << Mass[j] << "\n";
         }
-        if (Z[j] == 0 && PDGCode[j] != 0) {//TODO investigate PDGCode=0
+        if (Z[j] == 0 && PDGCode[j] != 0) {
           asciifile << "1  0  " << PDGCode[j] << "  " << P[j].Px() << "  "
                     << P[j].Py() << "  " << P[j].Pz() << "  " << pos_vec.x()
                     << "  " << pos_vec.y() << "  " << pos_vec.z() << "  "
@@ -157,15 +171,15 @@ void Generate_background()
                       << "  " << pos_vec.y() << "  " << pos_vec.z() << "  "
                       << Mass[j] << "\n";
           } else
-            asciifile << "-1  " << Z[j] << "	" << A[j] << "	"
-                      << PDGCode[j] << "  " << P[j].Px() << "  " << P[j].Py()
+            asciifile << "-1  " << Z[j] << "	" << A[j] <<"  " 
+            					<< P[j].Px() << "  " << P[j].Py()
                       << "  " << P[j].Pz() << "  " << pos_vec.x() << "  "
                       << pos_vec.y() << "  " << pos_vec.z() << "  " << Mass[j]
                       << "\n";
         }
         if (Z[j] > 1)
-          asciifile << "-1  " << Z[j] << "	" << A[j] << "	"
-                    << PDGCode[j] << "  " << P[j].Px() << "  " << P[j].Py()
+          asciifile << "-1  " << Z[j] << "	" << A[j] << "  "
+          					<< P[j].Px() << "  " << P[j].Py()
                     << "  " << P[j].Pz() << "  " << pos_vec.x() << "  "
                     << pos_vec.y() << "  " << pos_vec.z() << "  " << Mass[j]
                     << "\n";
@@ -175,4 +189,5 @@ void Generate_background()
   // Closing the files
   asciifile.close();
   fopen->Close();
+  cout<<"\n"<<endl;
 }

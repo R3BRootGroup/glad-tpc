@@ -14,20 +14,24 @@ void run_lang(TString GEOTAG = "Prototype")
     if (GEOTAG.CompareTo("Prototype") == 0)
     {
         cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
-        inFile = "../sim/Prototype/sim.root" parFile = "../sim/Prototype/par.root" outFile = "./Prototype/lang.root"
+        inFile = "../sim/Prototype/sim.root"; 
+        parFile = "../sim/Prototype/par.root"; 
+        outFile = "./Prototype/lang.root";
     }
     if (GEOTAG.CompareTo("Fullv1") == 0)
     {
         cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
-        inFile = "../sim/Fullv1/sim.root" parFile = "../sim/Fullv1/par.root" outFile = "./Fullv1/lang.root"
+        inFile = "../sim/Fullv1/sim.root"; 
+        parFile = "../sim/Fullv1/par.root";
+        outFile = "./Fullv1/lang.root";
     }
     if (GEOTAG.CompareTo("Fullv2") == 0)
     {
         cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
-        inFile = "../sim/Fullv2/sim.root" parFile = "../sim/Fullv2/par.root" outFile = "./Fullv2/lang.root"
+        inFile = "../sim/Fullv2/sim.root"; 
+        parFile = "../sim/Fullv2/par.root"; 
+        outFile = "./Fullv2/lang.root";
     }
-    else
-        exit(0);
 
     // -----   Create analysis run   ----------------------------------------
     FairRunAna* fRun = new FairRunAna();
