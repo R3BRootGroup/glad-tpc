@@ -283,6 +283,8 @@ void ConstructTPC(TGeoVolume* pWorld)
     logicBWindow = new TGeoVolume("back_window", solidBWindow, WindowMaterial);
 		
 		//Positioning the volumes in the world
+		//frame
+		pWorld->AddNode(logicFrame, 0, new TGeoCombiTrans(0., 0., 0, zeroRot));
 		//target
 		pWorld->AddNode(logicTarget, 0, new TGeoCombiTrans(TargetOffsetX, TargetOffsetY, TargetOffsetZ, zeroRot));
 		//Positioning the volumes in the frame		
@@ -295,8 +297,6 @@ void ConstructTPC(TGeoVolume* pWorld)
 		//Positioning the volumes in the gas_box
 		//Active_region
     logicGas->AddNode(logicActiveRegion, 0, new TGeoCombiTrans(*tc3, *zeroRot));	    
-		//frame
-		pWorld->AddNode(logicFrame, 0, new TGeoCombiTrans(0., 0., 0, zeroRot));
 		
     logicTarget->SetLineColor(kAzure);
     logicFrame->SetLineColor(kBlue);

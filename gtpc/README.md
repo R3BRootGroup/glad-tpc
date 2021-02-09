@@ -7,4 +7,4 @@ R3BGTPC[function] e.g. R3BGTPCSetup, R3BGTPCLangevin
 - R3BGTPCProjector: 	Electron drift using a simple linear projector toward the pad plane.
 - R3BGTPCSetup: 			necessary for the creation of the different HYDRA geometries. It's used to read the dimensions from a txt file.
 
-Inputs folder cointains the file.txt that contains the setup dimensions: everything it's in [cm] and [deg].
+Inputs folder cointains the file.txt where the setup dimensions are defined: everything it's in [cm] and [deg].
