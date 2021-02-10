@@ -1,0 +1,7 @@
+//____Target
+TargetRadius 0.25
+TargetLength 5.
+TargetAngle 0.
+TargetOffsetX -10.825
+TargetOffsetY 0.
+TargetOffsetZ -91.85

@@ -28,7 +28,7 @@ To create the ASCII file for R3BROOT everything must be in [ns], [cm] and [GeV]
 #include <iomanip>
 #include <iostream>
 #include <iterator>
-#include <stdlib.h> /* exit, EXIT_FAILURE */
+#include <stdlib.h>
 #include <string>
 #include <vector>
 using namespace std;
@@ -50,11 +50,10 @@ void Generate_background()
   TRandom3 r3(0);
   ofstream asciifile;
   // choose the detector
-  TString GEOTAG = "Prototype";
-  /*const char* geoTag = "Prototype";
-		const char* geoTag1 = "Fullv1";
-		const char* geoTag2 = "Fullv2";
-		GEOTAG = string(geoTag);*/
+  const char* geoTag = "Prototype";
+	const char* geoTag1 = "FullBeamOut";
+	const char* geoTag2 = "FullBeamIn";
+	TString GEOTAG = string(geoTag);
 
   // Open the NHL file
   TFile *fopen = new TFile("./root/C12_C12_22800_de-excitation=abla07.root");
@@ -91,18 +90,18 @@ void Generate_background()
          << TargetPosition.Y() << ", " << TargetPosition.Z() << ") [cm]"
          << endl;
   }
-  if (GEOTAG.CompareTo("Fullv1") == 0) {
+  if (GEOTAG.CompareTo("FullBeamOut") == 0) {
     cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
-    asciifile.open("./ASCII/inputFullv1_bkg.dat", ios::out | ios::app);
+    asciifile.open("./ASCII/inputFullBeamOut_bkg.dat", ios::out | ios::app);
     TargetPosition = {0, 0., 0}; // TODO add the coordinates
     cout << "The target Position is (" << TargetPosition.X() << ", "
          << TargetPosition.Y() << ", " << TargetPosition.Z() << ") [cm]"
          << endl;
   }
-  if (GEOTAG.CompareTo("Fullv2") == 0) {
+  if (GEOTAG.CompareTo("FullBeamIn") == 0) {
     cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
-    asciifile.open("./ASCII/inputFullv2_bkg.dat", ios::out | ios::app);
-    TargetPosition = {0, 0., 0}; // TODO add the coordinates
+    asciifile.open("./ASCII/inputFullBeamIn_bkg.dat", ios::out | ios::app);
+    TargetPosition = { 0, 0., 161. };
     cout << "The target Position is (" << TargetPosition.X() << ", "
          << TargetPosition.Y() << ", " << TargetPosition.Z() << ") [cm]"
          << endl;
@@ -115,7 +114,7 @@ void Generate_background()
   //____________________________________________________
   for (int i = 0; i < Nentr; ++i) {
   	
-  	double percentage=i/20455.;
+  	double percentage=i/(double)Nentr*1.;
   	loadfunction(percentage);
 
 		//Vertex position
@@ -157,7 +156,7 @@ void Generate_background()
                     << "  " << pos_vec.y() << "  " << pos_vec.z() << "  "
                     << Mass[j] << "\n";
         }
-        if (Z[j] == 0 && PDGCode[j] != 0) {
+        if (Z[j] == 0) {
           asciifile << "1  0  " << PDGCode[j] << "  " << P[j].Px() << "  "
                     << P[j].Py() << "  " << P[j].Pz() << "  " << pos_vec.x()
                     << "  " << pos_vec.y() << "  " << pos_vec.z() << "  "

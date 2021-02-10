@@ -13,6 +13,18 @@
 //     BUT FIRST, select in the //SETTINGS section the simulation features
 //	(the macro will plot and text information as a function of these settings)
 //  -------------------------------------------------------------------------
+//Loading bar
+#define PBSTR "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
+#define PBWIDTH 60
+void loadfunction(double &percentage)
+{
+    int val = (int) (percentage * 100);
+    int lpad = (int) (percentage * PBWIDTH);
+    int rpad = PBWIDTH - lpad;
+    printf("\r%3d%% [%.*s%*s]", val, lpad, PBSTR, rpad, "");
+    fflush(stdout);
+}
+
 void checkAll()
 {
 
@@ -33,7 +45,7 @@ void checkAll()
     // END OF THE SETTING AREA
 
     gROOT->SetStyle("Default");
-    gStyle->SetOptStat(1111111);
+    gStyle->SetOptStat(11);
     gStyle->SetOptFit(1);
 
     // HISTOGRAMS DEFINITION
@@ -46,22 +58,22 @@ void checkAll()
     TH2F *h2_Point_PxPz, *h2_Point_PyPz;
     if (graphicalOutput && checkMCTracks)
     { // HISTOGRAMS DEFINITION FOR MCTRACKS
-        h1_MC_Mult = new TH1F("h1_MC_Mult", "MCTrack Multiplicity (primaries)", 100, 0, 10);
+        h1_MC_Mult = new TH1F("h1_MC_Mult", "MCTrack Multiplicity (primaries)", 400, 0, 40);
         // if secondaries are included
-        h1_MC_MultSec = new TH1F("h1_MC_MultSec", "MCTrack Multiplicity", 100, 0, 1000);
+        h1_MC_MultSec = new TH1F("h1_MC_MultSec", "MCTrack Multiplicity", 600, 0, 6000);
         h1_MC_PDG = new TH1F("h1_MC_PDG", "Primary PDG Code", 2300, 0, 2300);
         h1_MC_PDGSec = new TH1F("h1_MC_PDGSec", "MCTrack PDG Code", 2300, 0, 2300);
         h1_MC_Ene = new TH1F("h1_MC_Ene", "Primary Energy (MeV)", 200, 0, 3 * maxE);
         h1_MC_EneSec = new TH1F("h1_MC_EneSec", "MCTrack Energy (MeV)", 200, 0, 3 * maxE);
-        h1_MC_Theta = new TH1F("h1_MC_Theta", "Primary Theta", 200, 0, 3.2);
-        h1_MC_ThetaSec = new TH1F("h1_MC_ThetaSec", "MCTrack Theta", 200, 0, 3.2);
+        h1_MC_Theta = new TH1F("h1_MC_Theta", "Primary Theta", 200, -0.1, 3.2);
+        h1_MC_ThetaSec = new TH1F("h1_MC_ThetaSec", "MCTrack Theta", 200, -0.1, 3.2);
         h1_MC_Phi = new TH1F("h1_MC_Phi", "Primary Phi", 200, -3.2, 3.2);
         h1_MC_PhiSec = new TH1F("h1_MC_PhiSec", "MCTrack Phi", 200, -3.2, 3.2);
     }
     if (graphicalOutput && checkPoints)
     { // HISTOGRAMS DEFINITION FOR POINTS
         h1_Point_Mult = new TH1F("h1_Point_Mult", "Point Multiplicity", 400, 0, 400);
-        h1_Point_Time = new TH1F("h1_Point_Time", "Point Time", 400, 0, 0.0000001);
+        h1_Point_Time = new TH1F("h1_Point_Time", "Point Time", 4000, 0, 0.000001);
         h1_Point_Length = new TH1F("h1_Point_Length", "Point Length", 400, 0, 400);
         h1_Point_ELoss = new TH1F("h1_Point_ELoss", "Point ELoss (MeV)", 400, 0, 0.1);
         h1_Point_TrackStatus = new TH1F("h1_Point_TrackStatus", "Point TrackStatus", 8, 0, 7);
@@ -70,10 +82,10 @@ void checkAll()
         h1_Point_Mass = new TH1F("h1_Point_Mass", "Point Mass", 400, 0, 10);
         h1_Point_Kine = new TH1F("h1_Point_Kine", "Point KinE (MeV)", 400, 0, 6000);
         h1_Point_trackStep = new TH1F("h1_Point_trackStep", "Point trackStep", 400, 0, 40);
-        h2_Point_XZ = new TH2F("h2_Point_XZ", "Points proyection on XZ plane", 600, -30, 30, 1100, 195, 305);
-        h2_Point_YZ = new TH2F("h2_Point_YZ", "Point proyection on XY plane", 600, -30, 30, 1100, 195, 305);
-        h2_Point_PxPz = new TH2F("h2_Point_PxPz", "Momentum proyection on XZ plane", 600, -1, 1, 600, -1, 7);
-        h2_Point_PyPz = new TH2F("h2_Point_PyPz", "Momentum proyection on XY plane", 600, -1, 1, 600, -1, 7);
+        h2_Point_XZ = new TH2F("h2_Point_XZ", "Points projection on XZ plane;Z[cm];X[cm]", 300, 270, 300, 100, 5, 15);
+        h2_Point_YZ = new TH2F("h2_Point_YZ", "Point projection on YZ plane;Z[cm];Y[cm]", 300, 270, 300, 400, -20, 20);
+        h2_Point_PxPz = new TH2F("h2_Point_PxPz", "Momentum projection on XZ plane", 600, -1, 1, 600, -1, 7);
+        h2_Point_PyPz = new TH2F("h2_Point_PyPz", "Momentum projection on YZ plane", 600, -1, 1, 600, -1, 7);
     }
     // END OF HISTOGRMAS DEFINITION
 
@@ -104,8 +116,8 @@ void checkAll()
 
     for (Int_t i = 0; i < nevents; i++)
     {
-        if (i % 10000 == 0)
-            printf("Event:%i\n", i);
+        double percentage=i/(double)(nevents*1.);
+        loadfunction(percentage);
 
         gtpcPointCA->Clear();
         MCTrackCA->Clear();
@@ -193,8 +205,8 @@ void checkAll()
                     h1_Point_Mass->Fill(point[h]->GetMass());
                     h1_Point_Kine->Fill(point[h]->GetKineticEnergy() * 1000);
                     h1_Point_trackStep->Fill(point[h]->GetTrackStep());
-                    h2_Point_XZ->Fill(point[h]->GetX(), point[h]->GetZ());
-                    h2_Point_YZ->Fill(point[h]->GetY(), point[h]->GetZ());
+                    h2_Point_XZ->Fill(point[h]->GetZ(), point[h]->GetX());
+                    h2_Point_YZ->Fill(point[h]->GetZ(), point[h]->GetY());
                     h2_Point_PxPz->Fill(point[h]->GetPx(), point[h]->GetPz());
                     h2_Point_PyPz->Fill(point[h]->GetPy(), point[h]->GetPz());
                 }
@@ -208,7 +220,7 @@ void checkAll()
         if (MCtracksPerEvent)
             delete[] track;
     }
-
+		cout<<"\n"<<endl;
     if (graphicalOutput)
     {
         TCanvas* c1 = new TCanvas("MCTrack", "MCTrack", 0, 0, 500, 700);
@@ -232,16 +244,17 @@ void checkAll()
         h1_MC_MultSec->Draw();
         c1->cd(3);
         c1->cd(3)->SetLogy();
+        c1->cd(3)->SetLogx();
         h1_MC_PDGSec->SetLineColor(kRed);
         h1_MC_PDGSec->Draw();
         h1_MC_PDG->Draw("SAME");
         TLatex Tl;
         Tl.SetTextSize(0.06);
         Tl.SetTextColor(1);
-        Tl.DrawLatex(200, 10, "Primaries");
+        Tl.DrawLatex(1.4,2127, "Primaries");
         Tl.SetTextSize(0.06);
         Tl.SetTextColor(2);
-        Tl.DrawLatex(1400, 10, "Secondaries");
+        Tl.DrawLatex(1.4, 127, "Secondaries");
         c1->cd(4);
         c1->cd(4)->SetLogy();
         h1_MC_EneSec->SetLineColor(kRed);
@@ -312,13 +325,13 @@ void checkAll()
         c3->cd();
         c3->Divide(2, 2);
         c3->cd(1);
-        h2_Point_XZ->Draw();
+        h2_Point_XZ->Draw("COLZ");
         c3->cd(2);
-        h2_Point_YZ->Draw();
+        h2_Point_YZ->Draw("COLZ");
         c3->cd(3);
-        h2_Point_PxPz->Draw();
+        h2_Point_PxPz->Draw("COLZ");
         c3->cd(4);
-        h2_Point_PyPz->Draw();
+        h2_Point_PyPz->Draw("COLZ");
 
         // OUTPUT FILE
         // ctext->Print("output.ps(");

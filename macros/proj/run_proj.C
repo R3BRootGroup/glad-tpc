@@ -1,4 +1,4 @@
-void run_proj(TString GEOTAG = "Prototype")
+void run_proj(TString GEOTAG = "FullBeamIn", TString version= "v1")
 {
     TStopwatch timer;
     timer.Start();
@@ -18,19 +18,34 @@ void run_proj(TString GEOTAG = "Prototype")
         parFile = "../sim/Prototype/par.root"; 
         outFile = "./Prototype/proj.root";
     }
-    if (GEOTAG.CompareTo("Fullv1") == 0)
+    if (GEOTAG.CompareTo("FullBeamOut") == 0)
     {
         cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
-        inFile = "../sim/Fullv1/sim.root";
-        parFile = "../sim/Fullv1/par.root"; 
-        outFile = "./Fullv1/proj.root";
+        inFile = "../sim/FullBeamOut/sim.root";
+        parFile = "../sim/FullBeamOut/par.root"; 
+        outFile = "./FullBeamOut/proj.root";
     }
-    if (GEOTAG.CompareTo("Fullv2") == 0)
+    if (GEOTAG.CompareTo("FullBeamIn") == 0)
     {
         cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
-        inFile = "../sim/Fullv2/sim.root";
-        parFile = "../sim/Fullv2/par.root";
-        outFile = "./Fullv2/proj.root";
+        if (version.CompareTo("v1")==0) 
+        {
+				    inFile = "../sim/FullBeamIn/v1/sim.root";
+				    parFile = "../sim/FullBeamIn/v1/par.root";
+				    outFile = "./FullBeamIn/v1/proj.root";
+        }
+    		if (version.CompareTo("v2")==0)
+    		{
+				    inFile = "../sim/FullBeamIn/v2/sim.root";
+				    parFile = "../sim/FullBeamIn/v2/par.root";
+				    outFile = "./FullBeamIn/v2/proj.root";
+        }
+    		if (version.CompareTo("v3")==0) 
+    		{
+				    inFile = "../sim/FullBeamIn/v3/sim.root";
+				    parFile = "../sim/FullBeamIn/v3/par.root";
+				    outFile = "./FullBeamIn/v3/proj.root";
+        }
     }
 
     // -----   Create analysis run   ----------------------------------------
@@ -46,9 +61,9 @@ void run_proj(TString GEOTAG = "Prototype")
     rtdb->print();
 
     R3BGTPCProjector* pro = new R3BGTPCProjector();
-    //ionization[GeV], drift velocity[cm/ns], longDiff[cm^(-1/2)], transvDiff[cm^(-1/2)], Fanofactor
-    pro->SetDriftParameters(15.e-9, 0.005, 0.0000001, 0.000001, 2);
-    pro->SetSizeOfVirtualPad(10); // 1 means pads of 1cm^2, 10 means pads of 1mm^2...
+    R3BGTPCSetup *setup=new R3BGTPCSetup();
+    pro->SetDriftParameters(setup->GetEIonization(), setup->GetDriftVelocity(), setup->GetLongDiff(), setup->GetTransDiff(), setup->GetFanoFactor());
+    pro->SetSizeOfVirtualPad(setup->GetPadSize()); // 1 means pads of 1cm^2, 10 means pads of 1mm^2...
 
     fRun->AddTask(pro);
 
@@ -61,5 +76,6 @@ void run_proj(TString GEOTAG = "Prototype")
     cout << "Macro finished succesfully!" << endl;
     cout << "Output file writen: " << outFile << endl;
     cout << "Parameter file writen: " << parFile << endl;
-    cout << "Real time: " << timer.RealTime() << "s, CPU time: " << timer.CpuTime() << "s" << endl;
+    if(timer.RealTime()<60.)cout << "Real time: " << timer.RealTime() << "s, CPU time: " << timer.CpuTime() << "s" << endl;
+    else cout << "Real time: " << timer.RealTime()/60. << "min, CPU time: " << timer.CpuTime()/60 << "min" << endl;
 }

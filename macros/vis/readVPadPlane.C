@@ -1,6 +1,8 @@
+
+//SHOULD BE MODIFY TO INCLUDE ALL THE VERSIONS
 ///////////////////////////////////////////////////////////////////
 //*-- AUTHOR : Hector Alvarez-Pol
-//*-- Date: 04/20018
+//*-- Date: 04/2018
 //*-- Last Update: 02/04/18
 //*-- Copyright: GENP (Univ. Santiago de Compostela)
 // --------------------------------------------------------------
@@ -69,11 +71,14 @@ void reader(const char* inputSimFile, Int_t event)
 
     char hname[255];
     // SETUP
-    // SET THIS VALUES AS IT WAS IN THE R3BGTPCProjector code
-    Double_t fHalfSizeTPC_X = 25;   // 50cm in X (row)
-    Double_t fHalfSizeTPC_Y = 10;   // 20cm in Y (time)
-    Double_t fHalfSizeTPC_Z = 50;   // 100cm in Z (column)
-    Double_t fSizeOfVirtualPad = 1; // 1: pads of 1cm^2 , 10: pads of 1mm^2
+    string geoTag="Prototype";
+		cout << "\n \033[1;31m Warning\033[0m: the detector you are building is " << geoTag << "!!!!!\n" << endl;
+    R3BGTPCSetup* setup = new R3BGTPCSetup(geoTag, 0);
+    Double_t fHalfSizeTPC_X = setup->GetActiveRegionx() / 2.;   // 50cm in X (row)
+    Double_t fHalfSizeTPC_Y = setup->GetActiveRegiony() / 2.;   // 20cm in Y (time)
+    Double_t fHalfSizeTPC_Z = setup->GetActiveRegionz() / 2.;   // 100cm in Z (column)
+    Double_t fSizeOfVirtualPad = setup->GetPadSize(); // 1: pads of 1cm^2 , 10: pads of 1mm^2
+		Double_t fMaxDriftTime=(round)((setup->GetActiveRegiony()/setup->GetDriftVelocity())*pow(10,-3));//us
     // END OF SETUP
 
     gROOT->SetStyle("Default");
@@ -103,7 +108,8 @@ void reader(const char* inputSimFile, Int_t event)
              << "bins in Z: " << histoBins2 << endl
              << "X size (half-length of box): " << fHalfSizeTPC_X << endl
              << "Y size (half-length of box (drift)): " << fHalfSizeTPC_Y << endl
-             << "Z size (half-length of box): " << fHalfSizeTPC_Z << endl;
+             << "Z size (half-length of box): " << fHalfSizeTPC_Z << endl
+      			 << "Max Drift time: "<<fMaxDriftTime<<endl;
     }
 
     TH2D* htrackInPads = 0;
@@ -115,47 +121,47 @@ void reader(const char* inputSimFile, Int_t event)
 
     htrackInPads = new TH2D("htrackInPads",
                             "All tracks in the XZ Pads Plane",
-                            histoBins,
-                            0,
-                            2 * fHalfSizeTPC_X * fSizeOfVirtualPad,
                             histoBins2,
                             0,
-                            2 * fHalfSizeTPC_Z * fSizeOfVirtualPad); // in [pad number]
-    htrackInPads->SetYTitle("Z [pad number]");
-    htrackInPads->SetXTitle("X [pad number]");
+                            2 * fHalfSizeTPC_Z * fSizeOfVirtualPad,
+                            histoBins,
+                            0,
+                            2 * fHalfSizeTPC_X * fSizeOfVirtualPad); // in [pad number]
+    htrackInPads->SetYTitle("X [pad number]");
+    htrackInPads->SetXTitle("Z [pad number]");
 
     hdriftTimeInPads = new TH2D("hdriftTimeInPads",
                                 "All tracks in the XZ Pads Plane with drift time",
-                                histoBins,
-                                0,
-                                2 * fHalfSizeTPC_X * fSizeOfVirtualPad,
-                                histoBins2,
-                                0,
-                                2 * fHalfSizeTPC_Z * fSizeOfVirtualPad); // in [pad number]
-    hdriftTimeInPads->SetYTitle("Z [pad number]");
-    hdriftTimeInPads->SetXTitle("X [pad number]");
+                            histoBins2,
+                            0,
+                            2 * fHalfSizeTPC_Z * fSizeOfVirtualPad,
+                            histoBins,
+                            0,
+                            2 * fHalfSizeTPC_X * fSizeOfVirtualPad); // in [pad number]
+    hdriftTimeInPads->SetYTitle("X [pad number]");
+    hdriftTimeInPads->SetXTitle("Z [pad number]");
 
     hdepth1InPads = new TH2D("hdepth1InPads",
                              "track In the Drift-Z Pads Plane",
                              histoBins,
                              0,
-                             40, // REPLACE FOR A CORRECT TIME ESTIMATION
+                             fMaxDriftTime,
                              histoBins2,
                              0,
                              2 * fHalfSizeTPC_Z * fSizeOfVirtualPad);
     hdepth1InPads->SetYTitle("Z [pad number]");
-    hdepth1InPads->SetXTitle("(drift) time [ns]");
+    hdepth1InPads->SetXTitle("(drift) time [us]");
 
     hdepth2InPads = new TH2D("hdepth2InPads",
                              "track In the Drift-X Pads Plane",
                              histoBins,
                              0,
-                             40, // REPLACE FOR A CORRECT TIME ESTIMATION
+                             fMaxDriftTime,
                              histoBins,
                              0,
                              2 * fHalfSizeTPC_X * fSizeOfVirtualPad);
     hdepth2InPads->SetYTitle("X [pad number]");
-    hdepth2InPads->SetXTitle("(drift) time [ns]");
+    hdepth2InPads->SetXTitle("(drift) time [us]");
 
     TFile* simFile = TFile::Open(inputSimFile);
     TTree* TEvt = (TTree*)simFile->Get("evt");
@@ -209,8 +215,8 @@ void reader(const char* inputSimFile, Int_t event)
                 zPad = (ppoint->GetVirtualPadID() - xPad) / (2 * fHalfSizeTPC_X * fSizeOfVirtualPad);
                 tPad = ((TH1S*)(ppoint->GetTimeDistribution()))->GetMean();
 
-                htrackInPads->Fill(xPad, zPad, ppoint->GetCharge());
-                hdriftTimeInPads->Fill(xPad, zPad, tPad);
+                htrackInPads->Fill(zPad, xPad, ppoint->GetCharge());
+                hdriftTimeInPads->Fill(zPad, xPad, tPad);
                 hdepth1InPads->Fill(tPad, zPad, ppoint->GetCharge());
                 hdepth2InPads->Fill(tPad, xPad, ppoint->GetCharge());
 
@@ -255,7 +261,7 @@ void reader(const char* inputSimFile, Int_t event)
         }
     }
 
-    TCanvas* c3 = new TCanvas("c3", "Pads in pad (XZ) plane", 0, 0, 600, 900);
+    TCanvas* c3 = new TCanvas("c3", "Pads in pad (XZ) plane", 0, 0, 1500, 1800);
     TLatex l;
     l.SetTextAlign(12);
     l.SetTextSize(0.05);
@@ -274,7 +280,7 @@ void reader(const char* inputSimFile, Int_t event)
                 "Color code: induced charge");
 
     TVirtualPad* c3_2 = c3->cd(2);
-    // c3_2->SetLogz();
+    c3_2->SetLogz();
     hdriftTimeInPads->Draw("ZCOL");
 
     TLatex l2;

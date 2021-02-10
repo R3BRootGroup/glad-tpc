@@ -30,7 +30,8 @@ class R3BGTPC : public R3BDetector
 
     /** Destructor **/
     virtual ~R3BGTPC();
-
+    
+		/**Initialize the the detectors**/
     virtual void Initialize();
 
     /** Virtual method ProcessHits

@@ -1,9 +1,9 @@
 // -----------------------------------------------------------------------------
 // -----                  R3BGTPCProjector header file                     -----
 // -----                  Created 27/03/18  by H.Alvarez                   -----
-// -----                Last modification 28/03/18                         -----
-// -----------------------------------------------------------------------------
-
+// -----           	Last modification 16/02/2021 S. Velardita              -----
+/// -----------------------------------------------------------------------------
+//
 /**  R3BGTPCProjector.h
  * Projects the electrons derived from the energy loss in the gas into
  * a virtual pad plane of variable size pads, including time information
@@ -41,6 +41,7 @@ class R3BGTPCProjector : public FairTask
     void SetDriftParameters(Double_t ion, Double_t driftv, Double_t tDiff, Double_t lDiff, Double_t fanoFactor);
 
     void SetSizeOfVirtualPad(Double_t size);
+    
 
   protected:
     /** Virtual method Init **/

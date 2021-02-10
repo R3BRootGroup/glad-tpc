@@ -12,6 +12,21 @@
 //     BUT FIRST, select in the //SETTINGS section the simulation features
 //	(the macro will plot and text information as a function of these settings)
 //  -------------------------------------------------------------------------
+//Loading bar
+#define PBSTR "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
+#define PBWIDTH 60
+void loadfunction(double &percentage)
+{
+    int val = (int) (percentage * 100);
+    int lpad = (int) (percentage * PBWIDTH);
+    int rpad = PBWIDTH - lpad;
+    printf("\r%3d%% [%.*s%*s]", val, lpad, PBSTR, rpad, "");
+    fflush(stdout);
+}
+#define cRED "\033[1;31m"
+#define cYELLOW "\033[1;33m"
+#define cNORMAL "\033[0m"
+#define cGREEN "\033[1;32m"
 void readProjPoints(TString GEOTAG = "Prototype")
 {
 
@@ -30,18 +45,18 @@ void readProjPoints(TString GEOTAG = "Prototype")
         cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
         title1 = "./Prototype/proj.root";
     }
-    if (GEOTAG.CompareTo("Fullv1") == 0)
+    if (GEOTAG.CompareTo("FullBeamOut") == 0)
     {
         cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
-        title1 = "./Fullv1/proj.root";
+        title1 = "./FullBeamOut/proj.root";
     }
-    if (GEOTAG.CompareTo("Fullv2") == 0)
+    if (GEOTAG.CompareTo("FullBeamIn") == 0)
     {
         cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
-        title1 = "./Fullv2/proj.root";
+        title1 = "./FullBeamIn/proj.root";
     }
 
-    TFile* file1 = TFile::Open(title1);
+		TFile* file1 = TFile::Open(title1);
     // END OF THE SETTING AREA
 
     gROOT->SetStyle("Default");
@@ -50,15 +65,12 @@ void readProjPoints(TString GEOTAG = "Prototype")
 
     // HISTOGRAMS DEFINITION
     TH1F *h1_ProjPoint_Mult, *h1_ProjPoint_Charge, *h1_ProjPoint_VirtualPadID;
-    TH2F* h2_ProjPoint_VPadPlane;
-    TH1S** h1_ProjPoint_TimeExample;
+    //TH1S** h1_ProjPoint_TimeExample;
     if (graphicalOutput && checkProjPoints)
     { // HISTOGRAMS DEFINITION FOR PROJPOINTS
         h1_ProjPoint_Mult = new TH1F("h1_ProjPoint_Mult", "ProjPoint Multiplicity", 400, 0, 400);
-        h1_ProjPoint_Charge = new TH1F("h1_ProjPoint_Charge", "ProjPoint Charge", 1000, 0, 1000);
-        h1_ProjPoint_VirtualPadID = new TH1F("h1_ProjPoint_VirtualPadID", "ProjPoint VirtualPadID", 5200, 0, 5200);
-        h2_ProjPoint_VPadPlane =
-            new TH2F("h2_ProjPoint_VPadPlane", "ProjPoint VPadPlane", 100, -50, 50, 1000, 200, 300);
+        h1_ProjPoint_Charge = new TH1F("h1_ProjPoint_Charge;# primary e-", "ProjPoint Charge", 1000, 0, 1000);
+        h1_ProjPoint_VirtualPadID = new TH1F("h1_ProjPoint_VirtualPadID", "ProjPoint VirtualPadID", 13000, -10, 12990);
         // h1_ProjPoint_TimeExample = new TH1F("h1_ProjPoint_TimeExample","ProjPoint TimeExample",100,0,100);
     }
     // END OF HISTOGRMAS DEFINITION
@@ -80,9 +92,8 @@ void readProjPoints(TString GEOTAG = "Prototype")
 
     for (Int_t i = 0; i < nevents; i++)
     {
-        if (i % 10000 == 0)
-            printf("Event:%i\n", i);
-
+        double percentage=i/(double)(nevents*1.);
+        loadfunction(percentage);
         gtpcProjPointCA->Clear();
 
         TEvt->GetEvent(i);
@@ -102,21 +113,6 @@ void readProjPoints(TString GEOTAG = "Prototype")
                 ppoint[j] = (R3BGTPCProjPoint*)gtpcProjPointCA->At(j);
             }
         }
-
-        if (i == 0 && (ppointsPerEvent > 0))
-        {
-            // only for the first event, show time distributions in a single pad
-            h1_ProjPoint_TimeExample = new TH1S*[ppointsPerEvent];
-            for (Int_t j = 0; j < ppointsPerEvent; j++)
-            {
-                // h1_ProjPoint_TimeExample[j] = new TH1S(ppoint[j]->GetTimeDistribution());
-                // h1_ProjPoint_TimeExample[j] = ppoint[j]->GetTimeDistribution();
-                sprintf(hname, "pad %i", ppoint[j]->GetVirtualPadID());
-                h1_ProjPoint_TimeExample[j] = (TH1S*)((ppoint[j]->GetTimeDistribution()))->Clone(hname);
-            }
-            numberOfTimeHistos = ppointsPerEvent;
-        }
-
         // GTPC Point information
         if (checkProjPoints)
         {
@@ -140,7 +136,7 @@ void readProjPoints(TString GEOTAG = "Prototype")
         if (ppointsPerEvent)
             delete[] ppoint;
     }
-
+		cout<<"\n"<<endl;
     if (graphicalOutput)
     {
         TCanvas* c1 = new TCanvas("ProjPoints", "ProjPoints", 20, 20, 620, 720);
@@ -156,19 +152,20 @@ void readProjPoints(TString GEOTAG = "Prototype")
         h1_ProjPoint_Charge->Draw();
         c1->cd(3);
         h1_ProjPoint_VirtualPadID->Draw();
-        c1->cd(4);
+        /*c1->cd(4);
         h1_ProjPoint_TimeExample[0]->GetXaxis()->SetRange(0, 50);
         h1_ProjPoint_TimeExample[0]->Draw();
         for (Int_t j = 1; j < 2; j++)
         {
             h1_ProjPoint_TimeExample[j]->SetLineColor(kRed);
             h1_ProjPoint_TimeExample[j]->Draw("SAME");
-        }
+        }*/
+
 
         // OUTPUT FILE
         // ctext->Print("output.ps(");
-        c1->Print("output.ps");
-        // c2->Print("output.ps");
+        c1->Print("output_projpoints.ps");
+        //c2->Print("output.ps)");
         // c3->Print("output.ps)");
     }
 }

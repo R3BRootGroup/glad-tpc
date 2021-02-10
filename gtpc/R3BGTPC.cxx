@@ -1,8 +1,8 @@
-#include "R3BGTPC.h"
 #include "FairRootManager.h"
 #include "FairRun.h"
 #include "FairRuntimeDb.h"
 #include "FairVolume.h"
+#include "R3BGTPC.h"
 #include "R3BGTPCPoint.h"
 #include "R3BMCStack.h"
 #include "TClonesArray.h"
@@ -80,26 +80,11 @@ void R3BGTPC::SetSpecialPhysicsCuts()
         TGeoMedium* pmix = gGeoManager->GetMedium("mix");
         if (pmix)
         {
-            // Setting processes for Gas
-            // gMC->Gstpar(pmix->GetId(), "LOSS", 3);
-            // gMC->Gstpar(pmix->GetId(), "STRA", 1.0);
-            // gMC->Gstpar(pmix->GetId(), "PAIR", 1.0);
-            // gMC->Gstpar(pmix->GetId(), "COMP", 1.0);
-            // gMC->Gstpar(pmix->GetId(), "PHOT", 1.0);
-            // gMC->Gstpar(pmix->GetId(), "ANNI", 1.0);
-            // gMC->Gstpar(pmix->GetId(), "BREM", 1.0);
-            // gMC->Gstpar(pmix->GetId(), "HADR", 1.0);
-            // gMC->Gstpar(pmix->GetId(), "DRAY", 1.0);
-            // gMC->Gstpar(pmix->GetId(), "DCAY", 1.0);
-            // gMC->Gstpar(pmix->GetId(), "MULS", 1.0);
-            // gMC->Gstpar(pmix->GetId(), "RAYL", 1.0);
-
             // Setting Energy-CutOff for Gas Only, 0.01mm
             Double_t cutE = 1e-6; // GeV-> 1 keV
 
             LOG(INFO) << "-I- R3BGTPC: Medium Id " << pmix->GetId() << " Energy Cut-Off : " << cutE << " GeV";
 
-            // Si
             gMC->Gstpar(pmix->GetId(), "CUTGAM", cutE); /** gammas (GeV)*/
             gMC->Gstpar(pmix->GetId(), "CUTELE", cutE); /** electrons (GeV)*/
             gMC->Gstpar(pmix->GetId(), "CUTNEU", cutE); /** neutral hadrons (GeV)*/
@@ -132,9 +117,9 @@ Bool_t R3BGTPC::ProcessHits(FairVolume* vol)
 
     Int_t parentTrackID = gMC->GetStack()->GetCurrentParentTrackNumber();
     TString particleName = gMC->GetStack()->GetCurrentTrack()->GetName();
-    //_______________only care about primary particle and decayed particle
+    //_______________only care about primary particle
    // if (parentTrackID == -1 || (parentTrackID == 0 && particleName != "e-"))
-    if (particleName != "e-")
+    if (gMC->TrackPid()!=0)//due to the INCL generator
     {
         Int_t size = fGTPCPointCollection->GetEntriesFast();
         new ((*fGTPCPointCollection)[size])
@@ -143,7 +128,7 @@ Bool_t R3BGTPC::ProcessHits(FairVolume* vol)
                          pos.Vect(),                               // pos from gMC->TrackPosition(pos);
                          mom.Vect(),                               // mom from gMC->TrackMomentum(pos);
                          gMC->TrackTime(),                         // time in s
-                         gMC->TrackLength(),                       // length
+                         gMC->TrackLength(),                       // Return the length of the current track from its origin (in cm)
                          gMC->Edep(),                              // eloss
                          gMC->CurrentEvent(),                      // EventID
                          parentTrackID,                            // parentTrackID
@@ -156,13 +141,12 @@ Bool_t R3BGTPC::ProcessHits(FairVolume* vol)
                          vol->GetName(),                                   // volName (or vol->getRealName();??)
                          TMCProcessName[gMC->ProdProcess(0)],              // processName
                          gMC->TrackCharge(),                               // charge
-                         gMC->TrackMass(),                                 // mass
+                         gMC->TrackMass(),                                 // Return the mass of the track currently transported.
                          (gMC->Etot() - gMC->TrackMass()),                 // kineticEnergy
-                         gMC->TrackStep(),                                 // trackStep
+                         gMC->TrackStep(),                                 // Return the length in centimeters of the current step (in cm)
                          kTRUE);                                           // isAccepted
     }
 
-    // DOES NOT WORK!!!! ASK!
     // Increment number of LandPoints for this track
     // R3BStack* stack = (R3BStack*)gMC->GetStack();
     // stack->AddPoint(kGTPC);
@@ -176,8 +160,7 @@ void R3BGTPC::BeginEvent() { ; }
 // -----   Public method EndOfEvent   -----------------------------------------
 void R3BGTPC::EndOfEvent()
 {
-    if (fVerboseLevel)
-        Print();
+    if (fVerboseLevel) Print();
     Reset();
 }
 // ----------------------------------------------------------------------------

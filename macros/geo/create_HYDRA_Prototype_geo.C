@@ -13,24 +13,10 @@ TGeoCombiTrans* zeroRotTrans = new TGeoCombiTrans(*zeroTrans, *zeroRot);
 TGeoTranslation* fGlobalTrans = new TGeoTranslation();
 // Create Matrix Unity
 TGeoRotation* fGlobalRot = new TGeoRotation();
-TGeoRotation* fRefRot = NULL;
 
 TGeoManager* gGeoMan = NULL;
 
-Double_t fThetaX = 0., fThetaY = 0., fThetaZ = 0.;
-Double_t fPhi = 0., fTheta = 0., fPsi = 0.;
-Double_t fX = 0., fY = 0., fZ = 0.;
-Bool_t fLocalTrans = kFALSE;
-Bool_t fLabTrans = kTRUE;
-
 //________________________HYDRA parameters
-Double_t TargetLength;
-Double_t TargetRadius;
-Double_t TargetAngle;
-Double_t TargetOffsetX;
-Double_t TargetOffsetY;
-Double_t TargetOffsetZ;
-
 Double_t TPCLx;
 Double_t TPCLy;
 Double_t TPCLz;
@@ -48,11 +34,8 @@ Double_t WorldSizeZ;
 
 void ConstructTPC(TGeoVolume* pWorld);
 
-string GEOTAG;
-
-void create_tpc_geo(const char* geoTag = "Prototype")
-{ // Putting the correct GEOTAG is essential
-    GEOTAG = std::string(geoTag);
+void create_tpc_geo(string geoTag = "Prototype")
+{ 
     fGlobalTrans->SetTranslation(0.0, 0.0, 0.0);
 
     // -------   Load media from media file   -----------------------------------
@@ -74,9 +57,6 @@ void create_tpc_geo(const char* geoTag = "Prototype")
     FairGeoMedia* geoMedia = geoFace->getMedia();
     FairGeoBuilder* geoBuild = geoLoad->getGeoBuilder();
 
-    // geoMedia->print();
-
-    // Defined by Simone----------------------------------------------------------
     FairGeoMedium* mMy = geoMedia->getMedium("mylar");
     if (!mMy)
         Fatal("Main", "FairMedium mylar not found");
@@ -100,7 +80,6 @@ void create_tpc_geo(const char* geoTag = "Prototype")
     TGeoMedium* pmix = gGeoMan->GetMedium("mix");
     if (!pmix)
         Fatal("Main", "Medium mix not found");
-    // --------------------------------------------------------------------------
     FairGeoMedium* mvacuum = geoMedia->getMedium("vacuum");
     if (!mvacuum)
         Fatal("Main", "FairMedium vacuum not found");
@@ -124,14 +103,6 @@ void create_tpc_geo(const char* geoTag = "Prototype")
     TGeoMedium* pLH2 = gGeoMan->GetMedium("LH2");
     if (!pLH2)
         Fatal("Main", "Medium LH2 not found");
-
-    FairGeoMedium* mcarbon = geoMedia->getMedium("carbon");
-    if (!mcarbon)
-        Fatal("Main", "FairMedium carbon not found");
-    geoBuild->createMedium(mcarbon);
-    TGeoMedium* pcarbon = gGeoMan->GetMedium("carbon");
-    if (!pcarbon)
-        Fatal("Main", "Medium carbon not found");
     //_________________________________
 
     // --------------   Create geometry and top volume  -------------------------
@@ -140,21 +111,13 @@ void create_tpc_geo(const char* geoTag = "Prototype")
     TGeoVolume* top = new TGeoVolumeAssembly("TOP");
     gGeoMan->SetTopVolume(top);
 
-    //top->SetVisLeaves(kTRUE);
+    top->SetVisContainers(kTRUE);
     gGeoManager->SetVisLevel(4);
     gGeoManager->SetVisOption(0);
     // --------------------------------------------------------------------------
 
     cout << "\n \033[1;31m Warning\033[0m: the detector you are building is " << geoTag << "!!!!!\n" << endl;
-    R3BGTPCSetup* setup = new R3BGTPCSetup(geoTag, 0);
-    // setup->Print();
-
-    TargetLength = setup->GetTargetLength() / 2.; // cm
-    TargetRadius = setup->GetTargetRadius();      // cm
-    TargetAngle = setup->GetTargetAngle();        // deg
-    TargetOffsetX = setup->GetTargetOffsetX();    // cm
-    TargetOffsetY = setup->GetTargetOffsetY();    // cm
-    TargetOffsetZ = setup->GetTargetOffsetZ();    // cm
+    R3BGTPCSetup* setup = new R3BGTPCSetup(geoTag, 1);
 
     ActiveRegionx = setup->GetActiveRegionx() / 2.; // cm
     ActiveRegiony = setup->GetActiveRegiony() / 2.; // cm
@@ -172,13 +135,6 @@ void create_tpc_geo(const char* geoTag = "Prototype")
     delete setup;
 
     /*
-    TargetLength           = 5;															//cm
-    TargetRadius           = 0.25;													//cm
-    TargetAngle            = 0.;														//deg
-    TargetOffsetX          = -10.2.;												//cm
-    TargetOffsetY          = 0.;														//cm
-    TargetOffsetZ          = -92;														//cm
-
     TPCLx                  = 19.7;													//cm
     TPCLy                  = 31.4;													//cm
     TPCLz                  = 47.8;													//cm
@@ -190,20 +146,19 @@ void create_tpc_geo(const char* geoTag = "Prototype")
 
     // World definition
 
-    WorldSizeX = 3 * (2 * TPCLx);
-    WorldSizeY = 3 * (2 * TPCLy);
-    WorldSizeZ = 3 * (2 * TPCLz);
+    WorldSizeX =  2 * TPCLx;
+    WorldSizeY = 	2 * TPCLy;
+    WorldSizeZ =	2 * TPCLz;
 
     // GTPC main area->World definition
     TGeoVolume* pAWorld = gGeoManager->GetTopVolume();
     TGeoShape* tpc_box = new TGeoBBox("GTPC_Box", WorldSizeX, WorldSizeY, WorldSizeZ);
 
     TGeoVolume* pWorld = new TGeoVolume("GTPC_box", tpc_box, pvacuum);
-
+		pWorld->SetInvisible();
     ConstructTPC(pWorld);
 
     // Globle definition of TPC position in cm 
-    // simulation in G4
     TVector3 gTrans(10.2, 0, 284.); // offset before rotation
     fGlobalTrans->SetTranslation(gTrans.X(), gTrans.Y(), gTrans.Z());
     TGeoCombiTrans* pGlobal = new TGeoCombiTrans(*fGlobalTrans, *fGlobalRot);
@@ -229,11 +184,8 @@ void ConstructTPC(TGeoVolume* pWorld)
     TGeoMedium* FrameMaterial = gGeoManager->GetMedium("aluminium");
     TGeoMedium* GasMaterial = gGeoManager->GetMedium("mix");
     TGeoMedium* WindowMaterial = gGeoManager->GetMedium("mylar");
-    TGeoMedium* TargetMaterial = gGeoManager->GetMedium("carbon");
 
     // Sensitive volume---------------------------------------------------------
-    TGeoShape* solidTarget = 0;
-    TGeoVolume* logicTarget = 0;
     TGeoShape* solidFrame = 0;
     TGeoVolume* logicFrame = 0;
     TGeoShape* solidGas = 0;
@@ -244,10 +196,6 @@ void ConstructTPC(TGeoVolume* pWorld)
     TGeoVolume* logicFWindow = 0;
     TGeoShape* solidBWindow = 0;
     TGeoVolume* logicBWindow = 0;
-
-    // C12 target
-    solidTarget = new TGeoTubeSeg("Target", 0., TargetRadius, TargetLength, 0, 360.);
-    logicTarget = new TGeoVolume("Target", solidTarget, TargetMaterial);
 
     // Aluminium frame----------------------------------------------------------
 
@@ -285,8 +233,6 @@ void ConstructTPC(TGeoVolume* pWorld)
 		//Positioning the volumes in the world
 		//frame
 		pWorld->AddNode(logicFrame, 0, new TGeoCombiTrans(0., 0., 0, zeroRot));
-		//target
-		pWorld->AddNode(logicTarget, 0, new TGeoCombiTrans(TargetOffsetX, TargetOffsetY, TargetOffsetZ, zeroRot));
 		//Positioning the volumes in the frame		
 		//front_window
     logicFrame->AddNode(logicFWindow, 0, new TGeoCombiTrans(-(TPCLx - 2 * FrameThickness + 0.0025), 0, 0, zeroRot));
@@ -298,7 +244,6 @@ void ConstructTPC(TGeoVolume* pWorld)
 		//Active_region
     logicGas->AddNode(logicActiveRegion, 0, new TGeoCombiTrans(*tc3, *zeroRot));	    
 		
-    logicTarget->SetLineColor(kAzure);
     logicFrame->SetLineColor(kBlue);
     logicGas->SetLineColor(kRed);
     logicActiveRegion->SetLineColor(kMagenta);

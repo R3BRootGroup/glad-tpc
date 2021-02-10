@@ -1,0 +1,32 @@
+//____Window
+Windowx 0.005
+Windowy 21.
+Windowz 100.
+//____HYDRA TPC 
+FrameThickness 1.
+TPCLx 12.
+TPCLy 31.
+TPCLz 120.
+//____Active Region 
+ActiveRegionx 4.
+ActiveRegiony 29.
+ActiveRegionz 90.
+//____Projection
+PadSize 5
+LongDiff 0.000001
+TransDiff 0.0000001
+FanoFactor 0.2
+EIonization 15.e-9
+DriftVelocity 0.005
+//////////GladAngle -14.
+GladAngle 0.
+GladOffsetX 0.
+GladOffsetY 0.
+GladOffsetZ 230.06
+///////////FieldAngle -14.
+FieldAngle 0.
+FieldOffsetX 0.
+FieldOffsetY 0.
+FieldOffsetZ 113.4
+//______
+OutputFileName test

@@ -13,19 +13,27 @@
 #include "FairRuntimeDb.h"
 #include "R3BGTPCSetup.h"
 
+std::string tag= "Prototype";
+std::string tag1= "FullBeamOut";	  
+std::string tag2= "FullBeamIn";	  
+std::string TAG = tag;
+
 R3BGTPCLangevin::R3BGTPCLangevin()
     : FairTask("R3BGTPCLangevin")
 {
     // ALL UNITS IN cm, ns, V/cm, Tesla and GeV
-    fEIonization = 15.e-9;  // [GeV]
-    fDriftVelocity = 0.005; // [cm/ns] just initial value
-    fTransDiff = 0.0000001; // [cm^2/ns] just initial value
-    fLongDiff = 0.000001;   // [cm^2/ns] just initial value
-    fFanoFactor = 2;
-    fHalfSizeTPC_X = 0.;    // to be filled during Init()
-    fHalfSizeTPC_Y = 0.;    // to be filled during Init()
-    fHalfSizeTPC_Z = 0.;    // to be filled during Init()
-    fSizeOfVirtualPad = 1.; // 1 means pads of 1cm^2, 10 means pads of 1mm^2, ...
+		R3BGTPCSetup* setup = new R3BGTPCSetup(TAG,1);
+		LOG(INFO) << "\033[1;31m Warning\033[0m: The detector is: " << TAG;
+    fEIonization = setup->GetEIonization();  // [GeV]-> typical value for a gas detector tens of eV
+    fDriftVelocity = setup->GetDriftVelocity(); // [cm/ns]-> Minos TPC with a Efield=152 V/cm
+    fTransDiff = setup->GetTransDiff(); // [cm^2/ns]?
+    fLongDiff = setup->GetLongDiff();   // [cm^2/ns]?
+    fFanoFactor = setup->GetFanoFactor();
+    fSizeOfVirtualPad = setup->GetPadSize(); // 1 means pads of 1cm^2, 10 means pads of 1mm^2, ...
+    fHalfSizeTPC_X = 0.; // to be filled during Init()
+    fHalfSizeTPC_Y = 0.; // to be filled during Init()
+    fHalfSizeTPC_Z = 0.; // to be filled during Init()
+    delete setup;
 }
 
 R3BGTPCLangevin::~R3BGTPCLangevin()
@@ -91,9 +99,9 @@ InitStatus R3BGTPCLangevin::Init()
     */
 
     R3BGTPCSetup* setup = new R3BGTPCSetup("Prototype",1);
-    fHalfSizeTPC_X = setup->GetTPCLx() / 2.;
-    fHalfSizeTPC_Y = setup->GetTPCLy() / 2.;
-    fHalfSizeTPC_Z = setup->GetTPCLz() / 2.;
+    fHalfSizeTPC_X = setup->GetActiveRegionx() / 2.;
+    fHalfSizeTPC_Y = setup->GetActiveRegiony() / 2.;
+    fHalfSizeTPC_Z = setup->GetActiveRegionz() / 2.;
     delete setup;
 
     return kSUCCESS;
@@ -296,21 +304,25 @@ void R3BGTPCLangevin::Exec(Option_t*)
             // obtain padID for projX, projZ (simple algorithm)
             // the algorithm assigns a pad number which depends on the XZ size of the chamber,
             // according to the fSizeOfVirtualPad parameter: if it is 1, the pad size is cm^2
-            // and padID goes from 0 to 2*fHalfSizeTPC_X in the first row (Z~200),
-            // from 2*fHalfSizeTPC_X to 4*fHalfSizeTPC_X in the second row (Z~201), ...
+            // and padID goes from 0 to 2*fHalfSizeTPC_X in the first row (ZOffset),
+            // from 2*fHalfSizeTPC_X to 4*fHalfSizeTPC_X in the second row (ZOffset+1), ...
             // if fSizeOfVirtualPad=0.1, then padID goes from 0 to 20*fHalfSizeTPC_X for (Z~200.0),
             // from 20*fHalfSizeTPC_X to 40*fHalfSizeTPC_X  (Z~200.0), ...
             // Avoid first moving out of the virtual pad plane limits
-            if (projZ < 200)
-                projZ = 200.0;
-            if (projZ > 200 + 2 * fHalfSizeTPC_Z)
-                projZ = 200.0 + 2 * fHalfSizeTPC_Z;
-            if (projX < -fHalfSizeTPC_X)
-                projX = -fHalfSizeTPC_X;
-            if (projX > 2 * fHalfSizeTPC_X)
-                projX = 2 * fHalfSizeTPC_X;
-            Int_t padID = (2 * fHalfSizeTPC_X * fSizeOfVirtualPad) * (Int_t)((projZ - 200.) * fSizeOfVirtualPad) +
-                          (Int_t)((projX + fHalfSizeTPC_X) * fSizeOfVirtualPad);
+            //ZOffset- z of the first pad row in the laboratory frame
+            double ZOffset=272.7;
+            //XOffset-y of the first pad column in the laboratory frame
+            double XOffset=5.8;
+            if (projZ < ZOffset)
+                projZ = ZOffset;
+            if (projZ > ZOffset + 2 * fHalfSizeTPC_Z)
+                projZ = ZOffset + 2 * fHalfSizeTPC_Z;   
+            if (projX < XOffset)
+                projX = XOffset;
+            if (projX > XOffset + 2 * fHalfSizeTPC_X)
+                projX = XOffset + 2 * fHalfSizeTPC_X;
+            Int_t padID = (2 * fHalfSizeTPC_X * fSizeOfVirtualPad) * (Int_t)((projZ - ZOffset) * fSizeOfVirtualPad) +
+                          (Int_t)((projX - XOffset) * fSizeOfVirtualPad);
 
             Int_t nProjPoints = fGTPCProjPoint->GetEntriesFast();
             for (Int_t pp = 0; pp < nProjPoints; pp++)

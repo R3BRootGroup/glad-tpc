@@ -27,7 +27,7 @@ To create the ASCII file for R3BROOT everything must be in [ns], [cm] and [GeV]
 #include <iomanip>
 #include <iostream>
 #include <iterator>
-#include <stdlib.h> /* exit, EXIT_FAILURE */
+#include <stdlib.h> 
 #include <string>
 #include <vector>
 //Loading bar
@@ -52,9 +52,9 @@ string GEOTAG;
 void GenerateInputTree_PhaseSpaceDecay()
 {
     const char* geoTag = "Prototype";
-    const char* geoTag1 = "Fullv1";
-    const char* geoTag2 = "Fullv2";
-    GEOTAG = std::string(geoTag);
+    const char* geoTag1 = "FullBeamOut";
+    const char* geoTag2 = "FullBeamIn";
+    GEOTAG = std::string(geoTag1);
     // Number of total decays 
     const int neve = 10000; //select the total number of events that you need
 		
@@ -84,27 +84,27 @@ void GenerateInputTree_PhaseSpaceDecay()
         cout << "The target Position is (" << TargetPosition.X() << ", " << TargetPosition.Y() << ", "
              << TargetPosition.Z() << ") [cm]" << endl;
     }
-    if (GEOTAG == "Fullv1")
+    if (GEOTAG == "FullBeamOut")
     {
         cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
-        asciifile.open("./ASCII/inputFullv1_3LH.dat", ios::out | ios::app);
-        TargetPosition = { 0, 0., 0 }; // TODO add the correct coordinates
+        asciifile.open("./ASCII/inputFullBeamOut_3LH.dat", ios::out | ios::app);
+        TargetPosition = { 0, 0., 147.5 }; 
         cout << "The target Position is (" << TargetPosition.X() << ", " << TargetPosition.Y() << ", "
              << TargetPosition.Z() << ") [cm]" << endl;
     }
-    if (GEOTAG == "Fullv2")
+    if (GEOTAG == "FullBeamIn")
     {
         cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
-        asciifile.open("./ASCII/inputFullv2_3LH.dat", ios::out | ios::app);
-        TargetPosition = { 0, 0., 0 }; // TODO add the coordinates
+        asciifile.open("./ASCII/inputFullBeamIn_3LH.dat", ios::out | ios::app);
+        TargetPosition = { 0, 0., 161. };
         cout << "The target Position is (" << TargetPosition.X() << ", " << TargetPosition.Y() << ", "
              << TargetPosition.Z() << ") [cm]" << endl;
     }
-
+		cout<<"Number of hypertriton decay events: "<<neve<<endl;
     //____________________________________________________
     for (int i = 0; i < neve; ++i)
     {
-    		double percentage=i/10000.;//neve has to be a double
+    		double percentage=i/10000.;
 				loadfunction(percentage);
 
         double sig_E = 0.1344, mean_E = 1.555; //[GeV]
@@ -172,7 +172,7 @@ void GenerateInputTree_PhaseSpaceDecay()
         {
             asciifile << eventNumber << "  " << multiplicity << "  0.  0."
                       << "\n";
-            // the position for the beam is fixed -2m
+            // the position for the 12C beam is fixed: -2m
             asciifile << "-1  6  12  " << PC.Px() << "  " << PC.Py() << "  " << PC.Pz() << "  0.  0.  -200.  11.178"
                       << "\n";
         }
@@ -208,8 +208,7 @@ void GenerateInputTree_PhaseSpaceDecay()
 }
 
 /*
-
-    //Benchmark beam-> 1GeV proton beam it's expected 51 deg of curvature
+    //Benchmark beam-> 1GeV proton beam it's expected to be bent 51 degure
     double Mp = 938.272;//MeV/c^2
     Double_t Tp = 1000;//1.*GeV/A
     Double_t Ep = Mp + Tp;

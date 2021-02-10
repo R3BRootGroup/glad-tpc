@@ -18,19 +18,19 @@ void run_lang(TString GEOTAG = "Prototype")
         parFile = "../sim/Prototype/par.root"; 
         outFile = "./Prototype/lang.root";
     }
-    if (GEOTAG.CompareTo("Fullv1") == 0)
+    if (GEOTAG.CompareTo("FullBeamOut") == 0)
     {
         cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
-        inFile = "../sim/Fullv1/sim.root"; 
-        parFile = "../sim/Fullv1/par.root";
-        outFile = "./Fullv1/lang.root";
+        inFile = "../sim/FullBeamOut/sim.root"; 
+        parFile = "../sim/FullBeamOut/par.root";
+        outFile = "./FullBeamOut/lang.root";
     }
-    if (GEOTAG.CompareTo("Fullv2") == 0)
+    if (GEOTAG.CompareTo("FullBeamIn") == 0)
     {
         cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
-        inFile = "../sim/Fullv2/sim.root"; 
-        parFile = "../sim/Fullv2/par.root"; 
-        outFile = "./Fullv2/lang.root";
+        inFile = "../sim/FullBeamIn/sim.root"; 
+        parFile = "../sim/FullBeamIn/par.root"; 
+        outFile = "./FullBeamIn/lang.root";
     }
 
     // -----   Create analysis run   ----------------------------------------
@@ -46,8 +46,9 @@ void run_lang(TString GEOTAG = "Prototype")
     rtdb->print();
 
     R3BGTPCLangevin* lan = new R3BGTPCLangevin();
-    lan->SetDriftParameters(15.e-9, 0.005, 0.0000001, 0.000001, 2);
-    lan->SetSizeOfVirtualPad(1); // 1 means pads of 1cm^2, 10 means pads of 1mm^2, ...
+    R3BGTPCSetup *setup=new R3BGTPCSetup();
+    lan->SetDriftParameters(setup->GetEIonization(), setup->GetDriftVelocity(), setup->GetLongDiff(), setup->GetTransDiff(), setup->GetFanoFactor());
+    lan->SetSizeOfVirtualPad(setup->GetPadSize()); // 1 means pads of 1cm^2, 10 means pads of 1mm^2, ...
 
     fRun->AddTask(lan);
 

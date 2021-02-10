@@ -1,10 +1,3 @@
-//____Target, not sure about Target Offset Z could be 20 cm more upstream TODO
-TargetRadius 0.25
-TargetLength 5.
-TargetAngle 0.
-TargetOffsetX -11.5
-TargetOffsetY 0.
-TargetOffsetZ -94.5
 //____Window
 Windowx 0.005
 Windowy 21.9
@@ -18,6 +11,13 @@ TPCLz 47.8
 ActiveRegionx 8.8
 ActiveRegiony 29.4
 ActiveRegionz 25.6
+//____Projection
+PadSize 5
+LongDiff 0.000001
+TransDiff 0.0000001
+FanoFactor 0.2
+EIonization 15.e-9
+DriftVelocity 0.005
 //////////GladAngle -14.
 GladAngle 0.
 GladOffsetX 0.
@@ -30,17 +30,3 @@ FieldOffsetY 0.
 FieldOffsetZ 113.4
 //______
 OutputFileName test
-
-//200*200*300 2*2mm pad-->500*500*1000 5*5mm pad
-//MINOS is defined successively by (all values have to be given in millimeters):
-//	- a target: TargetRadius, TargetLength
-//	- a chamber: ChamberInnerRadius, ChamberThickness, ChamberLength
-//	- inner Rohacell: inner radius = ChamberInnerRadius + ChamberThickness, InnerRohacellThickness, length = ChamberLength
-//	- Kapton: inner radius = ChamberInnerRadius + ChamberThickness + InnerRohacellThickness, KaptonThickness, length = ChamberLength
-//	- outer Rohacell: inner radius = ChamberInnerRadius + ChamberThickness + InnerRohacellThickness + KaptonThickness, OuterRohacellThickness, length = ChamberLength
-//	- TPC gas: inner radius = ChamberInnerRadius + ChamberThickness + InnerRohacellThickness + KaptonThickness + OuterRohacellThickness, TPCOuterRadius, length = ChamberLength
-//	- a Mylar window delimiting the volume target: WindowThickness
-// angle is in deg, rotate with Z axis
-//offset is in cm in x/y/z direction
-//230.06cm Glad rotation center
-//113.4cm magfield center

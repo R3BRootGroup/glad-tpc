@@ -19,8 +19,10 @@ R3BGTPCProjPoint::R3BGTPCProjPoint(Int_t pad, Double_t time, Double_t charge, In
     fCharge = charge;
     char hname[255];
     sprintf(hname, "event %i: pad %i", eventID, fVirtualPadID);
-    fTimeDistr = new TH1S(hname, hname, 400, 0, 40);
+    fTimeDistr = new TH1S(hname, hname, 400, 0, 40);//this is for microsec
+    //fTimeDistr = new TH1S(hname, hname, 400000, 0, 40000);//this is for nanosec
     SetTimeDistr(time, charge);
+
 }
 
 R3BGTPCProjPoint::~R3BGTPCProjPoint()

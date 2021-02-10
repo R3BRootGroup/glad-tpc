@@ -12,6 +12,17 @@
 //     BUT FIRST, select in the //SETTINGS section the simulation features
 //	(the macro will plot and text information as a function of these settings)
 //  -------------------------------------------------------------------------
+//Loading bar
+#define PBSTR "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
+#define PBWIDTH 60
+void loadfunction(double &percentage)
+{
+    int val = (int) (percentage * 100);
+    int lpad = (int) (percentage * PBWIDTH);
+    int rpad = PBWIDTH - lpad;
+    printf("\r%3d%% [%.*s%*s]", val, lpad, PBSTR, rpad, "");
+    fflush(stdout);
+}
 void ana_lang(TString GEOTAG = "Prototype")
 {
 
@@ -27,17 +38,17 @@ void ana_lang(TString GEOTAG = "Prototype")
         title1 = "./Prototype/lang.root";
         title2 = "./Prototype/proj.root";
     }
-    if (GEOTAG.CompareTo("Fullv1") == 0)
+    if (GEOTAG.CompareTo("FullBeamOut") == 0)
     {
         cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
-        title1 = "./Fullv1/lang.root";
-        title2 = "./Fullv1/proj.root";
+        title1 = "./FullBeamOut/lang.root";
+        title2 = "./FullBeamOut/proj.root";
     }
-    if (GEOTAG.CompareTo("Fullv2") == 0)
+    if (GEOTAG.CompareTo("FullBeamIn") == 0)
     {
         cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
-        title1 = "./Fullv2/lang.root";
-        title2 = "./Fullv2/proj.root";
+        title1 = "./FullBeamIn/lang.root";
+        title2 = "./FullBeamIn/proj.root";
     }
 
     TFile* file1 = TFile::Open(title1); // langevin results
@@ -48,11 +59,12 @@ void ana_lang(TString GEOTAG = "Prototype")
     gStyle->SetOptStat(111111);
     gStyle->SetOptFit(0);
 
-    // SET THIS VALUES AS IT WAS IN THE R3BGTPCProjector code
-    Double_t fHalfSizeTPC_X = 25;   // 50cm in X (row)
-    Double_t fHalfSizeTPC_Y = 10;   // 20cm in Y (time)
-    Double_t fHalfSizeTPC_Z = 50;   // 100cm in Z (column)
-    Double_t fSizeOfVirtualPad = 1; // 1: pads of 1cm^2 , 10: pads of 1mm^2
+    // SETUP
+    R3BGTPCSetup *setup=new R3BGTPCSetup();
+    Double_t fHalfSizeTPC_X = setup->GetActiveRegionx()/2;   // 50cm in X (row)
+    Double_t fHalfSizeTPC_Y = setup->GetActiveRegiony()/2;   // 20cm in Y (time)
+    Double_t fHalfSizeTPC_Z = setup->GetActiveRegionz()/2;   // 100cm in Z (column)
+    Double_t fSizeOfVirtualPad = setup->GetPadSize(); // 1: pads of 1cm^2 , 10: pads of 1mm^2
 
     // END OF SETTINGS
 
@@ -150,8 +162,8 @@ void ana_lang(TString GEOTAG = "Prototype")
 
     for (Int_t i = 0; i < nevents; i++)
     {
-        if (i % 10000 == 0)
-            printf("Event:%i\n", i);
+        double percentage=i/(double)(nevents*1.);
+        loadfunction(percentage);
 
         gtpcProjPointCA->Clear();
         gtpcProjPointCA_lan->Clear();
@@ -340,7 +352,7 @@ void ana_lang(TString GEOTAG = "Prototype")
             delete chargePad_lan;
         }
     }
-
+    cout<<"\n"<<endl;   
     TCanvas* c1 = new TCanvas("c1", "Diff in pads charge (XZ) plane", 0, 0, 600, 900);
 
     c1->SetFillColor(0);
