@@ -4,11 +4,11 @@
 #pragma link off all classes;
 #pragma link off all functions;
 
-#pragma link C++ class R3BGTPC+;
-#pragma link C++ class R3BGTPCSetup+;
-#pragma link C++ class R3BGTPCProjector+;
-#pragma link C++ class R3BGTPCLangevin+;
-#pragma link C++ class R3BGTPCLangevinTest+;
+#pragma link C++ class R3BGTPC + ;
+#pragma link C++ class R3BGTPCSetup + ;
+#pragma link C++ class R3BGTPCProjector + ;
+#pragma link C++ class R3BGTPCLangevin + ;
+#pragma link C++ class R3BGTPCLangevinTest + ;
 
 //#pragma link C++ class R3BGLADTPCHitPar+;
 //#pragma link C++ class R3BGLADTPCCalPar+;

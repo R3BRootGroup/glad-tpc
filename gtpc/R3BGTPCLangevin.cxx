@@ -1,3 +1,15 @@
+/******************************************************************************
+ *   Copyright (C) 2020 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
+ *   Copyright (C) 2020 Members of R3B Collaboration                          *
+ *                                                                            *
+ *             This software is distributed under the terms of the            *
+ *                 GNU General Public Licence (GPL) version 3,                *
+ *                    copied verbatim in the file "LICENSE".                  *
+ *                                                                            *
+ * In applying this license GSI does not waive the privileges and immunities  *
+ * granted to it by virtue of its status as an Intergovernmental Organization *
+ * or submit itself to any jurisdiction.                                      *
+ ******************************************************************************/
 #include "R3BGTPCLangevin.h"
 
 #include "TClonesArray.h"
@@ -13,26 +25,26 @@
 #include "FairRuntimeDb.h"
 #include "R3BGTPCSetup.h"
 
-std::string tag= "Prototype";
-std::string tag1= "FullBeamOut";	  
-std::string tag2= "FullBeamIn";	  
+std::string tag = "Prototype";
+std::string tag1 = "FullBeamOut";
+std::string tag2 = "FullBeamIn";
 std::string TAG = tag;
 
 R3BGTPCLangevin::R3BGTPCLangevin()
     : FairTask("R3BGTPCLangevin")
 {
     // ALL UNITS IN cm, ns, V/cm, Tesla and GeV
-		R3BGTPCSetup* setup = new R3BGTPCSetup(TAG,1);
-		LOG(INFO) << "\033[1;31m Warning\033[0m: The detector is: " << TAG;
-    fEIonization = setup->GetEIonization();  // [GeV]-> typical value for a gas detector tens of eV
+    R3BGTPCSetup* setup = new R3BGTPCSetup(TAG, 1);
+    LOG(INFO) << "\033[1;31m Warning\033[0m: The detector is: " << TAG;
+    fEIonization = setup->GetEIonization();     // [GeV]-> typical value for a gas detector tens of eV
     fDriftVelocity = setup->GetDriftVelocity(); // [cm/ns]-> Minos TPC with a Efield=152 V/cm
-    fTransDiff = setup->GetTransDiff(); // [cm^2/ns]?
-    fLongDiff = setup->GetLongDiff();   // [cm^2/ns]?
+    fTransDiff = setup->GetTransDiff();         // [cm^2/ns]?
+    fLongDiff = setup->GetLongDiff();           // [cm^2/ns]?
     fFanoFactor = setup->GetFanoFactor();
     fSizeOfVirtualPad = setup->GetPadSize(); // 1 means pads of 1cm^2, 10 means pads of 1mm^2, ...
-    fHalfSizeTPC_X = 0.; // to be filled during Init()
-    fHalfSizeTPC_Y = 0.; // to be filled during Init()
-    fHalfSizeTPC_Z = 0.; // to be filled during Init()
+    fHalfSizeTPC_X = 0.;                     // to be filled during Init()
+    fHalfSizeTPC_Y = 0.;                     // to be filled during Init()
+    fHalfSizeTPC_Z = 0.;                     // to be filled during Init()
     delete setup;
 }
 
@@ -98,7 +110,7 @@ InitStatus R3BGTPCLangevin::Init()
          fCoefL    = fPar->GetCoefDiffusionLong()*sqrt(10.);  // [cm^(-1/2)] to [mm^(-1/2)]
     */
 
-    R3BGTPCSetup* setup = new R3BGTPCSetup("Prototype",1);
+    R3BGTPCSetup* setup = new R3BGTPCSetup("Prototype", 1);
     fHalfSizeTPC_X = setup->GetActiveRegionx() / 2.;
     fHalfSizeTPC_Y = setup->GetActiveRegiony() / 2.;
     fHalfSizeTPC_Z = setup->GetActiveRegionz() / 2.;
@@ -309,14 +321,14 @@ void R3BGTPCLangevin::Exec(Option_t*)
             // if fSizeOfVirtualPad=0.1, then padID goes from 0 to 20*fHalfSizeTPC_X for (Z~200.0),
             // from 20*fHalfSizeTPC_X to 40*fHalfSizeTPC_X  (Z~200.0), ...
             // Avoid first moving out of the virtual pad plane limits
-            //ZOffset- z of the first pad row in the laboratory frame
-            double ZOffset=272.7;
-            //XOffset-y of the first pad column in the laboratory frame
-            double XOffset=5.8;
+            // ZOffset- z of the first pad row in the laboratory frame
+            double ZOffset = 272.7;
+            // XOffset-y of the first pad column in the laboratory frame
+            double XOffset = 5.8;
             if (projZ < ZOffset)
                 projZ = ZOffset;
             if (projZ > ZOffset + 2 * fHalfSizeTPC_Z)
-                projZ = ZOffset + 2 * fHalfSizeTPC_Z;   
+                projZ = ZOffset + 2 * fHalfSizeTPC_Z;
             if (projX < XOffset)
                 projX = XOffset;
             if (projX > XOffset + 2 * fHalfSizeTPC_X)

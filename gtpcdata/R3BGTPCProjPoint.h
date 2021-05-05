@@ -1,9 +1,15 @@
-// -------------------------------------------------------------------------
-// -----                  R3BGTPCProjPoint header file                 -----
-// -----               Created  28/03/18  by H. Alvarez Pol            -----
-// -----                Modified 30/03/18                              -----
-// -------------------------------------------------------------------------
-
+/******************************************************************************
+ *   Copyright (C) 2020 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
+ *   Copyright (C) 2020 Members of R3B Collaboration                          *
+ *                                                                            *
+ *             This software is distributed under the terms of the            *
+ *                 GNU General Public Licence (GPL) version 3,                *
+ *                    copied verbatim in the file "LICENSE".                  *
+ *                                                                            *
+ * In applying this license GSI does not waive the privileges and immunities  *
+ * granted to it by virtue of its status as an Intergovernmental Organization *
+ * or submit itself to any jurisdiction.                                      *
+ ******************************************************************************/
 /**  R3BGTPCProjPoint.h
  **  A R3BGTPCProjPoint is the projected information on a virtual
  **  pad plane. Contains the total charge and time information

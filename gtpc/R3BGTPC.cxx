@@ -1,8 +1,20 @@
+/******************************************************************************
+ *   Copyright (C) 2020 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
+ *   Copyright (C) 2020 Members of R3B Collaboration                          *
+ *                                                                            *
+ *             This software is distributed under the terms of the            *
+ *                 GNU General Public Licence (GPL) version 3,                *
+ *                    copied verbatim in the file "LICENSE".                  *
+ *                                                                            *
+ * In applying this license GSI does not waive the privileges and immunities  *
+ * granted to it by virtue of its status as an Intergovernmental Organization *
+ * or submit itself to any jurisdiction.                                      *
+ ******************************************************************************/
+#include "R3BGTPC.h"
 #include "FairRootManager.h"
 #include "FairRun.h"
 #include "FairRuntimeDb.h"
 #include "FairVolume.h"
-#include "R3BGTPC.h"
 #include "R3BGTPCPoint.h"
 #include "R3BMCStack.h"
 #include "TClonesArray.h"
@@ -118,8 +130,8 @@ Bool_t R3BGTPC::ProcessHits(FairVolume* vol)
     Int_t parentTrackID = gMC->GetStack()->GetCurrentParentTrackNumber();
     TString particleName = gMC->GetStack()->GetCurrentTrack()->GetName();
     //_______________only care about primary particle
-   // if (parentTrackID == -1 || (parentTrackID == 0 && particleName != "e-"))
-    if (gMC->TrackPid()!=0)//due to the INCL generator
+    // if (parentTrackID == -1 || (parentTrackID == 0 && particleName != "e-"))
+    if (gMC->TrackPid() != 0) // due to the INCL generator
     {
         Int_t size = fGTPCPointCollection->GetEntriesFast();
         new ((*fGTPCPointCollection)[size])
@@ -128,10 +140,10 @@ Bool_t R3BGTPC::ProcessHits(FairVolume* vol)
                          pos.Vect(),                               // pos from gMC->TrackPosition(pos);
                          mom.Vect(),                               // mom from gMC->TrackMomentum(pos);
                          gMC->TrackTime(),                         // time in s
-                         gMC->TrackLength(),                       // Return the length of the current track from its origin (in cm)
-                         gMC->Edep(),                              // eloss
-                         gMC->CurrentEvent(),                      // EventID
-                         parentTrackID,                            // parentTrackID
+                         gMC->TrackLength(),  // Return the length of the current track from its origin (in cm)
+                         gMC->Edep(),         // eloss
+                         gMC->CurrentEvent(), // EventID
+                         parentTrackID,       // parentTrackID
                          gMC->GetStack()->GetCurrentTrack()->GetMother(0), // primaryParticleID
                          theTrackStatus,                                   // trackStatus from GetTrackStatus(...)
                          gMC->TrackPid(),                                  // PDGCode
@@ -141,10 +153,10 @@ Bool_t R3BGTPC::ProcessHits(FairVolume* vol)
                          vol->GetName(),                                   // volName (or vol->getRealName();??)
                          TMCProcessName[gMC->ProdProcess(0)],              // processName
                          gMC->TrackCharge(),                               // charge
-                         gMC->TrackMass(),                                 // Return the mass of the track currently transported.
-                         (gMC->Etot() - gMC->TrackMass()),                 // kineticEnergy
-                         gMC->TrackStep(),                                 // Return the length in centimeters of the current step (in cm)
-                         kTRUE);                                           // isAccepted
+                         gMC->TrackMass(),                 // Return the mass of the track currently transported.
+                         (gMC->Etot() - gMC->TrackMass()), // kineticEnergy
+                         gMC->TrackStep(), // Return the length in centimeters of the current step (in cm)
+                         kTRUE);           // isAccepted
     }
 
     // Increment number of LandPoints for this track
@@ -160,7 +172,8 @@ void R3BGTPC::BeginEvent() { ; }
 // -----   Public method EndOfEvent   -----------------------------------------
 void R3BGTPC::EndOfEvent()
 {
-    if (fVerboseLevel) Print();
+    if (fVerboseLevel)
+        Print();
     Reset();
 }
 // ----------------------------------------------------------------------------
@@ -198,7 +211,7 @@ Bool_t R3BGTPC::CheckIfSensitive(std::string name)
 
     if (TString(name).Contains("Active_region"))
     {
-        LOG(INFO)<<name<<" is sensitive";
+        LOG(INFO) << name << " is sensitive";
         return kTRUE;
     }
     return kFALSE;

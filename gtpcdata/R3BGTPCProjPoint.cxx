@@ -1,8 +1,15 @@
-// -------------------------------------------------------------------------
-// -----                R3BGTPCProjPoint source file                   -----
-// -----               Created  28/03/18  by H. Alvarez Pol            -----
-// -------------------------------------------------------------------------
-
+/******************************************************************************
+ *   Copyright (C) 2020 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
+ *   Copyright (C) 2020 Members of R3B Collaboration                          *
+ *                                                                            *
+ *             This software is distributed under the terms of the            *
+ *                 GNU General Public Licence (GPL) version 3,                *
+ *                    copied verbatim in the file "LICENSE".                  *
+ *                                                                            *
+ * In applying this license GSI does not waive the privileges and immunities  *
+ * granted to it by virtue of its status as an Intergovernmental Organization *
+ * or submit itself to any jurisdiction.                                      *
+ ******************************************************************************/
 #include "R3BGTPCProjPoint.h"
 #include <iostream>
 
@@ -19,10 +26,9 @@ R3BGTPCProjPoint::R3BGTPCProjPoint(Int_t pad, Double_t time, Double_t charge, In
     fCharge = charge;
     char hname[255];
     sprintf(hname, "event %i: pad %i", eventID, fVirtualPadID);
-    fTimeDistr = new TH1S(hname, hname, 400, 0, 40);//this is for microsec
-    //fTimeDistr = new TH1S(hname, hname, 400000, 0, 40000);//this is for nanosec
+    fTimeDistr = new TH1S(hname, hname, 400, 0, 40); // this is for microsec
+    // fTimeDistr = new TH1S(hname, hname, 400000, 0, 40000);//this is for nanosec
     SetTimeDistr(time, charge);
-
 }
 
 R3BGTPCProjPoint::~R3BGTPCProjPoint()

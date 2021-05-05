@@ -1,3 +1,15 @@
+/******************************************************************************
+ *   Copyright (C) 2020 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
+ *   Copyright (C) 2020 Members of R3B Collaboration                          *
+ *                                                                            *
+ *             This software is distributed under the terms of the            *
+ *                 GNU General Public Licence (GPL) version 3,                *
+ *                    copied verbatim in the file "LICENSE".                  *
+ *                                                                            *
+ * In applying this license GSI does not waive the privileges and immunities  *
+ * granted to it by virtue of its status as an Intergovernmental Organization *
+ * or submit itself to any jurisdiction.                                      *
+ ******************************************************************************/
 #ifndef R3BGTPCSETUP_H
 #define R3BGTPCSETUP_H 1
 
@@ -21,21 +33,21 @@ class R3BGTPCSetup : public TObject
     ~R3BGTPCSetup();
     void ReadConfigurationFile(string, int);
     inline TString GetOutputFileName() { return OutputFileName; }
-    //Electronic______________________________________________________________________
-    inline double GetGain() 				{ return Gain; }
-    inline double GetTheta() 				{ return Theta; }
-    inline double GetNoiseRMS() 		{ return NoiseRMS; }
-    inline double GetTimeBinSize() 	{ return TimeBinSize; }
-    inline double GetShapingTime() 	{ return ShapingTime; }
-    inline double GetThreshold() 		{ return Threshold; }
-    //Target__________________________________________________________________________
+    // Electronic______________________________________________________________________
+    inline double GetGain() { return Gain; }
+    inline double GetTheta() { return Theta; }
+    inline double GetNoiseRMS() { return NoiseRMS; }
+    inline double GetTimeBinSize() { return TimeBinSize; }
+    inline double GetShapingTime() { return ShapingTime; }
+    inline double GetThreshold() { return Threshold; }
+    // Target__________________________________________________________________________
     inline double GetTargetLength() { return TargetLength; }
     inline double GetTargetRadius() { return TargetRadius; }
     inline double GetTargetAngle() { return TargetAngle; }
     inline double GetTargetOffsetX() { return TargetOffsetX; }
     inline double GetTargetOffsetY() { return TargetOffsetY; }
     inline double GetTargetOffsetZ() { return TargetOffsetZ; }
-		//TPC_____________________________________________________________________________
+    // TPC_____________________________________________________________________________
     inline double GetActiveRegionx() { return ActiveRegionx; }
     inline double GetActiveRegiony() { return ActiveRegiony; }
     inline double GetActiveRegionz() { return ActiveRegionz; }
@@ -46,14 +58,14 @@ class R3BGTPCSetup : public TObject
     inline double GetWindowx() { return Windowx; }
     inline double GetWindowy() { return Windowy; }
     inline double GetWindowz() { return Windowz; }
-		//Drift___________________________________________________________________________
+    // Drift___________________________________________________________________________
     inline double GetLongDiff() { return LongDiff; }
     inline double GetTransDiff() { return TransDiff; }
     inline double GetPadSize() { return PadSize; }
     inline double GetFanoFactor() { return FanoFactor; }
     inline double GetEIonization() { return EIonization; }
     inline double GetDriftVelocity() { return DriftVelocity; }
-		//GLAD____________________________________________________________________________
+    // GLAD____________________________________________________________________________
     inline double GetFieldAngle() { return FieldAngle; }
     inline double GetFieldOffsetX() { return FieldOffsetX; }
     inline double GetFieldOffsetY() { return FieldOffsetY; }
@@ -67,9 +79,9 @@ class R3BGTPCSetup : public TObject
 
   protected:
     // initial conditions
-		double Gain, Theta;
-		double NoiseRMS, TimeBinSize, ShapingTime;
-		double Threshold;
+    double Gain, Theta;
+    double NoiseRMS, TimeBinSize, ShapingTime;
+    double Threshold;
     double ActiveRegionx, ActiveRegiony, ActiveRegionz;
     double TPCLx, TPCLy, TPCLz, FrameThickness;
     double Windowx, Windowy, Windowz;

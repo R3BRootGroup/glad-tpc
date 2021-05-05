@@ -1,7 +1,18 @@
+/******************************************************************************
+ *   Copyright (C) 2020 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
+ *   Copyright (C) 2020 Members of R3B Collaboration                          *
+ *                                                                            *
+ *             This software is distributed under the terms of the            *
+ *                 GNU General Public Licence (GPL) version 3,                *
+ *                    copied verbatim in the file "LICENSE".                  *
+ *                                                                            *
+ * In applying this license GSI does not waive the privileges and immunities  *
+ * granted to it by virtue of its status as an Intergovernmental Organization *
+ * or submit itself to any jurisdiction.                                      *
+ ******************************************************************************/
 // Class to read the setup file of the detector, it's a common class for the 4 different designs.
 // This simplify the code, one has to be just careful to the use of the function R3BGTPCSetup,
 // because now it requires a second argument to be used.
-// Author S. Velardita
 #include "R3BGTPCSetup.h"
 ClassImp(R3BGTPCSetup)
 
@@ -12,15 +23,15 @@ ClassImp(R3BGTPCSetup)
 
 R3BGTPCSetup::R3BGTPCSetup(std::string detector, int verbose)
 {
-    if (TString(detector).CompareTo("Prototype")==0)
+    if (TString(detector).CompareTo("Prototype") == 0)
         ReadConfigurationFile("HYDRAprototype_FileSetup.txt", verbose);
-    else if (TString(detector).CompareTo("FullBeamOut")==0)
+    else if (TString(detector).CompareTo("FullBeamOut") == 0)
         ReadConfigurationFile("HYDRAFullBeamOut_FileSetup.txt", verbose);
-    else if (TString(detector).CompareTo("FullBeamIn")==0)
+    else if (TString(detector).CompareTo("FullBeamIn") == 0)
         ReadConfigurationFile("HYDRAFullBeamIn_FileSetup.txt", verbose);
-	 	else if (TString(detector).CompareTo("Target")==0)
+    else if (TString(detector).CompareTo("Target") == 0)
         ReadConfigurationFile("Target_FileSetup.txt", verbose);
-   	else if (TString(detector).CompareTo("Electronic")==0)
+    else if (TString(detector).CompareTo("Electronic") == 0)
         ReadConfigurationFile("Electronic_FileSetup.txt", verbose);
     else
         cout << "The detector is not well defined!!!!!!!!!!" << endl;
@@ -32,21 +43,21 @@ void R3BGTPCSetup::ReadConfigurationFile(string Config, int verbose)
 {
     string LineBuffer;
     string DataBuffer;
-		//Electronic
-   	bool cTimeBin   	= false;	
-   	bool cThreshold 	= false;
-   	bool cGain      	= false;
-   	bool cNoiseRMS  	= false;
-   	bool cTheta     	= false;
-   	bool cShapingTime = false;
-   	//Target
+    // Electronic
+    bool cTimeBin = false;
+    bool cThreshold = false;
+    bool cGain = false;
+    bool cNoiseRMS = false;
+    bool cTheta = false;
+    bool cShapingTime = false;
+    // Target
     bool cTargetRadius = false;
     bool cTargetLength = false;
     bool cTargetAngle = false;
     bool cTargetOffsetX = false;
     bool cTargetOffsetY = false;
     bool cTargetOffsetZ = false;
-		//TPC
+    // TPC
     bool cActiveRegionx = false;
     bool cActiveRegiony = false;
     bool cActiveRegionz = false;
@@ -57,14 +68,14 @@ void R3BGTPCSetup::ReadConfigurationFile(string Config, int verbose)
     bool cWindowx = false;
     bool cWindowy = false;
     bool cWindowz = false;
-    //Drift
+    // Drift
     bool cPadSize = false;
     bool cLongDiff = false;
     bool cTransDiff = false;
     bool cFanoFactor = false;
     bool cEIonization = false;
     bool cDriftVelocity = false;
-		//GLAD
+    // GLAD
     bool cGladAngle = false;
     bool cGladOffsetX = false;
     bool cGladOffsetY = false;
@@ -99,56 +110,56 @@ void R3BGTPCSetup::ReadConfigurationFile(string Config, int verbose)
             ;
         }
 
-        //Electronic_____________________________________________________________
-    		else if (LineBuffer.compare(0,7, "TimeBin") == 0 && cTimeBin == false) 
-    		{
-         	cTimeBin = true ;
-	 				string test = LineBuffer.substr(7,LineBuffer.length()-7);
-         	TimeBinSize=atof(test.c_str());
-         	if(verbose==1)
-         				cout << "Time bin = "<<TimeBinSize<<" ns" << endl   ;
-     		}
-     		else if (LineBuffer.compare(0,9, "Threshold") == 0 && cThreshold == false) 
-     		{
-         	cThreshold = true ;
-	 				string test = LineBuffer.substr(9,LineBuffer.length()-9);
-         	Threshold=atof(test.c_str());
-         	if(verbose==1)
-         				cout << "Detection Threshold = "<<Threshold<<" times noise rms" << endl   ;
-     		}
-      	else if (LineBuffer.compare(0,4, "Gain") == 0 && cGain == false) 
-      	{
-         	cGain = true ;
-	 				string test = LineBuffer.substr(4,LineBuffer.length()-4);
-         	Gain=atof(test.c_str());
-         	if(verbose==1)
-         				cout << "Detection Gain = "<<Gain << endl   ;
-     		}
-      	else if (LineBuffer.compare(0,5, "Theta") == 0 && cTheta == false) 
-      	{
-         	cTheta = true ;
-	 				string test = LineBuffer.substr(5,LineBuffer.length()-5);
-         	Theta=atof(test.c_str());
-         	if(verbose==1)
-         				cout << "Parameter theta for Polya = "<<Theta << endl   ;
-     		}
-      	else if (LineBuffer.compare(0,8, "NoiseRMS") == 0 && cNoiseRMS == false) 
-      	{
-        	cNoiseRMS = true ;
-	 				string test = LineBuffer.substr(8,LineBuffer.length()-8);
-         	NoiseRMS=atof(test.c_str());
-         	if(verbose==1)
-         				cout << "Noise background = "<<NoiseRMS<<" e- RMS" << endl   ;
-     		}
-      	else if (LineBuffer.compare(0,11, "ShapingTime") == 0 && cShapingTime == false) 
-      	{
-         	cShapingTime = true ;
-	 				string test = LineBuffer.substr(11,LineBuffer.length()-11);
-         	ShapingTime=atoi(test.c_str());
-         	if(verbose==1)
-         				cout << "ShapingTime = "<<ShapingTime<<" ns" << endl   ;
-     		}
-     		//Target_________________________________________________________________
+        // Electronic_____________________________________________________________
+        else if (LineBuffer.compare(0, 7, "TimeBin") == 0 && cTimeBin == false)
+        {
+            cTimeBin = true;
+            string test = LineBuffer.substr(7, LineBuffer.length() - 7);
+            TimeBinSize = atof(test.c_str());
+            if (verbose == 1)
+                cout << "Time bin = " << TimeBinSize << " ns" << endl;
+        }
+        else if (LineBuffer.compare(0, 9, "Threshold") == 0 && cThreshold == false)
+        {
+            cThreshold = true;
+            string test = LineBuffer.substr(9, LineBuffer.length() - 9);
+            Threshold = atof(test.c_str());
+            if (verbose == 1)
+                cout << "Detection Threshold = " << Threshold << " times noise rms" << endl;
+        }
+        else if (LineBuffer.compare(0, 4, "Gain") == 0 && cGain == false)
+        {
+            cGain = true;
+            string test = LineBuffer.substr(4, LineBuffer.length() - 4);
+            Gain = atof(test.c_str());
+            if (verbose == 1)
+                cout << "Detection Gain = " << Gain << endl;
+        }
+        else if (LineBuffer.compare(0, 5, "Theta") == 0 && cTheta == false)
+        {
+            cTheta = true;
+            string test = LineBuffer.substr(5, LineBuffer.length() - 5);
+            Theta = atof(test.c_str());
+            if (verbose == 1)
+                cout << "Parameter theta for Polya = " << Theta << endl;
+        }
+        else if (LineBuffer.compare(0, 8, "NoiseRMS") == 0 && cNoiseRMS == false)
+        {
+            cNoiseRMS = true;
+            string test = LineBuffer.substr(8, LineBuffer.length() - 8);
+            NoiseRMS = atof(test.c_str());
+            if (verbose == 1)
+                cout << "Noise background = " << NoiseRMS << " e- RMS" << endl;
+        }
+        else if (LineBuffer.compare(0, 11, "ShapingTime") == 0 && cShapingTime == false)
+        {
+            cShapingTime = true;
+            string test = LineBuffer.substr(11, LineBuffer.length() - 11);
+            ShapingTime = atoi(test.c_str());
+            if (verbose == 1)
+                cout << "ShapingTime = " << ShapingTime << " ns" << endl;
+        }
+        // Target_________________________________________________________________
         else if (LineBuffer.compare(0, 12, "TargetRadius") == 0 && cTargetRadius == false)
         {
             cTargetRadius = true;
@@ -197,7 +208,7 @@ void R3BGTPCSetup::ReadConfigurationFile(string Config, int verbose)
             if (verbose == 1)
                 cout << "TargetOffsetZ = " << TargetOffsetZ << " cm" << endl;
         }
-				//TPC____________________________________________________________________
+        // TPC____________________________________________________________________
         else if (LineBuffer.compare(0, 13, "ActiveRegionx") == 0 && cActiveRegionx == false)
         {
             cActiveRegionx = true;
@@ -280,7 +291,7 @@ void R3BGTPCSetup::ReadConfigurationFile(string Config, int verbose)
             if (verbose == 1)
                 cout << "Windowz = " << Windowz << " cm" << endl;
         }
-        //Drift__________________________________________________________________
+        // Drift__________________________________________________________________
         else if (LineBuffer.compare(0, 7, "PadSize") == 0 && cPadSize == false)
         {
             cPadSize = true;
@@ -329,7 +340,7 @@ void R3BGTPCSetup::ReadConfigurationFile(string Config, int verbose)
             if (verbose == 1)
                 cout << "DriftVelocity = " << DriftVelocity << " cm/ns" << endl;
         }
-				//GLAD___________________________________________________________________
+        // GLAD___________________________________________________________________
         else if (LineBuffer.compare(0, 9, "GladAngle") == 0 && cGladAngle == false)
         {
             cGladAngle = true;
@@ -410,21 +421,21 @@ void R3BGTPCSetup::ReadConfigurationFile(string Config, int verbose)
 
 void R3BGTPCSetup::Print()
 {
-		//Electronic_______________________________________________________________
-   	cout << "Time bin = "<<TimeBinSize<<" ns" << endl   ;
-    cout << "Detection Threshold = "<<Threshold<<" times noise rms" << endl   ;
-    cout << "Detection Gain = "<<Gain << endl   ;
-    cout << "Parameter theta for Polya = "<<Theta << endl   ;
-    cout << "Noise background = "<<NoiseRMS<<" e- RMS" << endl   ;
-    cout << "ShapingTime = "<<ShapingTime<<" ns" << endl   ;
-		//Target___________________________________________________________________
+    // Electronic_______________________________________________________________
+    cout << "Time bin = " << TimeBinSize << " ns" << endl;
+    cout << "Detection Threshold = " << Threshold << " times noise rms" << endl;
+    cout << "Detection Gain = " << Gain << endl;
+    cout << "Parameter theta for Polya = " << Theta << endl;
+    cout << "Noise background = " << NoiseRMS << " e- RMS" << endl;
+    cout << "ShapingTime = " << ShapingTime << " ns" << endl;
+    // Target___________________________________________________________________
     cout << "TargetRadius = " << TargetRadius << " cm" << endl;
     cout << "TargetLength = " << TargetLength << " cm" << endl;
     cout << "TargetAngle = " << TargetAngle << " deg" << endl;
     cout << "TargetOffsetX = " << TargetOffsetX << " cm" << endl;
     cout << "TargetOffsetY = " << TargetOffsetY << " cm" << endl;
     cout << "TargetOffsetZ = " << TargetOffsetZ << " cm" << endl;
-		//TPC______________________________________________________________________
+    // TPC______________________________________________________________________
     cout << "ActiveRegionx = " << ActiveRegionx << " cm" << endl;
     cout << "ActiveRegiony = " << ActiveRegiony << " cm" << endl;
     cout << "ActiveRegionz = " << ActiveRegionz << " cm" << endl;
@@ -435,14 +446,14 @@ void R3BGTPCSetup::Print()
     cout << "Windowx = " << Windowx << " cm" << endl;
     cout << "Windowy = " << Windowy << " cm" << endl;
     cout << "Windowz = " << Windowz << " cm" << endl;
-    //Drift____________________________________________________________________
+    // Drift____________________________________________________________________
     cout << "PadSize = " << PadSize << " " << endl;
     cout << "LongDiff = " << LongDiff << " cm^2/ns" << endl;
     cout << "TransDiff = " << TransDiff << " cm^2/ns" << endl;
     cout << "FanoFactor = " << FanoFactor << " " << endl;
     cout << "EIonization = " << EIonization << " GeV" << endl;
     cout << "DriftVelocity = " << DriftVelocity << " cm/ns" << endl;
-		//GLAD___________________________________________________________________
+    // GLAD___________________________________________________________________
     cout << "GladAngle = " << GladAngle << " deg" << endl;
     cout << "GladOffsetX = " << GladOffsetX << " cm" << endl;
     cout << "GladOffsetY = " << GladOffsetY << " cm" << endl;

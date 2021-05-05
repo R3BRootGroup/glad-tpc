@@ -1,3 +1,15 @@
+/******************************************************************************
+ *   Copyright (C) 2020 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
+ *   Copyright (C) 2020 Members of R3B Collaboration                          *
+ *                                                                            *
+ *             This software is distributed under the terms of the            *
+ *                 GNU General Public Licence (GPL) version 3,                *
+ *                    copied verbatim in the file "LICENSE".                  *
+ *                                                                            *
+ * In applying this license GSI does not waive the privileges and immunities  *
+ * granted to it by virtue of its status as an Intergovernmental Organization *
+ * or submit itself to any jurisdiction.                                      *
+ ******************************************************************************/
 #include "R3BGTPCProjector.h"
 
 #include "TClonesArray.h"
@@ -9,26 +21,25 @@
 #include "R3BGTPCSetup.h"
 #include "TF1.h"
 
-std::string geotag= "Prototype";
-std::string geotag1= "FullBeamOut";	  
-std::string geotag2= "FullBeamIn";	  
+std::string geotag = "Prototype";
+std::string geotag1 = "FullBeamOut";
+std::string geotag2 = "FullBeamIn";
 std::string GEOTAG = geotag2;
 R3BGTPCProjector::R3BGTPCProjector()
     : FairTask("R3BGTPCProjector")
-{    
-		R3BGTPCSetup* setup = new R3BGTPCSetup(GEOTAG,1);
-		LOG(INFO) << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG;
-    fEIonization = setup->GetEIonization();  // [GeV]
+{
+    R3BGTPCSetup* setup = new R3BGTPCSetup(GEOTAG, 1);
+    LOG(INFO) << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG;
+    fEIonization = setup->GetEIonization();     // [GeV]
     fDriftVelocity = setup->GetDriftVelocity(); // [cm/ns]
-    fTransDiff = setup->GetTransDiff(); // [cm^2/ns]
-    fLongDiff = setup->GetLongDiff();   // [cm^2/ns]
+    fTransDiff = setup->GetTransDiff();         // [cm^2/ns]
+    fLongDiff = setup->GetLongDiff();           // [cm^2/ns]
     fFanoFactor = setup->GetFanoFactor();
     fSizeOfVirtualPad = setup->GetPadSize(); // 5 means: pads of 2*2 mm^2
-    fHalfSizeTPC_X = 0.; // to be filled during Init()
-    fHalfSizeTPC_Y = 0.; // to be filled during Init()
-    fHalfSizeTPC_Z = 0.; // to be filled during Init()
+    fHalfSizeTPC_X = 0.;                     // to be filled during Init()
+    fHalfSizeTPC_Y = 0.;                     // to be filled during Init()
+    fHalfSizeTPC_Z = 0.;                     // to be filled during Init()
     delete setup;
-
 }
 
 R3BGTPCProjector::~R3BGTPCProjector()
@@ -73,11 +84,11 @@ InitStatus R3BGTPCProjector::Init()
     fGTPCProjPoint = new TClonesArray("R3BGTPCProjPoint");
     ioman->Register("GTPCProjPoint", GetName(), fGTPCProjPoint, kTRUE);
 
-    R3BGTPCSetup* setup = new R3BGTPCSetup(GEOTAG,1);
+    R3BGTPCSetup* setup = new R3BGTPCSetup(GEOTAG, 1);
     fHalfSizeTPC_X = setup->GetActiveRegionx() / 2.;
     fHalfSizeTPC_Y = setup->GetActiveRegiony() / 2.;
     fHalfSizeTPC_Z = setup->GetActiveRegionz() / 2.;
-		delete setup;
+    delete setup;
     return kSUCCESS;
 }
 
@@ -87,11 +98,11 @@ void R3BGTPCProjector::SetDriftParameters(Double_t ion,
                                           Double_t lDiff,
                                           Double_t fanoFactor)
 {
-    fEIonization = ion;       // [GeV]
-    fDriftVelocity = driftv;  // [cm/ns]
-    fTransDiff = tDiff;       // [cm^(-1/2)]
-    fLongDiff = lDiff;        // [cm^(-1/2)]
-    fFanoFactor = fanoFactor; 
+    fEIonization = ion;      // [GeV]
+    fDriftVelocity = driftv; // [cm/ns]
+    fTransDiff = tDiff;      // [cm^(-1/2)]
+    fLongDiff = lDiff;       // [cm^(-1/2)]
+    fFanoFactor = fanoFactor;
 }
 
 void R3BGTPCProjector::SetSizeOfVirtualPad(Double_t size)
@@ -169,7 +180,7 @@ void R3BGTPCProjector::Exec(Option_t*)
             energyDep = aPoint->GetEnergyLoss();
             timeBeforeDrift = aPoint->GetTime();
         }
-				//primary electrons produced by the ionization
+        // primary electrons produced by the ionization
         electrons = energyDep / fEIonization;
         // electron number fluctuates as the square root of the
         // Fano factor times the number of electrons
@@ -185,18 +196,18 @@ void R3BGTPCProjector::Exec(Option_t*)
         // improve (make the calculation individual for electron) if needed, but probably slower
         Double_t yApprox = (yPost + yPre) / 2;
         driftDistance = yApprox + fHalfSizeTPC_Y;
-        //cout<<"DriftDistance="<<driftDistance<<"	yApprox="<<yApprox<<endl;
+        // cout<<"DriftDistance="<<driftDistance<<"	yApprox="<<yApprox<<endl;
         sigmaLongAtPadPlane = sqrt(driftDistance * 2 * fLongDiff / fDriftVelocity);
         sigmaTransvAtPadPlane = sqrt(driftDistance * 2 * fTransDiff / fDriftVelocity);
 
-        for (Int_t ele = 1; ele <= generatedElectrons; ele++)//following each electrons from production to pad
+        for (Int_t ele = 1; ele <= generatedElectrons; ele++) // following each electrons from production to pad
         {
             driftTime = ((yPre + stepY * ele) + fHalfSizeTPC_Y) / fDriftVelocity;
             projX = gRandom->Gaus(xPre + stepX * ele, sigmaTransvAtPadPlane);
             projZ = gRandom->Gaus(zPre + stepZ * ele, sigmaTransvAtPadPlane);
             projTime = gRandom->Gaus(driftTime + timeBeforeDrift, sigmaLongAtPadPlane / fDriftVelocity);
-            //cout<<"projTime="<<projTime<<"		driftTime="<<driftTime<<"		timeBeforeDrift="<<timeBeforeDrift<<endl;
-						//cout<<"ProjZ="<<projZ<<"	ProjX="<<projX<<endl;            
+            // cout<<"projTime="<<projTime<<"		driftTime="<<driftTime<<"
+            // timeBeforeDrift="<<timeBeforeDrift<<endl; cout<<"ProjZ="<<projZ<<"	ProjX="<<projX<<endl;
             // obtain padID for projX, projZ (simple algorithm) TODO explain the new algorithm
             // the algorithm assigns a pad number which depends on the XZ size of the chamber,
             // according to the fSizeOfVirtualPad parameter: if it is 1, the pad size is cm^2
@@ -205,22 +216,24 @@ void R3BGTPCProjector::Exec(Option_t*)
             // if fSizeOfVirtualPad=0.1, then padID goes from 0 to 20*fHalfSizeTPC_X for (Z~200.0),
             // from 20*fHalfSizeTPC_X to 40*fHalfSizeTPC_X  (Z~200.0), ...
             // Avoid first moving out of the virtual pad plane limits
-            //ZOffset- z of the first pad row in the laboratory frame
-            double ZOffset=272.7;//272.7
-            //XOffset-y of the first pad column in the laboratory frame
-            double XOffset=5.8;//5.8
+            // ZOffset- z of the first pad row in the laboratory frame
+            double ZOffset = 272.7; // 272.7
+            // XOffset-y of the first pad column in the laboratory frame
+            double XOffset = 5.8; // 5.8
             if (projZ < ZOffset)
                 projZ = ZOffset;
             if (projZ > ZOffset + 2 * fHalfSizeTPC_Z)
-                projZ = ZOffset + 2 * fHalfSizeTPC_Z;   
+                projZ = ZOffset + 2 * fHalfSizeTPC_Z;
             if (projX < XOffset)
                 projX = XOffset;
             if (projX > XOffset + 2 * fHalfSizeTPC_X)
                 projX = XOffset + 2 * fHalfSizeTPC_X;
             Int_t padID;
-            if(GEOTAG.compare("Prototype") == 0)  padID= (100) * (Int_t)((projZ - ZOffset) / 0.2) + (Int_t)((projX -XOffset)  / 0.2);//2mm
-            else padID= (2 * fHalfSizeTPC_X * fSizeOfVirtualPad) * (Int_t)((projZ - ZOffset) * fSizeOfVirtualPad) +
-                          (Int_t)((projX -XOffset)  * fSizeOfVirtualPad);           
+            if (GEOTAG.compare("Prototype") == 0)
+                padID = (100) * (Int_t)((projZ - ZOffset) / 0.2) + (Int_t)((projX - XOffset) / 0.2); // 2mm
+            else
+                padID = (2 * fHalfSizeTPC_X * fSizeOfVirtualPad) * (Int_t)((projZ - ZOffset) * fSizeOfVirtualPad) +
+                        (Int_t)((projX - XOffset) * fSizeOfVirtualPad);
 
             Int_t nProjPoints = fGTPCProjPoint->GetEntriesFast();
             for (Int_t pp = 0; pp < nProjPoints; pp++)
@@ -228,7 +241,7 @@ void R3BGTPCProjector::Exec(Option_t*)
                 if (((R3BGTPCProjPoint*)fGTPCProjPoint->At(pp))->GetVirtualPadID() == padID)
                 {
                     // already existing R3BGTPCProjPoint... add time and electron
-                    ((R3BGTPCProjPoint*)fGTPCProjPoint->At(pp))->AddCharge();//
+                    ((R3BGTPCProjPoint*)fGTPCProjPoint->At(pp))->AddCharge();                      //
                     ((R3BGTPCProjPoint*)fGTPCProjPoint->At(pp))->SetTimeDistr(projTime / 1000, 1); // micros
                     virtualPadFound = kTRUE;
                     break;
