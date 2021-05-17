@@ -23,12 +23,12 @@ void loadfunction(double &percentage)
 }
 using namespace std;
 //functions for the electronics response
-double polya(double x[], double p[])
+double polya(double x[], double p[])//Gain
 	{
 	double val = (pow(p[1]+1, p[1]+1) / TMath::Gamma(p[1]+1))*pow(x[0]/p[0], p[1]) * exp(-(p[1]+1) * x[0] / p[0]);
 	return val;
 	}
-double conv(double x[], double p[])
+double conv(double x[], double p[])//pad response
 {
 	double val=0.;
 	for(int i=0; i<(p[0]-2)/2; i++)
@@ -38,7 +38,6 @@ double conv(double x[], double p[])
 	}
 	return(val);
 }
-//TODO The fit is not working right now
 double conv_fit(double x[], double p[])
 {
 	double val=0.;
@@ -69,12 +68,12 @@ void reader(const char* inputSimFile)
 		Double_t thr =       (electronics->GetThreshold())*NoiseRMS;	//[n.e-]
 		Double_t Gain=        electronics->GetGain();
 		Double_t Theta=       electronics->GetTheta();
-		Int_t NPads=12844;	 //total n of padID 5632 TODO [the loop should be optimized]
+		Int_t NPads=128*45;
 		delete electronics;	
     //root style
     gROOT->SetStyle("Default");
     gStyle->SetOptTitle(0);
-    gStyle->SetOptStat(11);//only the n. of entries in the plot
+    gStyle->SetOptStat(11);
     gStyle->SetOptFit(0);
 
     cout << "Reading input simulation file " << inputSimFile << endl;
@@ -98,7 +97,7 @@ void reader(const char* inputSimFile)
       	<< "Threshold: " << thr << endl
       	<< "Average Gain for Polya: " << Gain << endl
       	<< "Theta parameter for Polya: "<<Theta<<endl;
-		//The th2 definition
+		//Th2 definition
 		TH2D* Hitmap=0;
     TH2D* htrackInPads = 0;
     TH2D* hdriftTimeInPads = 0;
@@ -184,7 +183,7 @@ void reader(const char* inputSimFile)
 	  tout->Branch("Et_Pad",&Et_Pad);
 	  tout->Branch("n_Pads",&n_Pads);
     cout << "nevents=" << nevents << endl;
-
+		TCanvas *c[nevents];
     // GTPCProjPoints
     TClonesArray* gtpcProjPointCA;
     R3BGTPCProjPoint* ppoint = new R3BGTPCProjPoint;
@@ -225,6 +224,7 @@ void reader(const char* inputSimFile)
 			fonc_gain->FixParameter(1, Theta);
 			double noise[max_time];
 			double tab_noise[max_time];
+			bool tst = false;
 			npads=0;
 			//Loop over all the pads that are hit during the event ->padID is considered
 			for(int i=0; i<=NPads; i++)
@@ -275,8 +275,8 @@ void reader(const char* inputSimFile)
 						ii++;
 						kk++;
 						//Calculating the padxz
-						xPad = pad[j] % (Int_t)(100);
-				  	zPad = (pad[j] - xPad) / (100); 
+						xPad = pad[j] % (Int_t)(45);
+				  	zPad = (pad[j] - xPad) / (45); 
 					}
 				}
 				// temps barycentre
@@ -328,21 +328,21 @@ void reader(const char* inputSimFile)
 				fit->SetParameter(0, max);
 				fit->SetParLimits(1, time0-shapingtime*2., time0);
 				fit->SetParameter(1, time0-shapingtime);
-				fit->FixParameter(2, p2[1]);
-				fit->SetParameter(3, 10.);
+				fit->FixParameter(2, p2[1]);//shaping time
+				fit->SetParameter(3, 0.);		//offset
 				fit->SetNpx(1000000);
 
-				/*if(PadTouch[i])
+				if(PadTouch[i])
 				{ 
 					h_conv->Fit(fit, "NOQ"); //Q=quiet
 					t_rec = fit->GetParameter(1);
 					integral = fit->GetMaximum(0., max_time);
-				}		*/
-				if(PadTouch[i]) 
+				}		
+				/*if(PadTouch[i]) 
 				{
 					t_rec = time0;
 					integral = max;
-				}
+				}*/
 				
 				//electronics readout
 				if(max > thr&&PadTouch[i])
@@ -358,7 +358,14 @@ void reader(const char* inputSimFile)
 				q_Pad.push_back(integral);
 				eventID.push_back(l);
 				Et_Pad+=integral;
-
+				if(!tst){
+			  c[l]= new TCanvas(Form("can%d",i),"",800,800);
+			  //c[l]->SetLogy();
+			  h_conv->DrawCopy();
+			  fit->DrawCopy("same");
+			  c[l]->Print(Form("firstsig_ev%d.pdf",l));
+			  tst=true;
+			  } 
 				} 
 				delete h_conv;
 				delete f_conv;
@@ -412,7 +419,6 @@ void reader(const char* inputSimFile)
     TVirtualPad* c3_3 = c3->cd(3);
     c3_3->SetLogz();
     hdepth1InPads->Draw("ZCOL");
-    //dumm->Draw();
 
     l.SetTextAlign(12);
     l.SetTextSize(0.05);
@@ -446,5 +452,5 @@ void reader(const char* inputSimFile)
    timer.Stop();   
    cout << "Macro finished succesfully!" << endl;
    if(timer.RealTime()<60.)cout << "Real time: " << timer.RealTime() << "s, CPU time: " << timer.CpuTime() << "s" << endl;
-   else cout << "Real time: " << timer.RealTime()/60. << "min, CPU time: " << timer.CpuTime()/60 << "min" << endl;
+   else cout << "Real time: " << timer.RealTime()/59.99 << "min, CPU time: " << timer.CpuTime()/59.99 << "min" << endl;
 } 

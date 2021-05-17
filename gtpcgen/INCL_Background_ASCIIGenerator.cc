@@ -31,6 +31,7 @@ To create the ASCII file for R3BROOT everything must be in [ns], [cm] and [GeV]
 #include <stdlib.h>
 #include <string>
 #include <vector>
+#include <sys/stat.h>
 using namespace std;
 //Loading bar
 #define PBSTR "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
@@ -43,18 +44,28 @@ void loadfunction(double &percentage)
     printf("\r%3d%% [%.*s%*s]", val, lpad, PBSTR, rpad, "");
     fflush(stdout);
 }
-
-void Generate_background() 
-{
-
-  TRandom3 r3(0);
-  ofstream asciifile;
-  // choose the detector
   const char* geoTag = "Prototype";
 	const char* geoTag1 = "FullBeamOut";
 	const char* geoTag2 = "FullBeamIn";
-	TString GEOTAG = string(geoTag);
-
+void Generate_background(TString GEOTAG=string(geoTag2)) //choose the detector
+{
+  TRandom3 r3(0);
+  ofstream asciifile;
+  //Check if the ASCII folder is present
+    string folder="ASCII";
+		if (mkdir(folder.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == -1)
+		{
+    	if( errno == EEXIST ) 
+    	{
+				//already exist
+    	} 
+    	else 
+    	{
+       // something else
+        std::cout << "cannot create session name folder error:" << strerror(errno) << std::endl;
+        throw std::runtime_error( strerror(errno) );
+    	}
+		}
   // Open the NHL file
   TFile *fopen = new TFile("./root/C12_C12_22800_de-excitation=abla07.root");
   if (fopen->IsOpen())
@@ -93,7 +104,7 @@ void Generate_background()
   if (GEOTAG.CompareTo("FullBeamOut") == 0) {
     cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
     asciifile.open("./ASCII/inputFullBeamOut_bkg.dat", ios::out | ios::app);
-    TargetPosition = {0, 0., 0}; // TODO add the coordinates
+    TargetPosition = {0, 0., 147.5}; 
     cout << "The target Position is (" << TargetPosition.X() << ", "
          << TargetPosition.Y() << ", " << TargetPosition.Z() << ") [cm]"
          << endl;

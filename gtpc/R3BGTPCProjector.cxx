@@ -24,7 +24,7 @@
 std::string geotag = "Prototype";
 std::string geotag1 = "FullBeamOut";
 std::string geotag2 = "FullBeamIn";
-std::string GEOTAG = geotag2;
+std::string GEOTAG = geotag; 				//For the moment the projection is done only for the Prototype
 R3BGTPCProjector::R3BGTPCProjector()
     : FairTask("R3BGTPCProjector")
 {
@@ -107,7 +107,7 @@ void R3BGTPCProjector::SetDriftParameters(Double_t ion,
 
 void R3BGTPCProjector::SetSizeOfVirtualPad(Double_t size)
 {
-    fSizeOfVirtualPad = size; // 1 means pads of 1cm^2, 10 means pads of 1mm^2, ...
+    fSizeOfVirtualPad = size; // 1 means pads of 1cm^2, 5 means pads of 2mm^2, ...
 }
 
 void R3BGTPCProjector::Exec(Option_t*)
@@ -208,18 +208,16 @@ void R3BGTPCProjector::Exec(Option_t*)
             projTime = gRandom->Gaus(driftTime + timeBeforeDrift, sigmaLongAtPadPlane / fDriftVelocity);
             // cout<<"projTime="<<projTime<<"		driftTime="<<driftTime<<"
             // timeBeforeDrift="<<timeBeforeDrift<<endl; cout<<"ProjZ="<<projZ<<"	ProjX="<<projX<<endl;
-            // obtain padID for projX, projZ (simple algorithm) TODO explain the new algorithm
-            // the algorithm assigns a pad number which depends on the XZ size of the chamber,
-            // according to the fSizeOfVirtualPad parameter: if it is 1, the pad size is cm^2
-            // and padID goes from 0 to 2*fHalfSizeTPC_X in the first row (ZOffset),
-            // from 2*fHalfSizeTPC_X to 4*fHalfSizeTPC_X in the second row (ZOffset+1), ...
-            // if fSizeOfVirtualPad=0.1, then padID goes from 0 to 20*fHalfSizeTPC_X for (Z~200.0),
-            // from 20*fHalfSizeTPC_X to 40*fHalfSizeTPC_X  (Z~200.0), ...
-            // Avoid first moving out of the virtual pad plane limits
-            // ZOffset- z of the first pad row in the laboratory frame
-            double ZOffset = 272.7; // 272.7
-            // XOffset-y of the first pad column in the laboratory frame
-            double XOffset = 5.8; // 5.8
+            // obtain padID for projX, projZ (simple algorithm) for the Prototype
+            // the algorithm assigns a pad number which depends on the projX and projZ,
+            // taking into consideration the Offset (that depends on the position inside GLAD),
+            // the X and Z where the pad plane starts.
+            // Since the prototype pad plane has 44x126 pads, to avoid repetition in the padID 
+            // Z is multiplied by 45 and since the size of the pad is 2x2 mm^2, X and Z are divided by 0.2 cm
+            // ZOffset- z-> the first pad row in the laboratory frame
+            double ZOffset = 272.7; 
+            // XOffset-x-> the first pad column in the laboratory frame
+            double XOffset = 5.8; 
             if (projZ < ZOffset)
                 projZ = ZOffset;
             if (projZ > ZOffset + 2 * fHalfSizeTPC_Z)
@@ -230,10 +228,10 @@ void R3BGTPCProjector::Exec(Option_t*)
                 projX = XOffset + 2 * fHalfSizeTPC_X;
             Int_t padID;
             if (GEOTAG.compare("Prototype") == 0)
-                padID = (100) * (Int_t)((projZ - ZOffset) / 0.2) + (Int_t)((projX - XOffset) / 0.2); // 2mm
+                padID = (45) * (Int_t)((projZ - ZOffset) / 0.2) + (Int_t)((projX - XOffset) / 0.2); // 2mm
             else
                 padID = (2 * fHalfSizeTPC_X * fSizeOfVirtualPad) * (Int_t)((projZ - ZOffset) * fSizeOfVirtualPad) +
-                        (Int_t)((projX - XOffset) * fSizeOfVirtualPad);
+                        (Int_t)((projX - XOffset) * fSizeOfVirtualPad); //FULL HYDRA padplane has not been decided yet
 
             Int_t nProjPoints = fGTPCProjPoint->GetEntriesFast();
             for (Int_t pp = 0; pp < nProjPoints; pp++)

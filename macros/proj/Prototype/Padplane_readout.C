@@ -30,7 +30,7 @@ void reader(const char* inputSimFile)
 {
 
     // SETUP
-    string geoTag="Prototype";
+    string geoTag="Prototype";		//Only prototype for the moment
 		cout << "\n \033[1;31m Warning\033[0m: the detector you are building is " << geoTag << "!!!!!\n" << endl;
     R3BGTPCSetup* setup = new R3BGTPCSetup(geoTag, 0);
     Double_t fHalfSizeTPC_X = setup->GetActiveRegionx() / 2.;   // X (row)
@@ -154,15 +154,8 @@ void reader(const char* inputSimFile)
                 {
                     ppoint = (R3BGTPCProjPoint*)gtpcProjPointCA->At(h);
 
-										if(geoTag.compare("Prototype")==0)
-										{
-										xPad = ppoint->GetVirtualPadID() % (Int_t)(100);
-                    zPad = (ppoint->GetVirtualPadID() - xPad) / (100); 
-										} 
-                    else {
-                    xPad = ppoint->GetVirtualPadID() % (Int_t)(2*fHalfSizeTPC_X*fSizeOfVirtualPad);
-                    zPad = (ppoint->GetVirtualPadID() - xPad) / (2*fHalfSizeTPC_X*fSizeOfVirtualPad);
-                    }                   
+										xPad = ppoint->GetVirtualPadID() % (Int_t)(45);
+                    zPad = (ppoint->GetVirtualPadID() - xPad) / (45);                   
                     tPad = ((TH1S*)(ppoint->GetTimeDistribution()))->GetMean();
                     hdriftTimeInPads->Fill(zPad, xPad, tPad); // NOTE: THAT IS ACCUMULATED TIME!!.
 										htrackInPads->Fill(zPad, xPad, ppoint->GetCharge());

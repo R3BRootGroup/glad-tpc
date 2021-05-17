@@ -1,4 +1,4 @@
-void run_proj(TString GEOTAG = "FullBeamIn", TString version= "v1")
+void run_proj(TString GEOTAG = "Prototype", TString version= "none")
 {
     TStopwatch timer;
     timer.Start();

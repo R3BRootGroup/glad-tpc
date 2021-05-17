@@ -8,8 +8,8 @@ TPCLx 36
 TPCLy 20
 TPCLz 120.
 //____Active Region 
-ActiveRegionx 12.
-ActiveRegiony 26.
+ActiveRegionx 11.2
+ActiveRegiony 15.
 ActiveRegionz 100.
 //____Projection
 PadSize 5

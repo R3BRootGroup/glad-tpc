@@ -20,7 +20,7 @@ void simHYDRA(Int_t nEvents = 0, TString GEOTAG = "Prototype", TString version= 
  TString inputFile;
  TString outFile;
  TString parFile;
- Bool_t printGLAD=kTRUE; 			 						//print the inner glad vessel and the HYDRA detector
+ Bool_t printGLAD=kFALSE; 			 						//print the inner glad vessel and the HYDRA detector
  if (GEOTAG.CompareTo("Prototype") == 0)
     {
         cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;

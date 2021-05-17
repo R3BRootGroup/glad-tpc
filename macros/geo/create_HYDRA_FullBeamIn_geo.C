@@ -31,7 +31,7 @@ Double_t Windowz;
 Double_t WorldSizeX;
 Double_t WorldSizeY;
 Double_t WorldSizeZ;
-
+Double_t GLAD_angle=14.;
 void ConstructTPC(TGeoVolume* pWorld);
 
 string VERSION;
@@ -158,7 +158,7 @@ void create_tpc_geo(string geoTag = "FullBeamIn", const char* version = "v2")
     //_____________________________Globle definition of TPC position in cm
     
     TGeoRotation* rot_chamber = new TGeoRotation();
-    rot_chamber->RotateY(-14.);
+    rot_chamber->RotateY(-GLAD_angle);
     TGeoCombiTrans* t0 = new TGeoCombiTrans(-21.5, 0., 225., rot_chamber);
     top->AddNode(pWorld, 0, t0);
 
@@ -257,98 +257,80 @@ void ConstructTPC(TGeoVolume* pWorld)
 //---------------The Active Region is different for the different versions-------------------------//  
      
 		TGeoRotation rot_Aregion;					//Active region rotation
-		rot_Aregion.RotateZ(180);
+		rot_Aregion.RotateY(180);
 		TGeoRotation rot_Aregion1;				//Active region rotation, only v2
-		rot_Aregion1.RotateZ(180);
-
+		rot_Aregion1.RotateY(180);
 //Version 1->	1 active region with constant height________________________________________
     if(VERSION.compare("v1")==0)
     {
-    	 Double_t volume[]={  -ActiveRegionx   ,  ActiveRegiony ,
-														 ActiveRegionx   ,  ActiveRegiony ,
-														 ActiveRegionx   , -ActiveRegiony ,
-														-ActiveRegionx   , -ActiveRegiony ,
-														-3.3*ActiveRegionx ,  ActiveRegiony ,
+    	 Double_t volume[]={ 	-2.36*ActiveRegionx ,  ActiveRegiony ,
 													   ActiveRegionx   ,  ActiveRegiony ,
 														 ActiveRegionx   , -ActiveRegiony ,
-													  -3.3*ActiveRegionx , -ActiveRegiony  
-  									 			}; 
+													  -2.36*ActiveRegionx , -ActiveRegiony,
+													  -ActiveRegionx   ,  ActiveRegiony ,
+														 ActiveRegionx   ,  ActiveRegiony ,
+														 ActiveRegionx   , -ActiveRegiony ,
+														-ActiveRegionx   , -ActiveRegiony  
+  									 			}; 							 			
     	solidActiveRegion =
         new TGeoArb8("Active_region",
         							ActiveRegionz,
         							volume);
-      rot_Aregion.RotateY(10.6);
-		  cout<<"The active region is an Arb8 with dimensions: x1=" <<	2*ActiveRegionx 	<<
-		  																									 " x2=" <<	3.3*ActiveRegionx	  <<
-		  																									 "	y="	<<	2*ActiveRegiony	  <<
-		  																									 "	z="	<<	2*ActiveRegionz	  <<endl;
+      rot_Aregion.RotateY(GLAD_angle);
     }
     
 //Version 2->  2 active regions with different height_____________________________________
-	     									    
    if(VERSION.compare("v2")==0)
-    {
-		   Double_t volume1[]={ -ActiveRegionx   ,  ActiveRegiony ,
-														 			 5.   		 ,  ActiveRegiony ,
-														 			 5.    		 , -ActiveRegiony ,
-														-ActiveRegionx   , -ActiveRegiony ,
-																	-13.25      ,  ActiveRegiony ,
-													         5         ,  ActiveRegiony ,
-														       5         , -ActiveRegiony ,
-													        -13.25      , -ActiveRegiony  
+    {		  
+		   Double_t volume1[]={ -1.714* ActiveRegionx,  ActiveRegiony ,
+																ActiveRegionx    ,  ActiveRegiony ,
+																ActiveRegionx    , -ActiveRegiony ,
+														-1.714* ActiveRegionx, -ActiveRegiony ,
+					 											-ActiveRegionx   ,  ActiveRegiony ,
+																 ActiveRegionx   ,  ActiveRegiony ,
+																 ActiveRegionx   , -ActiveRegiony ,
+																-ActiveRegionx   , -ActiveRegiony 
+ 
   									 			};   
-			Double_t volume2[]={  
-																	    -13.6 ,  18. ,
-																		   5.    ,  18. ,
-																		   5.    , -18. ,
-																	    -13.6 , -18. ,
-												 -3.32*ActiveRegionx    ,  18. ,
-																	     5     ,  18. ,
-																		   5     , -18. ,
-												 -3.32*ActiveRegionx    , -18. 
+			Double_t volume2[]={ 
+														-2.36* ActiveRegionx,  1.7*ActiveRegiony ,
+															   ActiveRegionx   , 1.7*ActiveRegiony ,
+																 ActiveRegionx   ,-1.7*ActiveRegiony ,
+														-2.36* ActiveRegionx ,-1.7*ActiveRegiony ,
+														-1.75* ActiveRegionx , 1.7*ActiveRegiony ,
+																ActiveRegionx    , 1.7*ActiveRegiony ,
+																ActiveRegionx    ,-1.7*ActiveRegiony ,
+														-1.75* ActiveRegionx ,-1.7*ActiveRegiony  
 													};  	
-      rot_Aregion.RotateY(9.35);
+      rot_Aregion.RotateY(GLAD_angle);
     	solidActiveRegion =
         new TGeoArb8("Active_region",
-        							49./2,
+        							(ActiveRegionz-FrameThickness)/2,
         							volume1);
-      rot_Aregion1.RotateY(9.45);
+      rot_Aregion1.RotateY(GLAD_angle);
       solidActiveRegion1 =
         new TGeoArb8("Active_region",
-        							49./2,
+        							(ActiveRegionz-FrameThickness)/2,
         							volume2);
-      cout<<"The active region are 2 Arb8. \nArb8 1, with dimensions: x1="<<	11.	<<
-																																		"	x2="<<	20.8	<<
-																																		"	y="	<<	26.	<<
-																																		"	z="	<<	49.	<<
-		  																		"\nArb8 2, with dimensions: x1="<<	21.16	<<
-																																		"	x2="<<	30.<<
-																																		"	y="	<<	36.	<<
-																																		"	z="	<<	49.	<<endl;
     }
 
-//Version 3->  1 active regions with increasing height____________________________________
+//Version 3->  1 active region with increasing height____________________________________
     if(VERSION.compare("v3")==0)
     {
-    	 Double_t volume[]={  -ActiveRegionx   ,  ActiveRegiony ,
+    	 Double_t volume[]={  -2.36*ActiveRegionx ,  2.2*ActiveRegiony ,
+													   ActiveRegionx   ,  2.2*ActiveRegiony ,
+														 ActiveRegionx   , -2.2*ActiveRegiony ,
+													  -2.36*ActiveRegionx , -2.2*ActiveRegiony ,
+    	 											-ActiveRegionx   ,  ActiveRegiony ,
 														 ActiveRegionx   ,  ActiveRegiony ,
 														 ActiveRegionx   , -ActiveRegiony ,
-														-ActiveRegionx   , -ActiveRegiony ,
-														-3.3*ActiveRegionx ,  1.65*ActiveRegiony ,
-													   ActiveRegionx   ,  1.65*ActiveRegiony ,
-														 ActiveRegionx   , -1.65*ActiveRegiony ,
-													  -3.3*ActiveRegionx , -1.65*ActiveRegiony  
+														-ActiveRegionx   , -ActiveRegiony  
   									 			}; 
     	solidActiveRegion =
         new TGeoArb8("Active_region",
         							ActiveRegionz,
         							volume);
-      rot_Aregion.RotateY(10.6);
-		  cout<<"The active region is a Arb8 with dimensions: x1="<<	2*ActiveRegionx	  <<
-		  																									"	x2="<<	4*ActiveRegionx	  <<
-		  																									"	y1="<<	2*ActiveRegiony		<<
-		  																									"	y2="<<	3.5*ActiveRegiony	<<		
-		  																									"	z="	<<	2*ActiveRegionz		<<endl;
+      rot_Aregion.RotateY(GLAD_angle);
     }
     //Logical volume active region
     logicActiveRegion = new TGeoVolume("Active_region", solidActiveRegion, GasMaterial); 
@@ -357,17 +339,16 @@ void ConstructTPC(TGeoVolume* pWorld)
 
     if (VERSION.compare("v2")==0)
     {
-      TGeoCombiTrans* fTPCTrans  = new TGeoCombiTrans(20.25, 0., -25., new TGeoRotation(rot_Aregion));
+      TGeoCombiTrans* fTPCTrans  = new TGeoCombiTrans(22.1, 0., -26.5, new TGeoRotation(rot_Aregion));
     	logicGas->AddNode(logicActiveRegion, 0, fTPCTrans);
-      TGeoCombiTrans* fTPCTrans1 = new TGeoCombiTrans(29, 0., 26.5,new TGeoRotation(rot_Aregion1) );
+      TGeoCombiTrans* fTPCTrans1 = new TGeoCombiTrans(35.2, 0., 26.5,new TGeoRotation(rot_Aregion1) );
       logicActiveRegion1 = new TGeoVolume("Active_region", solidActiveRegion1, GasMaterial);			
       logicGas->AddNode(logicActiveRegion1, 0, fTPCTrans1);
     	logicActiveRegion1->SetLineColor(kMagenta);															
     } 
     else
   	{
-  	  TGeoCombiTrans* fTPCTrans = new TGeoCombiTrans(26.5, 0., 4, new TGeoRotation(rot_Aregion));//24 0 2
-    	logicGas->AddNode(logicActiveRegion, 0, fTPCTrans);
+    	logicGas->AddNode(logicActiveRegion, 0, new TGeoCombiTrans(28.8, 0., 0,  new TGeoRotation(rot_Aregion)));//21.5+7.64
   	}
     
     // Some colours to better distinguish the logic volumes    

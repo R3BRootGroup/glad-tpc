@@ -21,7 +21,7 @@ void loadfunction(double& percentage)
 }
 using namespace std;
 
-void Analysis(TString GEOTAG="FullBeamIn", TString version="v2")
+void Analysis(TString GEOTAG="FullBeamIn", TString version="v1")
 {
 		 // -----   Timer   --------------------------------------------------------
 		 TStopwatch timer;
@@ -75,52 +75,37 @@ void Analysis(TString GEOTAG="FullBeamIn", TString version="v2")
     // END OF THE SETTING AREA
 
     gROOT->SetStyle("Default");
-    gStyle->SetOptStat(111111);
+    gStyle->SetOptStat(1111);
     gStyle->SetOptFit(1);
 
     // HISTOGRAMS DEFINITION
-    TH1F *h1_MC_Mult, *h1_MC_PDG, *h1_MC_Ene, *h1_MC_Theta, *h1_MC_Phi;
-    TH1F *h1_MC_MultSec, *h1_MC_PDGSec, *h1_MC_EneSec, *h1_MC_ThetaSec, *h1_MC_PhiSec;
-    TH1F *h1_Point_Mult, *h1_Point_Time, *h1_Point_Length, *h1_Point_ELoss;
-    TH1F *h1_Point_TrackStatus, *h1_Point_PDG, *h1_Point_Charge, *h1_Point_Mass;
-    TH1F *h1_Point_Kine, *h1_Point_trackStep;
+    TH1F *h1_MC_Mult, *h1_MC_PDG, *h1_MC_Ene;
+    TH1F *h1_MC_MultSec, *h1_MC_PDGSec, *h1_MC_EneSec, *h1_MC_Vertex_Z;
     TH1D *h1_Pions_TrackLength, *h1_Pions_ELoss;
-    TH2F *h2_Point_XZ, *h2_Point_YZ;
-    TH2F *h2_Point_PxPz, *h2_Point_PyPz;
+    TH2F *h2_Point_XZ, *h2_Point_YZ, *h2_MC_Vertex_XZ, *h2_MC_Vertex_YZ;
+    TH2D *h2_TrackLength_VertexZ;
+    TH3F *h3_SpaceCharge;
     if (graphicalOutput && checkMCTracks)
     { // HISTOGRAMS DEFINITION FOR MCTRACKS
-        h1_MC_Mult = new TH1F("h1_MC_Mult", "MCTrack Multiplicity (primaries)", 100, 0, 10);
+        h1_MC_Mult = new TH1F("h1_MC_Mult", "MCTrack Multiplicity (primaries)", 200, 0, 20);
         // if secondaries are included
-        h1_MC_MultSec = new TH1F("h1_MC_MultSec", "MCTrack Multiplicity", 100, 0, 1000);
-        h1_MC_PDG = new TH1F("h1_MC_PDG", "Primary PDG Code", 4600, -2300, 2300);
-        h1_MC_PDGSec = new TH1F("h1_MC_PDGSec", "MCTrack PDG Code", 4600, -2300, 2300);
-        h1_MC_Ene = new TH1F("h1_MC_Ene", "Primary Energy (MeV)", 200, 0, 3 * maxE);
-        h1_MC_EneSec = new TH1F("h1_MC_EneSec", "MCTrack Energy (MeV)", 200, 0, 3 * maxE);
-        h1_MC_Theta = new TH1F("h1_MC_Theta", "Primary Theta", 200, 0, 3.2);
-        h1_MC_ThetaSec = new TH1F("h1_MC_ThetaSec", "MCTrack Theta", 200, 0, 3.2);
-        h1_MC_Phi = new TH1F("h1_MC_Phi", "Primary Phi", 200, -3.2, 3.2);
-        h1_MC_PhiSec = new TH1F("h1_MC_PhiSec", "MCTrack Phi", 200, -3.2, 3.2);
+        h1_MC_MultSec = new TH1F("h1_MC_MultSec", "MCTrack Multiplicity", 200, 0, 2000);
+        h1_MC_PDG = new TH1F("h1_MC_PDG", "Primary PDG Code", 6600, -2300, 4300);
+        h1_MC_PDGSec = new TH1F("h1_MC_PDGSec", "MCTrack PDG Code", 6600, -2300, 4300);
+        h1_MC_Ene = new TH1F("h1_MC_Ene", "Primary Energy (MeV)", 200, 0, 6 * maxE);
+        h1_MC_EneSec = new TH1F("h1_MC_EneSec", "MCTrack Energy (MeV)", 200, 0, 6 * maxE);
+        h2_MC_Vertex_XZ = new TH2F("h2_MC_Vertex_XZ", "Primary vertex position XZ (cm)", 2000, 155, 355,200,-1,1);
+        h2_MC_Vertex_YZ = new TH2F("h2_MC_Vertex_YZ", "Primary vertex position YZ (cm)", 2000, 155, 355,200,-1,1);
+        h1_MC_Vertex_Z = new TH1F("h1_MC_Vertex_Z", "Primary vertex position Z (cm)", 145, 155, 300);
     }
     if (graphicalOutput && checkPoints)
     { // HISTOGRAMS DEFINITION FOR POINTS
-        h1_Point_Mult = new TH1F("h1_Point_Mult", "Point Multiplicity", 400, 0, 400);
-        h1_Point_Time = new TH1F("h1_Point_Time", "Point Time", 400, 0, 0.0000001);
-        h1_Point_Length = new TH1F("h1_Point_Length", "Point Length", 400, 0, 400);
-        h1_Point_ELoss = new TH1F("h1_Point_ELoss", "Point ELoss (MeV)", 400, 0, 0.1);
-        h1_Point_TrackStatus = new TH1F("h1_Point_TrackStatus", "Point TrackStatus", 8, 0, 7);
-        h1_Point_PDG = new TH1F("h1_Point_PDG", "Point PDG", 4600, -2300, 2300);
-        h1_Point_Charge = new TH1F("h1_Point_Charge", "Point Charge", 40, 0, 39);
-        h1_Point_Mass = new TH1F("h1_Point_Mass", "Point Mass", 400, 0, 10);
-        h1_Point_Kine = new TH1F("h1_Point_Kine", "Point KinE (MeV)", 400, 0, 6000);
-        h1_Point_trackStep = new TH1F("h1_Point_trackStep", "Point trackStep", 400, 0, 40);
+        h2_Point_XZ = new TH2F("h2_Point_XZ", "Pions XZ plane- Active region", 1200, 175, 295, 400, -10, 30);
+        h2_Point_YZ = new TH2F("h2_Point_YZ", "Pions YZ plane- Active region", 1200, 175, 295, 600, -30, 30);
         h1_Pions_TrackLength = new TH1D("h1_Pions_TrackLength", "Pions trackLength (cm)", 100, 0, 100);
-        h1_Pions_ELoss = new TH1D("h1_Pions_ELoss", "Pions ELoss (MeV)", 900, 0, 0.2);
-        //h2_Point_XZ = new TH2F("h2_Point_XZ", "Points projection on XZ plane", 600, -30, 30, 1100, 195, 305);
-        //h2_Point_YZ = new TH2F("h2_Point_YZ", "Point projection on YZ plane", 600, -30, 30, 1100, 195, 305);
-        h2_Point_XZ = new TH2F("h2_Point_XZ", "Points projection on XZ plane", 1200, 175, 295, 600, -30, 30);
-        h2_Point_YZ = new TH2F("h2_Point_YZ", "Point projection on YZ plane", 1200, 175, 295, 600, -30, 30);        
-        h2_Point_PxPz = new TH2F("h2_Point_PxPz", "Momentum projection on XZ plane", 600, -1, 1, 600, -1, 7);
-        h2_Point_PyPz = new TH2F("h2_Point_PyPz", "Momentum projection on YZ plane", 600, -1, 1, 600, -1, 7);
+        h1_Pions_ELoss = new TH1D("h1_Pions_ELoss", "Pions ELoss (MeV)", 200, 0, 0.2);
+        h2_TrackLength_VertexZ= new TH2D("h2_TrackLength_VertexZ","Pions trackLength inside AR(cm) Vs Z vertex (cm)",145, 155, 300,100, 0, 100);
+        h3_SpaceCharge = new TH3F("h3_SpaceCharge", "Space charge; Z[cm];X[cm];Y[cm]", 120, 175, 295, 200, -10, 30, 300, -30, 30);
     }
     // END OF HISTOGRMAS DEFINITION
 
@@ -148,12 +133,13 @@ void Analysis(TString GEOTAG="FullBeamIn", TString version="v2")
     Int_t pointsPerEvent = 0;
     Int_t MCtracksPerEvent = 0;
     Int_t primaries = 0;
-
+    Int_t size=11;
+		double eff_zz[size];			// Efficiency Vz Z vertex
+		double a=163.5, b=a+10.;  // depends on the target position
     for (Int_t i = 0; i < nevents; i++)
     {
         double percentage = i / (double)(nevents * 1.);
         loadfunction(percentage);
-        //cout<<"n. event="<<i<<endl;
         gtpcPointCA->Clear();
         MCTrackCA->Clear();
         primaries = 0;
@@ -202,8 +188,8 @@ void Analysis(TString GEOTAG="FullBeamIn", TString version="v2")
                     {
                         h1_MC_PDG->Fill(track[h]->GetPdgCode());
                         h1_MC_Ene->Fill(track[h]->GetEnergy() * 1000 - track[h]->GetMass() * 1000);
-                        h1_MC_Theta->Fill(momentum.Theta());
-                        h1_MC_Phi->Fill(momentum.Phi());
+                        h2_MC_Vertex_XZ->Fill(track[h]->GetStartZ(),track[h]->GetStartX());
+                        h2_MC_Vertex_YZ->Fill(track[h]->GetStartZ(),track[h]->GetStartY());
                     }
                     if(track[h]->GetPdgCode()==-211) zz=track[h]->GetStartZ();
                 }
@@ -212,8 +198,6 @@ void Analysis(TString GEOTAG="FullBeamIn", TString version="v2")
                     momentum = track[h]->GetMomentumMass();
                     h1_MC_PDGSec->Fill(track[h]->GetPdgCode());
                     h1_MC_EneSec->Fill(track[h]->GetEnergy() * 1000 - track[h]->GetMass() * 1000);
-                    h1_MC_ThetaSec->Fill(momentum.Theta());
-                    h1_MC_PhiSec->Fill(momentum.Phi());
                 }
             }
             h1_MC_Mult->Fill(primaries);
@@ -223,14 +207,11 @@ void Analysis(TString GEOTAG="FullBeamIn", TString version="v2")
         // GTPC Point information[points inside tha Active Region]
         if (checkPoints)
         {
-            if (graphicalOutput)
-                h1_Point_Mult->Fill(pointsPerEvent);
             double ll = 0, ee=0;
             for (Int_t h = 0; h < pointsPerEvent; h++)//HERE
             {
 								if(point[h]->GetPDGCode()==-211&&point[h]->GetParentTrackID()==-1)
 								{
-								//cout<<"Name="<<point[h]->GetParticleName()<<"	ParentID="<<point[h]->GetParentTrackID()<<"	TrackStatus="<<point[h]->GetTrackStatus()<<"	Volume="<<point[h]->GetVolName()<<"	TrackStep="<<point[h]->GetTrackStep()<<"	X="<<point[h]->GetX()<<"	Z="<<point[h]->GetZ()<<endl;
 								ll+=point[h]->GetTrackStep();
 								ee+=point[h]->GetEnergyLoss() * 1000;
 								} 
@@ -240,29 +221,25 @@ void Analysis(TString GEOTAG="FullBeamIn", TString version="v2")
                     point[h]->Print();
                 }
                 if (graphicalOutput)
-                {
-                    h1_Point_Time->Fill(point[h]->GetTime());
-                    h1_Point_Length->Fill(point[h]->GetLength());
-                    h1_Point_ELoss->Fill(point[h]->GetEnergyLoss() * 1000);
-                    h1_Point_TrackStatus->Fill(point[h]->GetTrackStatus());
-                    h1_Point_PDG->Fill(point[h]->GetPDGCode());
-                    h1_Point_Charge->Fill(point[h]->GetCharge());
-                    h1_Point_Mass->Fill(point[h]->GetMass());
-                    h1_Point_Kine->Fill(point[h]->GetKineticEnergy() * 1000);
-                    h1_Point_trackStep->Fill(point[h]->GetTrackStep());
-                    //h2_Point_XZ->Fill(point[h]->GetX(), point[h]->GetZ());
-                    //h2_Point_YZ->Fill(point[h]->GetY(), point[h]->GetZ()); 
-                    if(point[h]->GetPDGCode()==-211)h2_Point_XZ->Fill(point[h]->GetZ(),point[h]->GetX());//1000060120
-                    if(point[h]->GetPDGCode()==-211)h2_Point_YZ->Fill(point[h]->GetZ(), point[h]->GetY());                    
-                    h2_Point_PxPz->Fill(point[h]->GetPx(), point[h]->GetPz());
-                    h2_Point_PyPz->Fill(point[h]->GetPy(), point[h]->GetPz());
+                { 
+                    if(point[h]->GetPDGCode()==-211)h2_Point_XZ->Fill(point[h]->GetZ(),point[h]->GetX());//1000060120 He 1000020030
+                    if(point[h]->GetPDGCode()==-211)h2_Point_YZ->Fill(point[h]->GetZ(), point[h]->GetY()); 
+                    if(point[h]->GetPDGCode()==-211)h3_SpaceCharge->Fill(point[h]->GetZ(),point[h]->GetX(),point[h]->GetY(),point[h]->GetEnergyLoss() * 1000);
                 }
+
             }
-            if(ll>2.&&zz>162.5)
+            if(ll>10.&&zz>163.5)//170, 175
             {
-            h1_Pions_TrackLength->Fill(ll);
-            h1_Pions_ELoss->Fill(ee);
+		          h1_Pions_TrackLength->Fill(ll);
+		          h1_Pions_ELoss->Fill(ee);
+		          h1_MC_Vertex_Z->Fill(zz);
+		         	h2_TrackLength_VertexZ->Fill(zz,ll);
             }
+         for (unsigned int i = 0; i < size; i += 1)
+         {
+         	 if(ll>10.&&zz>a+10*i && zz<=b+10*i) eff_zz[i]++;
+         }
+
         }
 
         // User defined additions
@@ -272,21 +249,32 @@ void Analysis(TString GEOTAG="FullBeamIn", TString version="v2")
         if (MCtracksPerEvent)
             delete[] track;
     }
-
+    double zz_avg[size], ex[size], ey[size], sum_eff=0;
+    for (unsigned int i = 0; i < size; i += 1)
+    {
+			zz_avg[i]=((a+10*i)+(b+10*i))*0.5;	//Z vertex average	
+			eff_zz[i]=(eff_zz[i]/nevents)*100;	//Efficiency percentage
+			sum_eff+=eff_zz[i];									//Total efficiency in %
+			ex[i]=5;														//error size bin x axis
+			ey[i]=0;														//error y axis
+    }
+    TGraphErrors *gr_efficiency_VertexZ=new TGraphErrors(size, zz_avg ,eff_zz,ex,ey);
+    gr_efficiency_VertexZ->SetTitle("Pion Efficiency (%) Vs Z vertex (cm)");
+    gr_efficiency_VertexZ->SetMarkerStyle(kFullCircle);
     if (graphicalOutput)
     {
         TCanvas* c1 = new TCanvas("MCTrack", "MCTrack", 0, 0, 500, 700);
         c1->SetFillColor(0);
         c1->SetFrameFillColor(0);
-        TCanvas* c2 = new TCanvas("Points", "Points", 20, 20, 620, 720);
+        TCanvas* c2 = new TCanvas("Points Position", "Points Position", 40, 40, 540, 740);
         c2->SetFillColor(0);
         c2->SetFrameFillColor(0);
-        TCanvas* c3 = new TCanvas("Points Position", "Points Position", 40, 40, 540, 740);
+        TCanvas* c3 = new TCanvas("Pions properties", "Pions properties", 40, 40, 540, 740);
         c3->SetFillColor(0);
         c3->SetFrameFillColor(0);
-        TCanvas* c4 = new TCanvas("Pions properties", "Pions properties", 40, 40, 540, 740);
+       /* TCanvas* c4 = new TCanvas("Space charge", "Space charge", 40, 40, 540, 740);
         c4->SetFillColor(0);
-        c4->SetFrameFillColor(0);
+        c4->SetFrameFillColor(0);*/
 
         // MC TRACK CANVAS
         c1->cd();
@@ -305,10 +293,10 @@ void Analysis(TString GEOTAG="FullBeamIn", TString version="v2")
         TLatex Tl;
         Tl.SetTextSize(0.06);
         Tl.SetTextColor(1);
-        Tl.DrawLatex(200, 10, "Primaries");
+        Tl.DrawLatex(-2000, 10, "Primaries");
         Tl.SetTextSize(0.06);
         Tl.SetTextColor(2);
-        Tl.DrawLatex(1400, 10, "Secondaries");
+        Tl.DrawLatex(500, 10, "Secondaries");
         c1->cd(4);
         c1->cd(4)->SetLogy();
         h1_MC_EneSec->SetLineColor(kRed);
@@ -316,84 +304,41 @@ void Analysis(TString GEOTAG="FullBeamIn", TString version="v2")
         h1_MC_Ene->Draw("SAME");
         Tl.SetTextSize(0.06);
         Tl.SetTextColor(1);
-        Tl.DrawLatex(5 * maxE, 10, "Primaries");
+        Tl.DrawLatex(1 * maxE, 100, "Primaries");
         Tl.SetTextSize(0.06);
         Tl.SetTextColor(2);
-        Tl.DrawLatex(20 * maxE, 10, "Secondaries");
+        Tl.DrawLatex(3* maxE, 100, "Secondaries");
         c1->cd(5);
-        c1->cd(5)->SetLogy();
-        h1_MC_ThetaSec->SetLineColor(kRed);
-        h1_MC_ThetaSec->Draw();
-        h1_MC_Theta->Draw("SAME");
-        Tl.SetTextSize(0.06);
-        Tl.SetTextColor(1);
-        Tl.DrawLatex(0.2, 2, "Primaries");
-        Tl.SetTextSize(0.06);
-        Tl.SetTextColor(2);
-        Tl.DrawLatex(1.8, 2, "Secondaries");
+        h2_MC_Vertex_XZ->Draw("col");
         c1->cd(6);
-        c1->cd(6)->SetLogy();
-        h1_MC_PhiSec->SetLineColor(kRed);
-        h1_MC_PhiSec->Draw();
-        h1_MC_Phi->Draw("SAME");
-        Tl.SetTextSize(0.06);
-        Tl.SetTextColor(1);
-        Tl.DrawLatex(-2, 2, "Primaries");
-        Tl.SetTextSize(0.06);
-        Tl.SetTextColor(2);
-        Tl.DrawLatex(0.8, 2, "Secondaries");
-
-        // POINT CANVAS
-        c2->cd();
-        c2->Divide(3, 3);
-        c2->cd(1);
-        c2->cd(1)->SetLogy();
-        h1_Point_Mult->Draw();
-        c2->cd(2);
-        c2->cd(2)->SetLogy();
-        h1_Point_Time->Draw();
-        c2->cd(3);
-        c2->cd(3)->SetLogy();
-        h1_Point_Length->Draw();
-        c2->cd(4);
-        c2->cd(4)->SetLogy();
-        h1_Point_ELoss->Draw();
-        c2->cd(5);
-        c2->cd(5)->SetLogy();
-        h1_Point_trackStep->Draw();
-        c2->cd(6);
-        c2->cd(6)->SetLogy();
-        h1_Point_PDG->Draw();
-        c2->cd(7);
-        c2->cd(7)->SetLogy();
-        h1_Point_Charge->Draw();
-        c2->cd(8);
-        c2->cd(8)->SetLogy();
-        h1_Point_Mass->Draw();
-        c2->cd(9);
-        c2->cd(9)->SetLogy();
-        h1_Point_Kine->Draw();
-        // c2->cd(1); c2->cd(1)->SetLogy();h1_Point_trackStep->Draw();
+        h2_MC_Vertex_YZ->Draw("col");
 
         // POINT CANVAS POSITION & MOMENTUM
+        c2->cd();
+        c2->Divide(1, 2);
+        c2->cd(1);
+        h2_Point_XZ->Draw("col");
+        c2->cd(2);
+        h2_Point_YZ->Draw("col");
+        
+        //Pions properties
         c3->cd();
         c3->Divide(2, 2);
         c3->cd(1);
-        h2_Point_XZ->Draw("col");
-        c3->cd(2);
-        h2_Point_YZ->Draw("col");
-        c3->cd(3);
-        h2_Point_PxPz->Draw("col");
-        c3->cd(4);
-        h2_Point_PyPz->Draw("col");
-        //Pions properties
-        c4->cd();
-        c4->Divide(1, 2);
-        c4->cd(1);
         h1_Pions_TrackLength->Draw();
-        c4->cd(2);
-        h1_Pions_ELoss->Draw();
-        
+        c3->cd(2);
+        h1_MC_Vertex_Z->Draw();
+        c3->cd(3);
+        h2_TrackLength_VertexZ->Draw("col");
+        c3->cd(4);
+				gr_efficiency_VertexZ->Draw("AP");
+				Tl.SetTextSize(0.06);
+        Tl.SetTextColor(1);
+        Tl.DrawLatex(240, 12, Form("#varepsilon_{#pi^{-}}= %.2f",sum_eff));
+
+				//SPACE CHARGE TODO review the space charge 
+				//c4->cd();
+				//h3_SpaceCharge->Draw();        
         cout << "\n" << endl;
 				// -----   Finish   -------------------------------------------------------
 				timer.Stop();
@@ -401,21 +346,21 @@ void Analysis(TString GEOTAG="FullBeamIn", TString version="v2")
 				Double_t ctime = timer.CpuTime();
 				cout << endl << endl;
 				cout << "Macro finished succesfully." << endl;
-				cout << "Real time " << rtime/60 << " min, CPU time " << ctime/60 << "min" << endl << endl;
+				cout << "Real time " << rtime << " sec, CPU time " << ctime<< "sec" << endl << endl;
         // OUTPUT FILE
         if (GEOTAG.CompareTo("FullBeamIn")==0)
         {
         c1->Print("./"+GEOTAG+"/"+version+"/Analysis"+GEOTAG+"."+version+".ps(");
         c2->Print("./"+GEOTAG+"/"+version+"/Analysis"+GEOTAG+"."+version+".ps");
-        c3->Print("./"+GEOTAG+"/"+version+"/Analysis"+GEOTAG+"."+version+".ps");
-        c4->Print("./"+GEOTAG+"/"+version+"/Analysis"+GEOTAG+"."+version+".ps)");
+        c3->Print("./"+GEOTAG+"/"+version+"/Analysis"+GEOTAG+"."+version+".ps)");
+        //c4->Print("./"+GEOTAG+"/"+version+"/Analysis"+GEOTAG+"."+version+".ps)");
         }
         else
         {
         c1->Print("./"+GEOTAG+"/Analysis"+GEOTAG+".ps(");
         c2->Print("./"+GEOTAG+"/Analysis"+GEOTAG+".ps");
-        c3->Print("./"+GEOTAG+"/Analysis"+GEOTAG+".ps");
-        c4->Print("./"+GEOTAG+"/Analysis"+GEOTAG+".ps)");
+        c3->Print("./"+GEOTAG+"/Analysis"+GEOTAG+".ps)");
+        //c4->Print("./"+GEOTAG+"/Analysis"+GEOTAG+".ps)");
         }
     }
 }

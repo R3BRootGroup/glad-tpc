@@ -30,6 +30,7 @@ To create the ASCII file for R3BROOT everything must be in [ns], [cm] and [GeV]
 #include <stdlib.h> 
 #include <string>
 #include <vector>
+#include <sys/stat.h>
 //Loading bar
 #define PBSTR "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
 #define PBWIDTH 60
@@ -54,7 +55,7 @@ void GenerateInputTree_PhaseSpaceDecay()
     const char* geoTag = "Prototype";
     const char* geoTag1 = "FullBeamOut";
     const char* geoTag2 = "FullBeamIn";
-    GEOTAG = std::string(geoTag1);
+    GEOTAG = std::string(geoTag);
     // Number of total decays 
     const int neve = 10000; //select the total number of events that you need
 		
@@ -76,6 +77,20 @@ void GenerateInputTree_PhaseSpaceDecay()
     ofstream asciifile;
     //Target position according to the different detectors
     TVector3 TargetPosition;
+    //Check if the ASCII folder is present
+    string folder="ASCII";
+		if (mkdir(folder.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == -1)
+		{
+    	if( errno == EEXIST ) 
+    	{
+				//already exist
+    	} 
+    	else 
+    	{
+        std::cout << "cannot create session name folder error:" << strerror(errno) << std::endl;
+        throw std::runtime_error( strerror(errno) );
+    	}
+		}
     if (GEOTAG == "Prototype")
     {
         cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
@@ -96,7 +111,7 @@ void GenerateInputTree_PhaseSpaceDecay()
     {
         cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
         asciifile.open("./ASCII/inputFullBeamIn_3LH.dat", ios::out | ios::app);
-        TargetPosition = { 0, 0., 161. };
+        TargetPosition = { 0, 0., 161};//161, 167.5, 172.5
         cout << "The target Position is (" << TargetPosition.X() << ", " << TargetPosition.Y() << ", "
              << TargetPosition.Z() << ") [cm]" << endl;
     }
@@ -104,7 +119,7 @@ void GenerateInputTree_PhaseSpaceDecay()
     //____________________________________________________
     for (int i = 0; i < neve; ++i)
     {
-    		double percentage=i/10000.;
+    		double percentage=i/(double)(neve*1.0);
 				loadfunction(percentage);
 
         double sig_E = 0.1344, mean_E = 1.555; //[GeV]
