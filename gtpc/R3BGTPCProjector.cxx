@@ -11,7 +11,7 @@
  * or submit itself to any jurisdiction.                                      *
  ******************************************************************************/
 #include "R3BGTPCProjector.h"
-
+#include "R3BMCTrack.h"
 #include "TClonesArray.h"
 
 #include "FairLogger.h"
@@ -20,6 +20,8 @@
 #include "FairRuntimeDb.h"
 #include "R3BGTPCSetup.h"
 #include "TF1.h"
+#include "TVirtualMC.h"
+#include "TVirtualMCStack.h"
 
 std::string geotag = "Prototype";
 std::string geotag1 = "FullBeamOut";
@@ -45,6 +47,7 @@ R3BGTPCProjector::R3BGTPCProjector()
 R3BGTPCProjector::~R3BGTPCProjector()
 {
     fGTPCPoints->Clear();
+    MCTrackCA->Clear();
     fGTPCProjPoint->Clear();
 }
 
@@ -79,6 +82,13 @@ InitStatus R3BGTPCProjector::Init()
         return kFATAL;
     }
     fGTPCPoints = (TClonesArray*)ioman->GetObject("GTPCPoint");
+		// Input: TClonesArray of R3BMCTrack
+    if ((TClonesArray*)ioman->GetObject("MCTrack") == nullptr)
+    {
+        LOG(FATAL) << "R3BMCTrack::Init No MCTrack!";
+        return kFATAL;
+    }    
+    MCTrackCA = (TClonesArray*)ioman->GetObject("MCTrack");
 
     // Output: TClonesArray of R3BGTPCProjPoint
     fGTPCProjPoint = new TClonesArray("R3BGTPCProjPoint");
@@ -124,7 +134,6 @@ void R3BGTPCProjector::Exec(Option_t*)
     }
 
     R3BGTPCPoint* aPoint;
-    // R3BGTPCProjPoint* aProjPoint;
     Int_t presentTrackID = -10; // control of the point trackID
     Double_t xPre, yPre, zPre;
     Double_t xPost, yPost, zPost;
@@ -145,6 +154,8 @@ void R3BGTPCProjector::Exec(Option_t*)
     {
         aPoint = (R3BGTPCPoint*)fGTPCPoints->At(i);
         evtID = aPoint->GetEventID();
+        Int_t PDGCode, MotherId;
+        Double_t Vertex_x0, Vertex_y0, Vertex_z0, Vertex_px0, Vertex_py0, Vertex_pz0;
         if (aPoint->GetTrackStatus() == 11000 || aPoint->GetTrackStatus() == 10010010 ||
             aPoint->GetTrackStatus() == 10010000 || aPoint->GetTrackStatus() == 10011000)
         {
@@ -153,6 +164,15 @@ void R3BGTPCProjector::Exec(Option_t*)
             xPre = aPoint->GetX();
             yPre = aPoint->GetY();
             zPre = aPoint->GetZ();
+            R3BMCTrack* Track=(R3BMCTrack*)MCTrackCA->At(presentTrackID);
+            PDGCode=Track->GetPdgCode();
+            MotherId=Track->GetMotherId();
+            Vertex_x0=Track->GetStartX();
+            Vertex_y0=Track->GetStartY();
+            Vertex_z0=Track->GetStartZ();
+            Vertex_px0=Track->GetPx();
+            Vertex_py0=Track->GetPy();
+            Vertex_pz0=Track->GetPz();
             readyToProject = kTRUE;
             continue; // no energy deposited in this point, just taking in entrance coordinates
         }
@@ -207,7 +227,7 @@ void R3BGTPCProjector::Exec(Option_t*)
             projZ = gRandom->Gaus(zPre + stepZ * ele, sigmaTransvAtPadPlane);
             projTime = gRandom->Gaus(driftTime + timeBeforeDrift, sigmaLongAtPadPlane / fDriftVelocity);
             // cout<<"projTime="<<projTime<<"		driftTime="<<driftTime<<"
-            // timeBeforeDrift="<<timeBeforeDrift<<endl; cout<<"ProjZ="<<projZ<<"	ProjX="<<projX<<endl;
+            // timeBeforeDrift="<<timeBeforeDrift<<endl;	cout<<"ProjZ="<<projZ<<" ProjX="<<projX<<endl; 
             // obtain padID for projX, projZ (simple algorithm) for the Prototype
             // the algorithm assigns a pad number which depends on the projX and projZ,
             // taking into consideration the Offset (that depends on the position inside GLAD),
@@ -228,7 +248,7 @@ void R3BGTPCProjector::Exec(Option_t*)
                 projX = XOffset + 2 * fHalfSizeTPC_X;
             Int_t padID;
             if (GEOTAG.compare("Prototype") == 0)
-                padID = (45) * (Int_t)((projZ - ZOffset) / 0.2) + (Int_t)((projX - XOffset) / 0.2); // 2mm
+                padID = (44) * (Int_t)((projZ - ZOffset) / 0.2) + (Int_t)((projX - XOffset) / 0.2); // 2mm
             else
                 padID = (2 * fHalfSizeTPC_X * fSizeOfVirtualPad) * (Int_t)((projZ - ZOffset) * fSizeOfVirtualPad) +
                         (Int_t)((projX - XOffset) * fSizeOfVirtualPad); //FULL HYDRA padplane has not been decided yet
@@ -239,7 +259,7 @@ void R3BGTPCProjector::Exec(Option_t*)
                 if (((R3BGTPCProjPoint*)fGTPCProjPoint->At(pp))->GetVirtualPadID() == padID)
                 {
                     // already existing R3BGTPCProjPoint... add time and electron
-                    ((R3BGTPCProjPoint*)fGTPCProjPoint->At(pp))->AddCharge();                      //
+                    ((R3BGTPCProjPoint*)fGTPCProjPoint->At(pp))->AddCharge();											 //
                     ((R3BGTPCProjPoint*)fGTPCProjPoint->At(pp))->SetTimeDistr(projTime / 1000, 1); // micros
                     virtualPadFound = kTRUE;
                     break;
@@ -247,7 +267,18 @@ void R3BGTPCProjector::Exec(Option_t*)
             }
             if (!virtualPadFound)
             {
-                new ((*fGTPCProjPoint)[nProjPoints]) R3BGTPCProjPoint(padID, projTime, 1, evtID);
+                new ((*fGTPCProjPoint)[nProjPoints]) R3BGTPCProjPoint(padID, 
+                																											projTime/1000, //micros
+                																											1, 
+                																											evtID, 
+                																											PDGCode, 
+                																											MotherId, 
+                																											Vertex_x0, 
+                																											Vertex_y0, 
+                																											Vertex_z0, 
+                																											Vertex_px0, 
+                																											Vertex_py0,
+                																											Vertex_pz0);
             }
             virtualPadFound = kFALSE;
         }

@@ -211,8 +211,8 @@ void reader(const char* inputSimFile, Int_t event)
             {
                 ppoint = (R3BGTPCProjPoint*)gtpcProjPointCA->At(h);
 
-                xPad = ppoint->GetVirtualPadID() % (Int_t)(2 * fHalfSizeTPC_X * fSizeOfVirtualPad);
-                zPad = (ppoint->GetVirtualPadID() - xPad) / (2 * fHalfSizeTPC_X * fSizeOfVirtualPad);
+                xPad = ppoint->GetVirtualPadID() % (Int_t)(44);
+                zPad = (ppoint->GetVirtualPadID() - xPad) / (44);
                 tPad = ((TH1S*)(ppoint->GetTimeDistribution()))->GetMean();
 
                 htrackInPads->Fill(zPad, xPad, ppoint->GetCharge());
@@ -248,12 +248,12 @@ void reader(const char* inputSimFile, Int_t event)
                 {
                     ppoint = (R3BGTPCProjPoint*)gtpcProjPointCA->At(h);
 
-                    xPad = ppoint->GetVirtualPadID() % (Int_t)(2 * fHalfSizeTPC_X * fSizeOfVirtualPad);
-                    zPad = (ppoint->GetVirtualPadID() - xPad) / (2 * fHalfSizeTPC_X * fSizeOfVirtualPad);
+                    xPad = ppoint->GetVirtualPadID() % (Int_t)(44);
+                    zPad = (ppoint->GetVirtualPadID() - xPad) / (44);
                     tPad = ((TH1S*)(ppoint->GetTimeDistribution()))->GetMean();
 
-                    htrackInPads->Fill(xPad, zPad, ppoint->GetCharge());
-                    hdriftTimeInPads->Fill(xPad, zPad, tPad); // NOTE: THAT IS ACCUMULATED TIME!!
+                    htrackInPads->Fill(zPad, xPad, ppoint->GetCharge());
+                    hdriftTimeInPads->Fill(zPad, xPad, tPad); // NOTE: THAT IS ACCUMULATED TIME!!
                     hdepth1InPads->Fill(tPad, zPad, ppoint->GetCharge());
                     hdepth2InPads->Fill(tPad, xPad, ppoint->GetCharge());
                 }
@@ -267,7 +267,7 @@ void reader(const char* inputSimFile, Int_t event)
     l.SetTextSize(0.05);
 
     c3->SetFillColor(0);
-    c3->Divide(2, 3);
+    c3->Divide(2, 2);
     c3->Draw();
     TVirtualPad* c3_1 = c3->cd(1);
     c3_1->SetLogz();
@@ -275,9 +275,7 @@ void reader(const char* inputSimFile, Int_t event)
 
     l.SetTextAlign(12);
     l.SetTextSize(0.05);
-    l.DrawLatex(0.2 * fHalfSizeTPC_X * fSizeOfVirtualPad,
-                2.04 * fHalfSizeTPC_Z * fSizeOfVirtualPad,
-                "Color code: induced charge");
+    l.DrawLatex(43.2,45,"Color code: induced charge");
 
     TVirtualPad* c3_2 = c3->cd(2);
     c3_2->SetLogz();
@@ -286,8 +284,7 @@ void reader(const char* inputSimFile, Int_t event)
     TLatex l2;
     l2.SetTextAlign(12);
     l2.SetTextSize(0.05);
-    l2.DrawLatex(
-        0.2 * fHalfSizeTPC_X * fSizeOfVirtualPad, 2.04 * fHalfSizeTPC_Z * fSizeOfVirtualPad, "Color code: drift time");
+    l2.DrawLatex(43.2,45, "Color code: drift time");
 
     TVirtualPad* c3_3 = c3->cd(3);
     c3_3->SetLogz();
@@ -295,7 +292,7 @@ void reader(const char* inputSimFile, Int_t event)
 
     l.SetTextAlign(12);
     l.SetTextSize(0.05);
-    l.DrawLatex(5, 2.04 * fHalfSizeTPC_Z * fSizeOfVirtualPad, "Color code: induced charge");
+    l.DrawLatex(2, 2.04 * fHalfSizeTPC_Z * fSizeOfVirtualPad, "Color code: induced charge");
 
     TVirtualPad* c3_4 = c3->cd(4);
     c3_4->SetLogz();
@@ -303,12 +300,12 @@ void reader(const char* inputSimFile, Int_t event)
 
     l.SetTextAlign(12);
     l.SetTextSize(0.05);
-    l.DrawLatex(5, 2.04 * fHalfSizeTPC_X * fSizeOfVirtualPad, "Color code: induced charge");
+    l.DrawLatex(2, 2.04 * fHalfSizeTPC_X * fSizeOfVirtualPad, "Color code: induced charge");
 
     gPad->Modified();
     gPad->Update();
 
-    if (h1_ProjPoint_TimeExample)
+   /* if (h1_ProjPoint_TimeExample)
     {
         TVirtualPad* c3_5 = c3->cd(5);
         // c3_5->SetLogz();
@@ -338,7 +335,7 @@ void reader(const char* inputSimFile, Int_t event)
         l.SetTextAlign(12);
         l.SetTextSize(0.05);
         l.DrawLatex(1, 50, "All pads");
-    }
+    }*/
 
     gPad->Modified();
     gPad->Update();

@@ -1,11 +1,10 @@
-
-{
+{	
     gSystem->Load("libR3BGTPC");
-    cout << "[INFO] projection macros directory for glad-tpc" << endl;
-		// Add my own options here: 
-		TStyle* mcStyle = new TStyle("mcStyle","Manuel's Root Styles"); 
+    cout << "[INFO] Output pad plane electronics response!" << endl;
+
+		TStyle* mcStyle = new TStyle("mcStyle","Simone's Root Styles"); 
 		mcStyle->SetPalette(1,0); // avoid horrible default color scheme 
-		mcStyle->SetOptStat(0); 
+		mcStyle->SetOptStat(1111); 
 		mcStyle->SetOptTitle(0); 
 		mcStyle->SetOptDate(0); 
 		mcStyle->SetTitleOffset(1.2,"y"); // default canvas options 

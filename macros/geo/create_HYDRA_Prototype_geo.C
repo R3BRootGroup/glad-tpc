@@ -80,6 +80,14 @@ void create_tpc_geo(string geoTag = "Prototype")
     TGeoMedium* pmix = gGeoMan->GetMedium("mix");
     if (!pmix)
         Fatal("Main", "Medium mix not found");
+    // this is the P10 gas mixture
+    FairGeoMedium* mp10 = geoMedia->getMedium("P10");
+    if (!mp10)
+        Fatal("Main", "FairMedium P10 not found");
+    geoBuild->createMedium(mp10);
+    TGeoMedium* pp10 = gGeoMan->GetMedium("P10");
+    if (!pp10)
+        Fatal("Main", "Medium P10 not found");
     FairGeoMedium* mvacuum = geoMedia->getMedium("vacuum");
     if (!mvacuum)
         Fatal("Main", "FairMedium vacuum not found");
@@ -182,7 +190,7 @@ void ConstructTPC(TGeoVolume* pWorld)
 {
     // Material-----------------------------------------------------------------
     TGeoMedium* FrameMaterial = gGeoManager->GetMedium("aluminium");
-    TGeoMedium* GasMaterial = gGeoManager->GetMedium("mix");
+    TGeoMedium* GasMaterial = gGeoManager->GetMedium("P10");
     TGeoMedium* WindowMaterial = gGeoManager->GetMedium("mylar");
 
     // Sensitive volume---------------------------------------------------------

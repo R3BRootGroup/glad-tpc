@@ -52,6 +52,11 @@ The steps to properly run the glad-tpc simulation:
 
 5. Visualization of the pad plane, in the folder `/glad-tpc/macro/vis` there is the macro `readVPadPlane.C`: This macro plots the output of the glad-tpc projector: plots the `R3BGTPCProjPoint` which contains the virtual pads calculated after the projection of the track.
 
+6. Electronics response, in the folder `/glad-tpc/macro/electronics` there is the macro `Electronics_MT.C`: This macro simulate the electronics response.
+
+#How to run the simulations
+
+It is possible to use the bash script `run_full.sh` to run all these steps at once. BE CAREFUL, set first the wanted parameters in the different folders.
 
 # Data Analysis
 
