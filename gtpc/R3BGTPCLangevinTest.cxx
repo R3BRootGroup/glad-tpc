@@ -11,11 +11,12 @@
  * or submit itself to any jurisdiction.                                      *
  ******************************************************************************/
 #include "R3BGTPCLangevinTest.h"
+#include "R3BMCTrack.h"
 
 #include "TClonesArray.h"
 #include "TMath.h"
-//#include "TVirtualMC.h"
-//#include "TVirtualMagField.h"
+#include "TVirtualMC.h"
+#include "TVirtualMCStack.h"
 
 #include "R3BGladFieldMap.h"
 
@@ -45,6 +46,7 @@ R3BGTPCLangevinTest::~R3BGTPCLangevinTest()
 {
     fGTPCPoints->Clear();
     fGTPCProjPoint->Clear();
+    MCTrackCA->Clear();
 }
 
 void R3BGTPCLangevinTest::SetParContainers()
@@ -91,7 +93,13 @@ InitStatus R3BGTPCLangevinTest::Init()
         return kFATAL;
     }
     fGTPCPoints = (TClonesArray*)ioman->GetObject("GTPCPoint");
-
+    // Input: TClonesArray of R3BMCTrack
+    if ((TClonesArray*)ioman->GetObject("MCTrack") == nullptr)
+    {
+        LOG(FATAL) << "R3BMCTrack::Init No MCTrack!";
+        return kFATAL;
+    }
+    MCTrackCA = (TClonesArray*)ioman->GetObject("MCTrack");
     // Output: TClonesArray of R3BGTPCProjPoint
     fGTPCProjPoint = new TClonesArray("R3BGTPCProjPoint");
     ioman->Register("GTPCProjPoint", GetName(), fGTPCProjPoint, kTRUE);
@@ -161,11 +169,21 @@ void R3BGTPCLangevinTest::Exec(Option_t*)
     Double_t sigmaLongAtPadPlane;
     Double_t sigmaTransvAtPadPlane;
     Int_t evtID;
-
+    Int_t PDGCode, MotherId;
+    Double_t Vertex_x0, Vertex_y0, Vertex_z0, Vertex_px0, Vertex_py0, Vertex_pz0;
     for (Int_t i = 0; i < nPoints; i++)
     {
         aPoint = (R3BGTPCPoint*)fGTPCPoints->At(i);
         evtID = aPoint->GetEventID();
+        R3BMCTrack* Track = (R3BMCTrack*)MCTrackCA->At(aPoint->GetTrackID());
+        PDGCode = Track->GetPdgCode();
+        MotherId = Track->GetMotherId();
+        Vertex_x0 = Track->GetStartX();
+        Vertex_y0 = Track->GetStartY();
+        Vertex_z0 = Track->GetStartZ();
+        Vertex_px0 = Track->GetPx();
+        Vertex_py0 = Track->GetPy();
+        Vertex_pz0 = Track->GetPz();
     }
 
     // Using here m, V, T, s just to simplify in SI system...
@@ -384,7 +402,18 @@ void R3BGTPCLangevinTest::Exec(Option_t*)
                 }
                 if (!virtualPadFound)
                 {
-                    new ((*fGTPCProjPoint)[nProjPoints]) R3BGTPCProjPoint(padID, projTime, 1, evtID);
+                    new ((*fGTPCProjPoint)[nProjPoints]) R3BGTPCProjPoint(padID,
+                                                                          projTime / 1000, // micros
+                                                                          1,
+                                                                          evtID,
+                                                                          PDGCode,
+                                                                          MotherId,
+                                                                          Vertex_x0,
+                                                                          Vertex_y0,
+                                                                          Vertex_z0,
+                                                                          Vertex_px0,
+                                                                          Vertex_py0,
+                                                                          Vertex_pz0);
                 }
                 virtualPadFound = kFALSE;
             }

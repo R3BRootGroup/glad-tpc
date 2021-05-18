@@ -35,7 +35,7 @@ Double_t WorldSizeZ;
 void ConstructTPC(TGeoVolume* pWorld);
 
 void create_tpc_geo(string geoTag = "Prototype")
-{ 
+{
     fGlobalTrans->SetTranslation(0.0, 0.0, 0.0);
 
     // -------   Load media from media file   -----------------------------------
@@ -80,6 +80,14 @@ void create_tpc_geo(string geoTag = "Prototype")
     TGeoMedium* pmix = gGeoMan->GetMedium("mix");
     if (!pmix)
         Fatal("Main", "Medium mix not found");
+    // this is the P10 gas mixture
+    FairGeoMedium* mp10 = geoMedia->getMedium("P10");
+    if (!mp10)
+        Fatal("Main", "FairMedium P10 not found");
+    geoBuild->createMedium(mp10);
+    TGeoMedium* pp10 = gGeoMan->GetMedium("P10");
+    if (!pp10)
+        Fatal("Main", "Medium P10 not found");
     FairGeoMedium* mvacuum = geoMedia->getMedium("vacuum");
     if (!mvacuum)
         Fatal("Main", "FairMedium vacuum not found");
@@ -146,19 +154,19 @@ void create_tpc_geo(string geoTag = "Prototype")
 
     // World definition
 
-    WorldSizeX =  2 * TPCLx;
-    WorldSizeY = 	2 * TPCLy;
-    WorldSizeZ =	2 * TPCLz;
+    WorldSizeX = 2 * TPCLx;
+    WorldSizeY = 2 * TPCLy;
+    WorldSizeZ = 2 * TPCLz;
 
     // GTPC main area->World definition
     TGeoVolume* pAWorld = gGeoManager->GetTopVolume();
     TGeoShape* tpc_box = new TGeoBBox("GTPC_Box", WorldSizeX, WorldSizeY, WorldSizeZ);
 
     TGeoVolume* pWorld = new TGeoVolume("GTPC_box", tpc_box, pvacuum);
-		pWorld->SetInvisible();
+    pWorld->SetInvisible();
     ConstructTPC(pWorld);
 
-    // Globle definition of TPC position in cm 
+    // Globle definition of TPC position in cm
     TVector3 gTrans(10.2, 0, 284.); // offset before rotation
     fGlobalTrans->SetTranslation(gTrans.X(), gTrans.Y(), gTrans.Z());
     TGeoCombiTrans* pGlobal = new TGeoCombiTrans(*fGlobalTrans, *fGlobalRot);
@@ -182,7 +190,7 @@ void ConstructTPC(TGeoVolume* pWorld)
 {
     // Material-----------------------------------------------------------------
     TGeoMedium* FrameMaterial = gGeoManager->GetMedium("aluminium");
-    TGeoMedium* GasMaterial = gGeoManager->GetMedium("mix");
+    TGeoMedium* GasMaterial = gGeoManager->GetMedium("P10");
     TGeoMedium* WindowMaterial = gGeoManager->GetMedium("mylar");
 
     // Sensitive volume---------------------------------------------------------
@@ -213,12 +221,12 @@ void ConstructTPC(TGeoVolume* pWorld)
 
     solidGas =
         new TGeoBBox("gas_box", TPCLx - 2 * FrameThickness, TPCLy - 2 * FrameThickness, TPCLz - 2 * FrameThickness);
-		logicGas = new TGeoVolume("gas_box", solidGas, GasMaterial);
+    logicGas = new TGeoVolume("gas_box", solidGas, GasMaterial);
     // Active region------------------------------------------------------------
 
     solidActiveRegion = new TGeoBBox("Active_region", ActiveRegionx, ActiveRegiony, ActiveRegionz);
     logicActiveRegion = new TGeoVolume("Active_region", solidActiveRegion, GasMaterial);
-    
+
     TGeoTranslation* tc3 = new TGeoTranslation("tc3", 0, 0, 1.5);
     tc3->RegisterYourself();
 
@@ -229,21 +237,21 @@ void ConstructTPC(TGeoVolume* pWorld)
 
     solidBWindow = new TGeoBBox("back_window", Windowx, Windowy, Windowz);
     logicBWindow = new TGeoVolume("back_window", solidBWindow, WindowMaterial);
-		
-		//Positioning the volumes in the world
-		//frame
-		pWorld->AddNode(logicFrame, 0, new TGeoCombiTrans(0., 0., 0, zeroRot));
-		//Positioning the volumes in the frame		
-		//front_window
+
+    // Positioning the volumes in the world
+    // frame
+    pWorld->AddNode(logicFrame, 0, new TGeoCombiTrans(0., 0., 0, zeroRot));
+    // Positioning the volumes in the frame
+    // front_window
     logicFrame->AddNode(logicFWindow, 0, new TGeoCombiTrans(-(TPCLx - 2 * FrameThickness + 0.0025), 0, 0, zeroRot));
-    //back_window
+    // back_window
     logicFrame->AddNode(logicBWindow, 0, new TGeoCombiTrans(TPCLx - 2 * FrameThickness + 0.0025, 0, 0, zeroRot));
-    //GAS
+    // GAS
     logicFrame->AddNode(logicGas, 0, new TGeoCombiTrans(0., 0., 0, zeroRot));
-		//Positioning the volumes in the gas_box
-		//Active_region
-    logicGas->AddNode(logicActiveRegion, 0, new TGeoCombiTrans(*tc3, *zeroRot));	    
-		
+    // Positioning the volumes in the gas_box
+    // Active_region
+    logicGas->AddNode(logicActiveRegion, 0, new TGeoCombiTrans(*tc3, *zeroRot));
+
     logicFrame->SetLineColor(kBlue);
     logicGas->SetLineColor(kRed);
     logicActiveRegion->SetLineColor(kMagenta);

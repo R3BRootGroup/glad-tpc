@@ -12,59 +12,57 @@ bla bla
 #include <TStyle.h>
 #include <TSystem.h>
 #include <math.h>
-//Loading bar
+// Loading bar
 #define PBSTR "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
 #define PBWIDTH 60
-void loadfunction(double &percentage)
+void loadfunction(double& percentage)
 {
-    int val = (int) (percentage * 100);
-    int lpad = (int) (percentage * PBWIDTH);
+    int val = (int)(percentage * 100);
+    int lpad = (int)(percentage * PBWIDTH);
     int rpad = PBWIDTH - lpad;
     printf("\r%3d%% [%.*s%*s]", val, lpad, PBSTR, rpad, "");
     fflush(stdout);
 }
 using namespace std;
 
-
 void reader(const char* inputSimFile)
 {
 
     // SETUP
-    string geoTag="Prototype";		//Only prototype for the moment
-		cout << "\n \033[1;31m Warning\033[0m: the detector you are building is " << geoTag << "!!!!!\n" << endl;
+    string geoTag = "Prototype"; // Only prototype for the moment
+    cout << "\n \033[1;31m Warning\033[0m: the detector you are building is " << geoTag << "!!!!!\n" << endl;
     R3BGTPCSetup* setup = new R3BGTPCSetup(geoTag, 0);
-    Double_t fHalfSizeTPC_X = setup->GetActiveRegionx() / 2.;   // X (row)
-    Double_t fHalfSizeTPC_Y = setup->GetActiveRegiony() / 2.;   // Y (time)
-    Double_t fHalfSizeTPC_Z = setup->GetActiveRegionz() / 2.;   // Z (column)
-    Double_t fSizeOfVirtualPad = setup->GetPadSize(); // 1: pads of 1cm^2 , 10: pads of 1mm^2
-		Double_t fMaxDriftTime=(round)((setup->GetActiveRegiony()/setup->GetDriftVelocity())*pow(10,-3));//us
-    //root style
+    Double_t fHalfSizeTPC_X = setup->GetActiveRegionx() / 2.; // X (row)
+    Double_t fHalfSizeTPC_Y = setup->GetActiveRegiony() / 2.; // Y (time)
+    Double_t fHalfSizeTPC_Z = setup->GetActiveRegionz() / 2.; // Z (column)
+    Double_t fSizeOfVirtualPad = setup->GetPadSize();         // 1: pads of 1cm^2 , 10: pads of 1mm^2
+    Double_t fMaxDriftTime = (round)((setup->GetActiveRegiony() / setup->GetDriftVelocity()) * pow(10, -3)); // us
+    // root style
     gROOT->SetStyle("Default");
     gStyle->SetOptTitle(0);
     gStyle->SetOptStat(0);
     gStyle->SetOptFit(0);
-    
+
     cout << "Reading input simulation file " << inputSimFile << endl;
     // HERE THE HISTOGRAMS ARE DEFINED...
     // IT IS POSSIBLE TO CHANGE THE RANGE AND THE BINNING
     UInt_t histoBins = 2 * fHalfSizeTPC_X * fSizeOfVirtualPad;
     UInt_t histoBins2 = 2 * fHalfSizeTPC_Z * fSizeOfVirtualPad;
 
+    cout << "Values taken for the visualization" << endl
+         << "bins in X: " << histoBins << endl
+         << "bins in Z: " << histoBins2 << endl
+         << "X size (half-length of box): " << fHalfSizeTPC_X << endl
+         << "Y size (half-length of box (drift)): " << fHalfSizeTPC_Y << endl
+         << "Z size (half-length of box): " << fHalfSizeTPC_Z << endl
+         << "Max Drift time: " << fMaxDriftTime << endl;
 
-   cout << "Values taken for the visualization" << endl
-      << "bins in X: " << histoBins << endl
-      << "bins in Z: " << histoBins2 << endl
-      << "X size (half-length of box): " << fHalfSizeTPC_X << endl
-      << "Y size (half-length of box (drift)): " << fHalfSizeTPC_Y << endl
-      << "Z size (half-length of box): " << fHalfSizeTPC_Z << endl
-      << "Max Drift time: "<<fMaxDriftTime<<endl;
-
-		//The th2 definition
+    // The th2 definition
     TH2D* htrackInPads = 0;
     TH2D* hdriftTimeInPads = 0;
     TH2D* hdepth1InPads = 0;
     TH2D* hdepth2InPads = 0;
-    TH2D* Hitmap=0;
+    TH2D* Hitmap = 0;
 
     htrackInPads = new TH2D("htrackInPads",
                             "All tracks in the XZ Pads Plane",
@@ -79,12 +77,12 @@ void reader(const char* inputSimFile)
 
     hdriftTimeInPads = new TH2D("hdriftTimeInPads",
                                 "All tracks in the XZ Pads Plane with drift time",
-                            histoBins2,
-                            0,
-                            2 * fHalfSizeTPC_Z * fSizeOfVirtualPad,
-                            histoBins,
-                            0,
-                            2 * fHalfSizeTPC_X * fSizeOfVirtualPad); // in [pad number]
+                                histoBins2,
+                                0,
+                                2 * fHalfSizeTPC_Z * fSizeOfVirtualPad,
+                                histoBins,
+                                0,
+                                2 * fHalfSizeTPC_X * fSizeOfVirtualPad); // in [pad number]
     hdriftTimeInPads->SetYTitle("X [pad number]");
     hdriftTimeInPads->SetXTitle("Z [pad number]");
 
@@ -92,7 +90,7 @@ void reader(const char* inputSimFile)
                              "track In the Drift-Z Pads Plane",
                              histoBins,
                              0,
-                             fMaxDriftTime, 
+                             fMaxDriftTime,
                              histoBins2,
                              0,
                              2 * fHalfSizeTPC_Z * fSizeOfVirtualPad);
@@ -103,26 +101,30 @@ void reader(const char* inputSimFile)
                              "track In the Drift-X Pads Plane",
                              histoBins,
                              0,
-                             fMaxDriftTime, 
+                             fMaxDriftTime,
                              histoBins,
                              0,
                              2 * fHalfSizeTPC_X * fSizeOfVirtualPad);
     hdepth2InPads->SetYTitle("X [pad number]");
     hdepth2InPads->SetXTitle("(drift) time [us]");
-    
+
     Hitmap = new TH2D("Hitmap",
-                            "Hitmap XZ Pads Plane",
-                            histoBins2,
-                            0,
-                            2 * fHalfSizeTPC_Z * fSizeOfVirtualPad,
-                            histoBins,
-                            0,
-                            2 * fHalfSizeTPC_X * fSizeOfVirtualPad); // in [pad number]
+                      "Hitmap XZ Pads Plane",
+                      histoBins2,
+                      0,
+                      2 * fHalfSizeTPC_Z * fSizeOfVirtualPad,
+                      histoBins,
+                      0,
+                      2 * fHalfSizeTPC_X * fSizeOfVirtualPad); // in [pad number]
     Hitmap->SetYTitle("X [pad number]");
     Hitmap->SetXTitle("Z [pad number]");
-    Hitmap->SetTitleOffset(2.,"XYZ");
+    Hitmap->SetTitleOffset(2., "XYZ");
 
     TFile* simFile = TFile::Open(inputSimFile);
+    if (simFile->IsOpen())
+        cout << "File correctly opened!" << endl;
+    else
+        exit(1);
     TTree* TEvt = (TTree*)simFile->Get("evt");
     Int_t nevents = TEvt->GetEntries();
 
@@ -139,35 +141,35 @@ void reader(const char* inputSimFile)
     Int_t nb = 0;
     Int_t beamPadsWithSignalPerEvent, productPadsWithSignalPerEvent;
     Double_t xPad, zPad, tPad;
-    
- // all events
-        for (Int_t i = 0; i < nevents; i++)
+
+    // all events
+    for (Int_t i = 0; i < nevents; i++)
+    {
+        double percentage = i / (double)(nevents * 1.);
+        loadfunction(percentage);
+        gtpcProjPointCA->Clear();
+        nb += TEvt->GetEvent(i);
+        padsPerEvent = gtpcProjPointCA->GetEntries();
+        if (padsPerEvent > 0)
         {
-            double percentage=i/(double)(nevents*1.);
-            loadfunction(percentage);
-            gtpcProjPointCA->Clear();
-            nb += TEvt->GetEvent(i);
-            padsPerEvent = gtpcProjPointCA->GetEntries();
-            if (padsPerEvent > 0)
+            for (Int_t h = 0; h < padsPerEvent; h++)
             {
-                for (Int_t h = 0; h < padsPerEvent; h++)
-                {
-                    ppoint = (R3BGTPCProjPoint*)gtpcProjPointCA->At(h);
+                ppoint = (R3BGTPCProjPoint*)gtpcProjPointCA->At(h);
 
-										xPad = ppoint->GetVirtualPadID() % (Int_t)(45);
-                    zPad = (ppoint->GetVirtualPadID() - xPad) / (45);                   
-                    tPad = ((TH1S*)(ppoint->GetTimeDistribution()))->GetMean();
-                    hdriftTimeInPads->Fill(zPad, xPad, tPad); // NOTE: THAT IS ACCUMULATED TIME!!.
-										htrackInPads->Fill(zPad, xPad, ppoint->GetCharge());
-                    hdepth1InPads->Fill(tPad, zPad, ppoint->GetCharge());
-                    hdepth2InPads->Fill(tPad, xPad, ppoint->GetCharge());
+                xPad = ppoint->GetVirtualPadID() % (Int_t)(45);
+                zPad = (ppoint->GetVirtualPadID() - xPad) / (45);
+                tPad = ((TH1S*)(ppoint->GetTimeDistribution()))->GetMean();
+                hdriftTimeInPads->Fill(zPad, xPad, tPad); // NOTE: THAT IS ACCUMULATED TIME!!.
+                htrackInPads->Fill(zPad, xPad, ppoint->GetCharge());
+                hdepth1InPads->Fill(tPad, zPad, ppoint->GetCharge());
+                hdepth2InPads->Fill(tPad, xPad, ppoint->GetCharge());
 
-                    Hitmap->Fill(zPad, xPad);
-                }
+                Hitmap->Fill(zPad, xPad);
             }
         }
-    cout<<"\n"<<endl;   
-		TCanvas* c3 = new TCanvas("c3", "Pads in pad (XZ) plane", 0, 0, 1250, 950);
+    }
+    cout << "\n" << endl;
+    TCanvas* c3 = new TCanvas("c3", "Pads in pad (XZ) plane", 0, 0, 1250, 950);
     TLatex l;
     l.SetTextAlign(12);
     l.SetTextSize(0.05);
@@ -201,7 +203,7 @@ void reader(const char* inputSimFile)
 
     l.SetTextAlign(12);
     l.SetTextSize(0.05);
-    l.DrawLatex(0.3*fMaxDriftTime, 2.04 * fHalfSizeTPC_Z * fSizeOfVirtualPad, "Color code: induced charge");
+    l.DrawLatex(0.3 * fMaxDriftTime, 2.04 * fHalfSizeTPC_Z * fSizeOfVirtualPad, "Color code: induced charge");
 
     TVirtualPad* c3_4 = c3->cd(4);
     c3_4->SetLogz();
@@ -209,23 +211,22 @@ void reader(const char* inputSimFile)
 
     l.SetTextAlign(12);
     l.SetTextSize(0.05);
-    l.DrawLatex(0.3*fMaxDriftTime, 2.04 * fHalfSizeTPC_X * fSizeOfVirtualPad, "Color code: induced charge");
+    l.DrawLatex(0.3 * fMaxDriftTime, 2.04 * fHalfSizeTPC_X * fSizeOfVirtualPad, "Color code: induced charge");
 
     gPad->Modified();
     gPad->Update();
-    
-    TCanvas *c1=new TCanvas("c1","Hitmap",0,0,1800,1500);
-    c1->Divide(1,2);
+
+    TCanvas* c1 = new TCanvas("c1", "Hitmap", 0, 0, 1800, 1500);
+    c1->Divide(1, 2);
     c1->cd(1);
     Hitmap->Draw("COLZ");
     c1->cd(2);
-    Hitmap->Draw("lego2");    
+    Hitmap->Draw("lego2");
     c1->Draw();
-    
+
     // OUTPUT FILE
     c3->Print("output_readout.ps(");
     c1->Print("output_readout.ps)");
     // c2->Print("output.ps");
     // c3->Print("output.ps)");
-
 }

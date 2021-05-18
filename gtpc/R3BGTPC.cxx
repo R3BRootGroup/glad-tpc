@@ -88,12 +88,26 @@ void R3BGTPC::SetSpecialPhysicsCuts()
     LOG(INFO) << "-I- R3BGTPC: Adding customized Physics cut ... ";
 
     if (gGeoManager)
-    {
-        TGeoMedium* pmix = gGeoManager->GetMedium("mix");
+    { // NOT SURE THIS IS USEFUL
+        TGeoMedium* pmix = gGeoManager->GetMedium("P10");
         if (pmix)
         {
-            // Setting Energy-CutOff for Gas Only, 0.01mm
-            Double_t cutE = 1e-6; // GeV-> 1 keV
+            // Setting processes for Gas
+            gMC->Gstpar(pmix->GetId(), "LOSS", 3);
+            gMC->Gstpar(pmix->GetId(), "STRA", 1.0);
+            gMC->Gstpar(pmix->GetId(), "PAIR", 1.0);
+            gMC->Gstpar(pmix->GetId(), "COMP", 1.0);
+            gMC->Gstpar(pmix->GetId(), "PHOT", 1.0);
+            gMC->Gstpar(pmix->GetId(), "ANNI", 1.0);
+            gMC->Gstpar(pmix->GetId(), "BREM", 1.0);
+            gMC->Gstpar(pmix->GetId(), "HADR", 1.0);
+            gMC->Gstpar(pmix->GetId(), "DRAY", 1.0);
+            gMC->Gstpar(pmix->GetId(), "DCAY", 1.0);
+            gMC->Gstpar(pmix->GetId(), "MULS", 1.0);
+            gMC->Gstpar(pmix->GetId(), "RAYL", 1.0);
+
+            // Setting Energy-CutOff for Gas Only->Ionization energy ~30eV
+            Double_t cutE = 1e-6; // GeV-> 1keV
 
             LOG(INFO) << "-I- R3BGTPC: Medium Id " << pmix->GetId() << " Energy Cut-Off : " << cutE << " GeV";
 

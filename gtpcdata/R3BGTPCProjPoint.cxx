@@ -18,9 +18,28 @@ R3BGTPCProjPoint::R3BGTPCProjPoint()
     fVirtualPadID = 0;
     fCharge = 0.;
     fTimeDistr = NULL;
+    fPDGCode = 0;
+    fMotherId = 0;
+    fx0 = 0;
+    fy0 = 0;
+    fz0 = 0;
+    fpx0 = 0;
+    fpy0 = 0;
+    fpz0 = 0;
 }
 
-R3BGTPCProjPoint::R3BGTPCProjPoint(Int_t pad, Double_t time, Double_t charge, Int_t eventID)
+R3BGTPCProjPoint::R3BGTPCProjPoint(Int_t pad,
+                                   Double_t time,
+                                   Double_t charge,
+                                   Int_t eventID,
+                                   Int_t PdgCode,
+                                   Int_t MotherId,
+                                   Double_t x0,
+                                   Double_t y0,
+                                   Double_t z0,
+                                   Double_t px0,
+                                   Double_t py0,
+                                   Double_t pz0)
 {
     fVirtualPadID = pad;
     fCharge = charge;
@@ -29,6 +48,14 @@ R3BGTPCProjPoint::R3BGTPCProjPoint(Int_t pad, Double_t time, Double_t charge, In
     fTimeDistr = new TH1S(hname, hname, 400, 0, 40); // this is for microsec
     // fTimeDistr = new TH1S(hname, hname, 400000, 0, 40000);//this is for nanosec
     SetTimeDistr(time, charge);
+    fPDGCode = PdgCode;
+    fMotherId = MotherId;
+    fx0 = x0;
+    fy0 = y0;
+    fz0 = z0;
+    fpx0 = px0;
+    fpy0 = py0;
+    fpz0 = pz0;
 }
 
 R3BGTPCProjPoint::~R3BGTPCProjPoint()

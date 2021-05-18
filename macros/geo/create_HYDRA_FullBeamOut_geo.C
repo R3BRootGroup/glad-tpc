@@ -1,8 +1,8 @@
 #include "TFile.h"
+#include "TGeoArb8.h" //TODO Decide whether to change the geometry into Arb8 or not
 #include "TGeoBBox.h"
 #include "TGeoManager.h"
 #include "TGeoTrd1.h"
-#include "TGeoArb8.h"//TODO Decide whether to change the geometry into Arb8 or not
 #include "TMath.h"
 #include <iomanip>
 #include <iostream>
@@ -35,9 +35,8 @@ Double_t WorldSizeZ;
 
 void ConstructTPC(TGeoVolume* pWorld);
 
-
 void create_tpc_geo(string geoTag = "FullBeamOut")
-{ 
+{
     fGlobalTrans->SetTranslation(0.0, 0.0, 0.0);
 
     // -------   Load media from media file   -----------------------------------
@@ -82,7 +81,14 @@ void create_tpc_geo(string geoTag = "FullBeamOut")
     TGeoMedium* pmix = gGeoMan->GetMedium("mix");
     if (!pmix)
         Fatal("Main", "Medium mix not found");
-
+    // this is the P10 gas mixture
+    FairGeoMedium* mp10 = geoMedia->getMedium("P10");
+    if (!mp10)
+        Fatal("Main", "FairMedium P10 not found");
+    geoBuild->createMedium(mp10);
+    TGeoMedium* pp10 = gGeoMan->GetMedium("P10");
+    if (!pp10)
+        Fatal("Main", "Medium P10 not found");
     FairGeoMedium* mvacuum = geoMedia->getMedium("vacuum");
     if (!mvacuum)
         Fatal("Main", "FairMedium vacuum not found");
@@ -114,7 +120,7 @@ void create_tpc_geo(string geoTag = "FullBeamOut")
 
     cout << "\n \033[1;31m Warning\033[0m: the detector you are building is " << geoTag << "!!!!!\n" << endl;
     R3BGTPCSetup* setup = new R3BGTPCSetup(geoTag, 1);
-    
+
     ActiveRegionx = setup->GetActiveRegionx() / 2.; // cm
     ActiveRegiony = setup->GetActiveRegiony() / 2.; // cm
     ActiveRegionz = setup->GetActiveRegionz() / 2.; // cm
@@ -135,8 +141,8 @@ void create_tpc_geo(string geoTag = "FullBeamOut")
     TPCLy                  = 31														  //cm
     TPCLz                  = 120														//cm
     Windowx 							 = 0.005 													//cm
-		Windowy 							 = 21 														//cm
-		Windowz								 = 100 														//cm
+        Windowy 							 = 21 														//cm
+        Windowz								 = 100 														//cm
     ActiveRegionx 				 = 4															//cm
     ActiveRegiony 				 = 29															//cm
     ActiveRegionz 				 = 90															//cm
@@ -155,7 +161,7 @@ void create_tpc_geo(string geoTag = "FullBeamOut")
     TGeoShape* tpc_box = new TGeoBBox("GTPC_Box", WorldSizeX, WorldSizeY, WorldSizeZ);
 
     TGeoVolume* pWorld = new TGeoVolume("GTPC_box", tpc_box, pvacuum);
-		pWorld->SetInvisible();
+    pWorld->SetInvisible();
     ConstructTPC(pWorld);
 
     // Globle definition of TPC position in cm TODO->check the position in the simulation, this values comes from my old
@@ -163,7 +169,7 @@ void create_tpc_geo(string geoTag = "FullBeamOut")
     TVector3 gTrans(8.4, 0, 244.5); // offset before rotation TODO use the new method
     fGlobalTrans->SetTranslation(gTrans.X(), gTrans.Y(), gTrans.Z());
     TGeoRotation* rot = new TGeoRotation("rot"); // transformation name
-    rot->SetAngles(90, 0, 90, 90, 2.66, 0);     // rotation with 2.66 degrees about Z
+    rot->SetAngles(90, 0, 90, 90, 2.66, 0);      // rotation with 2.66 degrees about Z
     rot->RegisterYourself();
     TGeoCombiTrans* pGlobal = new TGeoCombiTrans(*fGlobalTrans, *rot);
     top->AddNode(pWorld, 0, pGlobal);
@@ -186,7 +192,7 @@ void ConstructTPC(TGeoVolume* pWorld)
 {
     // Material-------------------------------------------
     TGeoMedium* FrameMaterial = gGeoManager->GetMedium("aluminium");
-    TGeoMedium* GasMaterial = gGeoManager->GetMedium("mix");
+    TGeoMedium* GasMaterial = gGeoManager->GetMedium("P10");
     TGeoMedium* WindowMaterial = gGeoManager->GetMedium("mylar");
 
     // Sensitive volume------------------------------------
@@ -200,15 +206,15 @@ void ConstructTPC(TGeoVolume* pWorld)
     TGeoVolume* logicFWindow = 0;
     TGeoShape* solidBWindow = 0;
     TGeoVolume* logicBWindow = 0;
-    
-		//Rotation, TODO find a simpler way to define the angle
-    TGeoRotation* r1 = new TGeoRotation("r1"); 
-    r1->SetAngles(90, 0, 90, 90, 2.66, 0);     
+
+    // Rotation, TODO find a simpler way to define the angle
+    TGeoRotation* r1 = new TGeoRotation("r1");
+    r1->SetAngles(90, 0, 90, 90, 2.66, 0);
     r1->RegisterYourself();
-    TGeoRotation* r2 = new TGeoRotation("r2"); 
-    r2->SetAngles(90, 0, 90, 90, -2.66, 0);    
+    TGeoRotation* r2 = new TGeoRotation("r2");
+    r2->SetAngles(90, 0, 90, 90, -2.66, 0);
     r2->RegisterYourself();
-		//Rototranslation for the windows
+    // Rototranslation for the windows
     TGeoCombiTrans* rottrans1 = new TGeoCombiTrans("rottrans1", (1.5 * TPCLx) - 0.5 * FrameThickness, 0., 0., r1);
     rottrans1->RegisterYourself();
     TGeoCombiTrans* rottrans2 = new TGeoCombiTrans("rottrans2", -((1.5 * TPCLx) - 0.5 * FrameThickness), 0., 0., r2);
@@ -244,17 +250,17 @@ void ConstructTPC(TGeoVolume* pWorld)
     tc3->RegisterYourself();
 
     logicActiveRegion = new TGeoVolume("Active_region", solidActiveRegion, GasMaterial);
-    
-    //Frame
+
+    // Frame
     pWorld->AddNode(logicFrame, 0, new TGeoCombiTrans(0., 0., 0, zeroRot));
-    //Windows
+    // Windows
     logicFrame->AddNode(logicFWindow, 0, rottrans1);
     logicFrame->AddNode(logicBWindow, 0, rottrans2);
-    //GAS
+    // GAS
     logicFrame->AddNode(logicGas, 0, new TGeoCombiTrans(0., 0., 0, zeroRot));
-    //Active region
+    // Active region
     logicGas->AddNode(logicActiveRegion, 0, new TGeoCombiTrans(*tc3, *zeroRot));
-    
+
     logicFrame->SetLineColor(kBlue);
     logicGas->SetLineColor(kRed);
     logicActiveRegion->SetLineColor(kMagenta);

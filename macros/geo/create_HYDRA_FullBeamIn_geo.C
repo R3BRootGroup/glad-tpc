@@ -1,8 +1,8 @@
 #include "TFile.h"
+#include "TGeoArb8.h"
 #include "TGeoBBox.h"
 #include "TGeoManager.h"
 #include "TGeoTrd2.h"
-#include "TGeoArb8.h"
 #include "TMath.h"
 #include <iomanip>
 #include <iostream>
@@ -31,13 +31,11 @@ Double_t Windowz;
 Double_t WorldSizeX;
 Double_t WorldSizeY;
 Double_t WorldSizeZ;
-Double_t GLAD_angle=14.;
+Double_t GLAD_angle = 14.;
 void ConstructTPC(TGeoVolume* pWorld);
 
-string VERSION;
-void create_tpc_geo(string geoTag = "FullBeamIn", const char* version = "v2")
+void create_tpc_geo(string geoTag = "FullBeamIn")
 {
-		VERSION= std::string(version);													
     fGlobalTrans->SetTranslation(0.0, 0.0, 0.0);
 
     // -------   Load media from media file   -----------------------------------
@@ -52,7 +50,7 @@ void create_tpc_geo(string geoTag = "FullBeamIn", const char* version = "v2")
 
     // -------   Geometry file name (output)   ----------------------------------
     TString geoFileName = geoPath + "/glad-tpc/geometry/HYDRA_";
-    geoFileName = geoFileName + geoTag+ "."+ VERSION + ".geo.root";
+    geoFileName = geoFileName + geoTag + ".geo.root";
     // --------------------------------------------------------------------------
 
     // -----------------   Get and create the required media    -----------------
@@ -82,7 +80,14 @@ void create_tpc_geo(string geoTag = "FullBeamIn", const char* version = "v2")
     TGeoMedium* pmix = gGeoMan->GetMedium("mix");
     if (!pmix)
         Fatal("Main", "Medium mix not found");
-
+    // this is the P10 gas mixture
+    FairGeoMedium* mp10 = geoMedia->getMedium("P10");
+    if (!mp10)
+        Fatal("Main", "FairMedium P10 not found");
+    geoBuild->createMedium(mp10);
+    TGeoMedium* pp10 = gGeoMan->GetMedium("P10");
+    if (!pp10)
+        Fatal("Main", "Medium P10 not found");
     FairGeoMedium* mvacuum = geoMedia->getMedium("vacuum");
     if (!mvacuum)
         Fatal("Main", "FairMedium vacuum not found");
@@ -110,10 +115,10 @@ void create_tpc_geo(string geoTag = "FullBeamIn", const char* version = "v2")
     top->SetVisContainers(kTRUE);
     // --------------------------------------------------------------------------
 
-    cout << "\n \033[1;31m Warning\033[0m: the detector you are building is " << geoTag<<"."<<VERSION << "!!!!!\n" << endl;
-    
+    cout << "\n \033[1;31m Warning\033[0m: the detector you are building is " << geoTag << "!!!!!\n" << endl;
+
     R3BGTPCSetup* setup = new R3BGTPCSetup(geoTag, 1);
-    
+
     TPCLx = setup->GetTPCLx() / 2.;                   // cm
     TPCLy = setup->GetTPCLy() / 2.;                   // cm
     TPCLz = setup->GetTPCLz() / 2.;                   // cm
@@ -152,11 +157,11 @@ void create_tpc_geo(string geoTag = "FullBeamIn", const char* version = "v2")
     TGeoShape* tpc_box = new TGeoBBox("GTPC_Box", WorldSizeX, WorldSizeY, WorldSizeZ);
 
     TGeoVolume* pWorld = new TGeoVolume("GTPC_box", tpc_box, pvacuum);
-		pWorld->SetInvisible();
+    pWorld->SetInvisible();
     ConstructTPC(pWorld);
 
     //_____________________________Globle definition of TPC position in cm
-    
+
     TGeoRotation* rot_chamber = new TGeoRotation();
     rot_chamber->RotateY(-GLAD_angle);
     TGeoCombiTrans* t0 = new TGeoCombiTrans(-21.5, 0., 225., rot_chamber);
@@ -180,7 +185,7 @@ void ConstructTPC(TGeoVolume* pWorld)
 {
     // Material-----------------------------------------------------------------
     TGeoMedium* FrameMaterial = gGeoManager->GetMedium("aluminium");
-    TGeoMedium* GasMaterial = gGeoManager->GetMedium("mix");
+    TGeoMedium* GasMaterial = gGeoManager->GetMedium("P10");
     TGeoMedium* WindowMaterial = gGeoManager->GetMedium("mylar");
 
     // Sensitive volumes-------------------------------------------------------------------
@@ -190,172 +195,75 @@ void ConstructTPC(TGeoVolume* pWorld)
     TGeoVolume* logicGas = 0;
     TGeoShape* solidActiveRegion = 0;
     TGeoVolume* logicActiveRegion = 0;
-    TGeoShape* solidActiveRegion1 = 0;			//Version2
-    TGeoVolume* logicActiveRegion1 = 0;			//Version2
     TGeoShape* solidFWindow = 0;
     TGeoVolume* logicFWindow = 0;
     TGeoShape* solidBWindow = 0;
     TGeoVolume* logicBWindow = 0;
 
-   
-    // Aluminium frame is the same for the diffent versions_______________________________________
-    TGeoShape *frame_box =new TGeoTrd2("frame_box", 
-    																		 1.15 * TPCLx, //
-    																		 3.3 * TPCLx, 
-    																		 1.5 * TPCLy, //
-    																		 2.5 * TPCLy,	//
-    																		 			 TPCLz);
-    																		 
-		TGeoShape* frame_window1 = new TGeoBBox("frame_window1", 
-                                            2 * Windowx,
-                                            Windowy,
-                                            FrameThickness);
-    TGeoShape* frame_window2 = new TGeoBBox("frame_window2", 
-                                            6  * Windowx,
-                                            9  * Windowy,
-                                            FrameThickness);
-                                          
-		//Windows translation
-    TGeoTranslation* tc1 = new TGeoTranslation("tc1", 0, 0, -(TPCLz -  FrameThickness));
+    // Aluminium frame-----------------------------------------
+    TGeoShape* frame_box = new TGeoTrd2("frame_box", 1.15 * TPCLx, 3.3 * TPCLx, 1.5 * TPCLy, 2.5 * TPCLy, TPCLz);
+
+    TGeoShape* frame_window1 = new TGeoBBox("frame_window1", 2 * Windowx, Windowy, FrameThickness);
+    TGeoShape* frame_window2 = new TGeoBBox("frame_window2", 6 * Windowx, 9 * Windowy, FrameThickness);
+
+    // Windows translation
+    TGeoTranslation* tc1 = new TGeoTranslation("tc1", 0, 0, -(TPCLz - FrameThickness));
     tc1->RegisterYourself();
     TGeoTranslation* tc2 = new TGeoTranslation("tc2", 0, 0, (TPCLz - FrameThickness));
     tc2->RegisterYourself();
 
     solidFrame = new TGeoCompositeShape("Frame", "frame_box -frame_window1:tc1 -frame_window2:tc2");
     logicFrame = new TGeoVolume("Frame", solidFrame, FrameMaterial);
-    
-		//Placing logicframe in the world
+
+    // Placing logicframe in the world
     pWorld->AddNode(logicFrame, 0, new TGeoCombiTrans(0., 0., 0, zeroRot));
-    
+
     // Gas region-----------------------------------------
     solidGas = new TGeoTrd2("gas",
-                            1.15*  TPCLx - 2 * FrameThickness,
+                            1.15 * TPCLx - 2 * FrameThickness,
                             3.3 * TPCLx - 2 * FrameThickness,
                             1.5 * TPCLy - 2 * FrameThickness,
                             2.5 * TPCLy - 2 * FrameThickness,
                             TPCLz - 2 * FrameThickness);
 
     logicGas = new TGeoVolume("gas", solidGas, GasMaterial);
-    
-    //Placing GAS in the Frame
-    logicFrame->AddNode(logicGas, 0, new TGeoCombiTrans(0., 0., 0, zeroRot));  
-    
+
+    // Placing GAS in the Frame
+    logicFrame->AddNode(logicGas, 0, new TGeoCombiTrans(0., 0., 0, zeroRot));
+
     // Mylar windows---------------------------------------
-    solidFWindow = new TGeoBBox("front_window", 2 * Windowx, 
-    																						Windowy, 
-    																						Windowz);
+    solidFWindow = new TGeoBBox("front_window", 2 * Windowx, Windowy, Windowz);
     logicFWindow = new TGeoVolume("front_window", solidFWindow, WindowMaterial);
 
-    solidBWindow = new TGeoBBox("back_window", 6  * Windowx, 
-    																					 9 * Windowy, 
-    																							 Windowz);
+    solidBWindow = new TGeoBBox("back_window", 6 * Windowx, 9 * Windowy, Windowz);
     logicBWindow = new TGeoVolume("back_window", solidBWindow, WindowMaterial);
-    //Placing logicWindows in the Frame
+
+    // Placing logicWindows in the Frame
     logicFrame->AddNode(logicFWindow, 0, new TGeoCombiTrans(*tc1, *zeroRot));
-    logicFrame->AddNode(logicBWindow, 0, new TGeoCombiTrans(*tc2, *zeroRot));  
-    
-//---------------The Active Region is different for the different versions-------------------------//  
-     
-		TGeoRotation rot_Aregion;					//Active region rotation
-		rot_Aregion.RotateY(180);
-		TGeoRotation rot_Aregion1;				//Active region rotation, only v2
-		rot_Aregion1.RotateY(180);
-//Version 1->	1 active region with constant height________________________________________
-    if(VERSION.compare("v1")==0)
-    {
-    	 Double_t volume[]={ 	-2.36*ActiveRegionx ,  ActiveRegiony ,
-													   ActiveRegionx   ,  ActiveRegiony ,
-														 ActiveRegionx   , -ActiveRegiony ,
-													  -2.36*ActiveRegionx , -ActiveRegiony,
-													  -ActiveRegionx   ,  ActiveRegiony ,
-														 ActiveRegionx   ,  ActiveRegiony ,
-														 ActiveRegionx   , -ActiveRegiony ,
-														-ActiveRegionx   , -ActiveRegiony  
-  									 			}; 							 			
-    	solidActiveRegion =
-        new TGeoArb8("Active_region",
-        							ActiveRegionz,
-        							volume);
-      rot_Aregion.RotateY(GLAD_angle);
-    }
-    
-//Version 2->  2 active regions with different height_____________________________________
-   if(VERSION.compare("v2")==0)
-    {		  
-		   Double_t volume1[]={ -1.714* ActiveRegionx,  ActiveRegiony ,
-																ActiveRegionx    ,  ActiveRegiony ,
-																ActiveRegionx    , -ActiveRegiony ,
-														-1.714* ActiveRegionx, -ActiveRegiony ,
-					 											-ActiveRegionx   ,  ActiveRegiony ,
-																 ActiveRegionx   ,  ActiveRegiony ,
-																 ActiveRegionx   , -ActiveRegiony ,
-																-ActiveRegionx   , -ActiveRegiony 
- 
-  									 			};   
-			Double_t volume2[]={ 
-														-2.36* ActiveRegionx,  1.7*ActiveRegiony ,
-															   ActiveRegionx   , 1.7*ActiveRegiony ,
-																 ActiveRegionx   ,-1.7*ActiveRegiony ,
-														-2.36* ActiveRegionx ,-1.7*ActiveRegiony ,
-														-1.75* ActiveRegionx , 1.7*ActiveRegiony ,
-																ActiveRegionx    , 1.7*ActiveRegiony ,
-																ActiveRegionx    ,-1.7*ActiveRegiony ,
-														-1.75* ActiveRegionx ,-1.7*ActiveRegiony  
-													};  	
-      rot_Aregion.RotateY(GLAD_angle);
-    	solidActiveRegion =
-        new TGeoArb8("Active_region",
-        							(ActiveRegionz-FrameThickness)/2,
-        							volume1);
-      rot_Aregion1.RotateY(GLAD_angle);
-      solidActiveRegion1 =
-        new TGeoArb8("Active_region",
-        							(ActiveRegionz-FrameThickness)/2,
-        							volume2);
-    }
+    logicFrame->AddNode(logicBWindow, 0, new TGeoCombiTrans(*tc2, *zeroRot));
 
-//Version 3->  1 active region with increasing height____________________________________
-    if(VERSION.compare("v3")==0)
-    {
-    	 Double_t volume[]={  -2.36*ActiveRegionx ,  2.2*ActiveRegiony ,
-													   ActiveRegionx   ,  2.2*ActiveRegiony ,
-														 ActiveRegionx   , -2.2*ActiveRegiony ,
-													  -2.36*ActiveRegionx , -2.2*ActiveRegiony ,
-    	 											-ActiveRegionx   ,  ActiveRegiony ,
-														 ActiveRegionx   ,  ActiveRegiony ,
-														 ActiveRegionx   , -ActiveRegiony ,
-														-ActiveRegionx   , -ActiveRegiony  
-  									 			}; 
-    	solidActiveRegion =
-        new TGeoArb8("Active_region",
-        							ActiveRegionz,
-        							volume);
-      rot_Aregion.RotateY(GLAD_angle);
-    }
-    //Logical volume active region
-    logicActiveRegion = new TGeoVolume("Active_region", solidActiveRegion, GasMaterial); 
-    
-    //Putting logicActiveRegion inside GAS
+    TGeoRotation rot_Aregion; // Active region rotation
+    rot_Aregion.RotateY(180);
+    TGeoRotation rot_Aregion1; // Active region rotation, only v2
+    rot_Aregion1.RotateY(180);
 
-    if (VERSION.compare("v2")==0)
-    {
-      TGeoCombiTrans* fTPCTrans  = new TGeoCombiTrans(22.1, 0., -26.5, new TGeoRotation(rot_Aregion));
-    	logicGas->AddNode(logicActiveRegion, 0, fTPCTrans);
-      TGeoCombiTrans* fTPCTrans1 = new TGeoCombiTrans(35.2, 0., 26.5,new TGeoRotation(rot_Aregion1) );
-      logicActiveRegion1 = new TGeoVolume("Active_region", solidActiveRegion1, GasMaterial);			
-      logicGas->AddNode(logicActiveRegion1, 0, fTPCTrans1);
-    	logicActiveRegion1->SetLineColor(kMagenta);															
-    } 
-    else
-  	{
-    	logicGas->AddNode(logicActiveRegion, 0, new TGeoCombiTrans(28.8, 0., 0,  new TGeoRotation(rot_Aregion)));//21.5+7.64
-  	}
-    
-    // Some colours to better distinguish the logic volumes    
+    Double_t volume[] = { -3 * ActiveRegionx, ActiveRegiony,  ActiveRegionx,      ActiveRegiony,
+                          ActiveRegionx,      -ActiveRegiony, -3 * ActiveRegionx, -ActiveRegiony,
+                          -ActiveRegionx,     ActiveRegiony,  ActiveRegionx,      ActiveRegiony,
+                          ActiveRegionx,      -ActiveRegiony, -ActiveRegionx,     -ActiveRegiony };
+    solidActiveRegion = new TGeoArb8("Active_region", ActiveRegionz, volume);
+    rot_Aregion.RotateY(GLAD_angle);
+
+    // Logical volume active region
+    logicActiveRegion = new TGeoVolume("Active_region", solidActiveRegion, GasMaterial);
+
+    // Placing logicActiveRegion inside GAS
+    logicGas->AddNode(logicActiveRegion, 0, new TGeoCombiTrans(29.8, 0., 0, new TGeoRotation(rot_Aregion))); // 21.5+8.64
+
+    // Some colours to better distinguish the logic volumes
     logicFrame->SetLineColor(kBlue);
     logicGas->SetLineColor(kRed);
     logicFWindow->SetLineColor(kYellow);
     logicBWindow->SetLineColor(kOrange);
-    logicActiveRegion->SetLineColor(kMagenta);          
-
+    logicActiveRegion->SetLineColor(kMagenta);
 }

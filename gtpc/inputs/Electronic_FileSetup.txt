@@ -1,6 +1,6 @@
-Gain  3600.
+Gain  4000.
 Theta 1.
-NoiseRMS 2500.
-Threshold 3
+NoiseRMS 700.
+Threshold 5
 TimeBin 20.0
-ShapingTime 426.
+ShapingTime 300.

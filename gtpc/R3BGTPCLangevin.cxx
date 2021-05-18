@@ -11,11 +11,12 @@
  * or submit itself to any jurisdiction.                                      *
  ******************************************************************************/
 #include "R3BGTPCLangevin.h"
+#include "R3BMCTrack.h"
 
 #include "TClonesArray.h"
 #include "TMath.h"
-//#include "TVirtualMC.h"
-//#include "TVirtualMagField.h"
+#include "TVirtualMC.h"
+#include "TVirtualMCStack.h"
 
 #include "R3BGladFieldMap.h"
 
@@ -52,6 +53,7 @@ R3BGTPCLangevin::~R3BGTPCLangevin()
 {
     fGTPCPoints->Clear();
     fGTPCProjPoint->Clear();
+    MCTrackCA->Clear();
 }
 
 void R3BGTPCLangevin::SetParContainers()
@@ -98,7 +100,13 @@ InitStatus R3BGTPCLangevin::Init()
         return kFATAL;
     }
     fGTPCPoints = (TClonesArray*)ioman->GetObject("GTPCPoint");
-
+    // Input: TClonesArray of R3BMCTrack
+    if ((TClonesArray*)ioman->GetObject("MCTrack") == nullptr)
+    {
+        LOG(FATAL) << "R3BMCTrack::Init No MCTrack!";
+        return kFATAL;
+    }
+    MCTrackCA = (TClonesArray*)ioman->GetObject("MCTrack");
     // Output: TClonesArray of R3BGTPCProjPoint
     fGTPCProjPoint = new TClonesArray("R3BGTPCProjPoint");
     ioman->Register("GTPCProjPoint", GetName(), fGTPCProjPoint, kTRUE);
@@ -170,7 +178,8 @@ void R3BGTPCLangevin::Exec(Option_t*)
     Double_t sigmaLongAtPadPlane;
     Double_t sigmaTransvAtPadPlane;
     Int_t evtID;
-
+    Int_t PDGCode, MotherId;
+    Double_t Vertex_x0, Vertex_y0, Vertex_z0, Vertex_px0, Vertex_py0, Vertex_pz0;
     for (Int_t i = 0; i < nPoints; i++)
     {
         aPoint = (R3BGTPCPoint*)fGTPCPoints->At(i);
@@ -183,6 +192,15 @@ void R3BGTPCLangevin::Exec(Option_t*)
             xPre = aPoint->GetX();
             yPre = aPoint->GetY();
             zPre = aPoint->GetZ();
+            R3BMCTrack* Track = (R3BMCTrack*)MCTrackCA->At(presentTrackID);
+            PDGCode = Track->GetPdgCode();
+            MotherId = Track->GetMotherId();
+            Vertex_x0 = Track->GetStartX();
+            Vertex_y0 = Track->GetStartY();
+            Vertex_z0 = Track->GetStartZ();
+            Vertex_px0 = Track->GetPx();
+            Vertex_py0 = Track->GetPy();
+            Vertex_pz0 = Track->GetPz();
             readyToProject = kTRUE;
             continue; // no energy deposited in this point, just taking in entrance coordinates
         }
@@ -333,8 +351,12 @@ void R3BGTPCLangevin::Exec(Option_t*)
                 projX = XOffset;
             if (projX > XOffset + 2 * fHalfSizeTPC_X)
                 projX = XOffset + 2 * fHalfSizeTPC_X;
-            Int_t padID = (2 * fHalfSizeTPC_X * fSizeOfVirtualPad) * (Int_t)((projZ - ZOffset) * fSizeOfVirtualPad) +
-                          (Int_t)((projX - XOffset) * fSizeOfVirtualPad);
+            Int_t padID;
+            if (TAG.compare("Prototype") == 0)
+                padID = (44) * (Int_t)((projZ - ZOffset) / 0.2) + (Int_t)((projX - XOffset) / 0.2); // 2mm
+            else
+                padID = (2 * fHalfSizeTPC_X * fSizeOfVirtualPad) * (Int_t)((projZ - ZOffset) * fSizeOfVirtualPad) +
+                        (Int_t)((projX - XOffset) * fSizeOfVirtualPad); // FULL HYDRA padplane has not been decided yet
 
             Int_t nProjPoints = fGTPCProjPoint->GetEntriesFast();
             for (Int_t pp = 0; pp < nProjPoints; pp++)
@@ -350,7 +372,18 @@ void R3BGTPCLangevin::Exec(Option_t*)
             }
             if (!virtualPadFound)
             {
-                new ((*fGTPCProjPoint)[nProjPoints]) R3BGTPCProjPoint(padID, projTime, 1, evtID);
+                new ((*fGTPCProjPoint)[nProjPoints]) R3BGTPCProjPoint(padID,
+                                                                      projTime / 1000, // micros
+                                                                      1,
+                                                                      evtID,
+                                                                      PDGCode,
+                                                                      MotherId,
+                                                                      Vertex_x0,
+                                                                      Vertex_y0,
+                                                                      Vertex_z0,
+                                                                      Vertex_px0,
+                                                                      Vertex_py0,
+                                                                      Vertex_pz0);
             }
             virtualPadFound = kFALSE;
         }

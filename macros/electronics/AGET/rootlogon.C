@@ -1,8 +1,6 @@
 {
     gSystem->Load("libR3BGTPC");
-
-    cout << "[INFO] electronics response macros directory for glad-tpc" << endl;
-    cout << "[WARNING] This macro operates in Multi-threading mode!!" << endl;
+    cout << "[INFO] Output pad plane electronics response!" << endl;
 
     TStyle* mcStyle = new TStyle("mcStyle", "Simone's Root Styles");
     mcStyle->SetPalette(1, 0); // avoid horrible default color scheme

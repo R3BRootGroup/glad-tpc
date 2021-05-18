@@ -13,13 +13,13 @@
 //     BUT FIRST, select in the //SETTINGS section the simulation features
 //	(the macro will plot and text information as a function of these settings)
 //  -------------------------------------------------------------------------
-//Loading bar
+// Loading bar
 #define PBSTR "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
 #define PBWIDTH 60
-void loadfunction(double &percentage)
+void loadfunction(double& percentage)
 {
-    int val = (int) (percentage * 100);
-    int lpad = (int) (percentage * PBWIDTH);
+    int val = (int)(percentage * 100);
+    int lpad = (int)(percentage * PBWIDTH);
     int rpad = PBWIDTH - lpad;
     printf("\r%3d%% [%.*s%*s]", val, lpad, PBSTR, rpad, "");
     fflush(stdout);
@@ -32,13 +32,17 @@ void checkAll()
     // SETTINGS
     Bool_t graphicalOutput = kTRUE;
     Bool_t textOutput = kFALSE;
+    Bool_t DEBUG = kTRUE;
 
     Bool_t checkMCTracks = kTRUE; // Defines Histogram for MCTracks
     Bool_t checkPoints = kTRUE;   // Defines Histogram for Points
 
     sprintf(title1, "%s", "sim.root"); // INPUT FILE
     TFile* file1 = TFile::Open(title1);
-
+    if (file1->IsOpen())
+        cout << "File correctly opened!" << endl;
+    else
+        exit(1);
     Double_t maxE = 100; // max energy in plots
 
     gDebug = 0; //    Debug option
@@ -64,7 +68,7 @@ void checkAll()
         h1_MC_PDG = new TH1F("h1_MC_PDG", "Primary PDG Code", 2300, 0, 2300);
         h1_MC_PDGSec = new TH1F("h1_MC_PDGSec", "MCTrack PDG Code", 2300, 0, 2300);
         h1_MC_Ene = new TH1F("h1_MC_Ene", "Primary Energy (MeV)", 200, 0, 3 * maxE);
-        h1_MC_EneSec = new TH1F("h1_MC_EneSec", "MCTrack Energy (MeV)", 200, 0, 3 * maxE);
+        h1_MC_EneSec = new TH1F("h1_MC_EneSec", "MCTrack Energy (MeV)", 200, 0, 15 * maxE);
         h1_MC_Theta = new TH1F("h1_MC_Theta", "Primary Theta", 200, -0.1, 3.2);
         h1_MC_ThetaSec = new TH1F("h1_MC_ThetaSec", "MCTrack Theta", 200, -0.1, 3.2);
         h1_MC_Phi = new TH1F("h1_MC_Phi", "Primary Phi", 200, -3.2, 3.2);
@@ -75,14 +79,14 @@ void checkAll()
         h1_Point_Mult = new TH1F("h1_Point_Mult", "Point Multiplicity", 400, 0, 400);
         h1_Point_Time = new TH1F("h1_Point_Time", "Point Time", 4000, 0, 0.000001);
         h1_Point_Length = new TH1F("h1_Point_Length", "Point Length", 400, 0, 400);
-        h1_Point_ELoss = new TH1F("h1_Point_ELoss", "Point ELoss (MeV)", 400, 0, 0.1);
+        h1_Point_ELoss = new TH1F("h1_Point_ELoss", "Point ELoss (keV)", 500, 0, 1.5); // 0.01 cm
         h1_Point_TrackStatus = new TH1F("h1_Point_TrackStatus", "Point TrackStatus", 8, 0, 7);
         h1_Point_PDG = new TH1F("h1_Point_PDG", "Point PDG", 2300, 0, 2300);
         h1_Point_Charge = new TH1F("h1_Point_Charge", "Point Charge", 40, 0, 39);
         h1_Point_Mass = new TH1F("h1_Point_Mass", "Point Mass", 400, 0, 10);
         h1_Point_Kine = new TH1F("h1_Point_Kine", "Point KinE (MeV)", 400, 0, 6000);
-        h1_Point_trackStep = new TH1F("h1_Point_trackStep", "Point trackStep", 400, 0, 40);
-        h2_Point_XZ = new TH2F("h2_Point_XZ", "Points projection on XZ plane;Z[cm];X[cm]", 300, 270, 300, 100, 5, 15);
+        h1_Point_trackStep = new TH1F("h1_Point_trackStep", "Point trackStep (cm)", 300, 0, 1.5); // maxstep 0.1 cm
+        h2_Point_XZ = new TH2F("h2_Point_XZ", "Points projection on XZ plane;Z[cm];X[cm]", 600, 270, 300, 500, 5, 15);
         h2_Point_YZ = new TH2F("h2_Point_YZ", "Point projection on YZ plane;Z[cm];Y[cm]", 300, 270, 300, 400, -20, 20);
         h2_Point_PxPz = new TH2F("h2_Point_PxPz", "Momentum projection on XZ plane", 600, -1, 1, 600, -1, 7);
         h2_Point_PyPz = new TH2F("h2_Point_PyPz", "Momentum projection on YZ plane", 600, -1, 1, 600, -1, 7);
@@ -116,9 +120,10 @@ void checkAll()
 
     for (Int_t i = 0; i < nevents; i++)
     {
-        double percentage=i/(double)(nevents*1.);
-        loadfunction(percentage);
-
+        double percentage = i / (double)(nevents * 1.);
+        if (!DEBUG)
+            loadfunction(percentage);
+        double e_dep_gas = 0, track_length = 0, counter = 0;
         gtpcPointCA->Clear();
         MCTrackCA->Clear();
         primaries = 0;
@@ -198,7 +203,7 @@ void checkAll()
                 {
                     h1_Point_Time->Fill(point[h]->GetTime());
                     h1_Point_Length->Fill(point[h]->GetLength());
-                    h1_Point_ELoss->Fill(point[h]->GetEnergyLoss() * 1000);
+                    h1_Point_ELoss->Fill(point[h]->GetEnergyLoss() * 1000000); // keV
                     h1_Point_TrackStatus->Fill(point[h]->GetTrackStatus());
                     h1_Point_PDG->Fill(point[h]->GetPDGCode());
                     h1_Point_Charge->Fill(point[h]->GetCharge());
@@ -210,6 +215,9 @@ void checkAll()
                     h2_Point_PxPz->Fill(point[h]->GetPx(), point[h]->GetPz());
                     h2_Point_PyPz->Fill(point[h]->GetPy(), point[h]->GetPz());
                 }
+                e_dep_gas += point[h]->GetEnergyLoss() * 1e6;
+                track_length += point[h]->GetTrackStep();
+                counter++;
             }
         }
 
@@ -219,8 +227,13 @@ void checkAll()
             delete[] point;
         if (MCtracksPerEvent)
             delete[] track;
+        if (DEBUG)
+        {
+            cout << setprecision(4) << "E_dep=" << e_dep_gas << " keV,	track_length=" << track_length
+                 << " cm,	Edep/length=" << e_dep_gas / track_length << " keV/cm,	#points=" << counter << endl;
+        }
     }
-		cout<<"\n"<<endl;
+    cout << "\n" << endl;
     if (graphicalOutput)
     {
         TCanvas* c1 = new TCanvas("MCTrack", "MCTrack", 0, 0, 500, 700);
@@ -232,6 +245,9 @@ void checkAll()
         TCanvas* c3 = new TCanvas("Points Position", "Points Position", 40, 40, 540, 740);
         c3->SetFillColor(0);
         c3->SetFrameFillColor(0);
+        TCanvas* c4 = new TCanvas("Transport model", "Transport model", 40, 40, 540, 740);
+        c4->SetFillColor(0);
+        c4->SetFrameFillColor(0);
 
         // MC TRACK CANVAS
         c1->cd();
@@ -251,7 +267,7 @@ void checkAll()
         TLatex Tl;
         Tl.SetTextSize(0.06);
         Tl.SetTextColor(1);
-        Tl.DrawLatex(1.4,2127, "Primaries");
+        Tl.DrawLatex(1.4, 2127, "Primaries");
         Tl.SetTextSize(0.06);
         Tl.SetTextColor(2);
         Tl.DrawLatex(1.4, 127, "Secondaries");
@@ -333,10 +349,23 @@ void checkAll()
         c3->cd(4);
         h2_Point_PyPz->Draw("COLZ");
 
+        c4->cd();
+        c4->Divide(2, 2);
+        c4->cd(1);
+        h2_Point_XZ->Draw("COLZ");
+        c4->cd(2);
+        c4->cd(2)->SetLogy();
+        h1_Point_ELoss->Draw();
+        c4->cd(3);
+        c4->cd(3)->SetLogy();
+        h1_Point_trackStep->Draw();
+        c4->cd(4);
+
         // OUTPUT FILE
         // ctext->Print("output.ps(");
         c1->Print("output.ps(");
         c2->Print("output.ps");
+        c4->Print("output.ps");
         c3->Print("output.ps)");
     }
 }

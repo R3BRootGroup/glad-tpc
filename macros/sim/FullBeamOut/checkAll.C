@@ -26,7 +26,10 @@ void checkAll()
 
     sprintf(title1, "%s", "sim.root"); // INPUT FILE
     TFile* file1 = TFile::Open(title1);
-
+    if (file1->IsOpen())
+        cout << "File correctly opened!" << endl;
+    else
+        exit(1);
     Double_t maxE = 100; // max energy in plots
 
     gDebug = 0; //    Debug option

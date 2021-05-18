@@ -12,13 +12,13 @@
 //     BUT FIRST, select in the //SETTINGS section the simulation features
 //	(the macro will plot and text information as a function of these settings)
 //  -------------------------------------------------------------------------
-//Loading bar
+// Loading bar
 #define PBSTR "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
 #define PBWIDTH 60
-void loadfunction(double &percentage)
+void loadfunction(double& percentage)
 {
-    int val = (int) (percentage * 100);
-    int lpad = (int) (percentage * PBWIDTH);
+    int val = (int)(percentage * 100);
+    int lpad = (int)(percentage * PBWIDTH);
     int rpad = PBWIDTH - lpad;
     printf("\r%3d%% [%.*s%*s]", val, lpad, PBSTR, rpad, "");
     fflush(stdout);
@@ -60,11 +60,11 @@ void ana_lang(TString GEOTAG = "Prototype")
     gStyle->SetOptFit(0);
 
     // SETUP
-    R3BGTPCSetup *setup=new R3BGTPCSetup();
-    Double_t fHalfSizeTPC_X = setup->GetActiveRegionx()/2;   // 50cm in X (row)
-    Double_t fHalfSizeTPC_Y = setup->GetActiveRegiony()/2;   // 20cm in Y (time)
-    Double_t fHalfSizeTPC_Z = setup->GetActiveRegionz()/2;   // 100cm in Z (column)
-    Double_t fSizeOfVirtualPad = setup->GetPadSize(); // 1: pads of 1cm^2 , 10: pads of 1mm^2
+    R3BGTPCSetup* setup = new R3BGTPCSetup();
+    Double_t fHalfSizeTPC_X = setup->GetActiveRegionx() / 2; // 50cm in X (row)
+    Double_t fHalfSizeTPC_Y = setup->GetActiveRegiony() / 2; // 20cm in Y (time)
+    Double_t fHalfSizeTPC_Z = setup->GetActiveRegionz() / 2; // 100cm in Z (column)
+    Double_t fSizeOfVirtualPad = setup->GetPadSize();        // 1: pads of 1cm^2 , 10: pads of 1mm^2
 
     // END OF SETTINGS
 
@@ -162,7 +162,7 @@ void ana_lang(TString GEOTAG = "Prototype")
 
     for (Int_t i = 0; i < nevents; i++)
     {
-        double percentage=i/(double)(nevents*1.);
+        double percentage = i / (double)(nevents * 1.);
         loadfunction(percentage);
 
         gtpcProjPointCA->Clear();
@@ -352,7 +352,7 @@ void ana_lang(TString GEOTAG = "Prototype")
             delete chargePad_lan;
         }
     }
-    cout<<"\n"<<endl;   
+    cout << "\n" << endl;
     TCanvas* c1 = new TCanvas("c1", "Diff in pads charge (XZ) plane", 0, 0, 600, 900);
 
     c1->SetFillColor(0);
