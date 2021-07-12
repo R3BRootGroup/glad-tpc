@@ -94,15 +94,15 @@ void GenerateInputTree_PhaseSpaceDecay()
     if (GEOTAG == "Prototype")
     {
         cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
-        asciifile.open("./ASCII/inputPrototype_3LH.dat", ios::out | ios::app);
-        TargetPosition = { -0.7, 0., 192.0 };
+        asciifile.open("./ASCII/inputPrototype_3LH.dat", ios::out);
+        TargetPosition = {-2.46, 0., 222.7};
         cout << "The target Position is (" << TargetPosition.X() << ", " << TargetPosition.Y() << ", "
              << TargetPosition.Z() << ") [cm]" << endl;
     }
     if (GEOTAG == "FullBeamOut")
     {
         cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
-        asciifile.open("./ASCII/inputFullBeamOut_3LH.dat", ios::out | ios::app);
+        asciifile.open("./ASCII/inputFullBeamOut_3LH.dat", ios::out);
         TargetPosition = { 0, 0., 147.5 }; 
         cout << "The target Position is (" << TargetPosition.X() << ", " << TargetPosition.Y() << ", "
              << TargetPosition.Z() << ") [cm]" << endl;
@@ -110,8 +110,8 @@ void GenerateInputTree_PhaseSpaceDecay()
     if (GEOTAG == "FullBeamIn")
     {
         cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
-        asciifile.open("./ASCII/inputFullBeamIn_3LH.dat", ios::out | ios::app);
-        TargetPosition = { 0, 0., 161};//161, 167.5, 172.5
+        asciifile.open("./ASCII/inputFullBeamIn_3LH.dat", ios::out);
+        TargetPosition = { 0, 0., 170};//161, 167.5, 172.5 155 145
         cout << "The target Position is (" << TargetPosition.X() << ", " << TargetPosition.Y() << ", "
              << TargetPosition.Z() << ") [cm]" << endl;
     }
@@ -223,7 +223,7 @@ void GenerateInputTree_PhaseSpaceDecay()
 }
 
 /*
-    //Benchmark beam-> 1GeV proton beam it's expected to be bent 51 degure
+    //Benchmark beam-> 1GeV proton beam it's expected to be bent 51 degree
     double Mp = 938.272;//MeV/c^2
     Double_t Tp = 1000;//1.*GeV/A
     Double_t Ep = Mp + Tp;

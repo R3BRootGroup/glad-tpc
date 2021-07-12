@@ -123,6 +123,10 @@ void reader(const char* inputSimFile)
     Hitmap->SetTitleOffset(2.,"XYZ");
 
     TFile* simFile = TFile::Open(inputSimFile);
+    if (simFile->IsOpen())
+    cout <<"File correctly opened!"<<endl;
+		else 
+			exit(1);
     TTree* TEvt = (TTree*)simFile->Get("evt");
     Int_t nevents = TEvt->GetEntries();
 

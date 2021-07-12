@@ -31,6 +31,10 @@ void map_lang()
     // langevin results
     sprintf(title1, "%s", "lang_TOMC_100_borra2.root"); // INPUT FILE 1  TODO ???????
     TFile* file1 = TFile::Open(title1);
+    if (file1->IsOpen())
+    	cout <<"File correctly opened!"<<endl;
+		else 
+			exit(1);
 
     gROOT->SetStyle("Default");
     gStyle->SetOptTitle(1);

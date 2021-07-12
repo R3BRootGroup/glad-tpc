@@ -8,7 +8,7 @@ TPCLx 36
 TPCLy 20
 TPCLz 120.
 //____Active Region 
-ActiveRegionx 11.2
+ActiveRegionx 7.2
 ActiveRegiony 15.
 ActiveRegionz 100.
 //____Projection

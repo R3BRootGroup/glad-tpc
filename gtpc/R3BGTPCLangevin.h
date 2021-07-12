@@ -61,7 +61,9 @@ class R3BGTPCLangevin : public FairTask
 
     TClonesArray* fGTPCPoints;
     TClonesArray* fGTPCProjPoint;
-
+    // MCTrack- vertex information
+    TClonesArray* MCTrackCA;
+    
     // R3BGTPCGeoPar* fGTPCGeoPar; //!< Geometry parameter container (TODO)
     // R3BGTPCGasPar* fGTPCGasPar; //!< Gas parameter container (TODO)
 

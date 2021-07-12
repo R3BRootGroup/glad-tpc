@@ -38,7 +38,7 @@
 // the Cerenkov (int npckov).
 //
 // * float madfld  - maximum angular deviation TMAXFD due to field
-// * float maxstep - maximum step permitted STEMAX
+// * float maxstep - maximum step permitted STEMAX (CM)
 // * float maxde   - maximum fractional energy loss DEEMAX
 // * float minstep - minimum value for step STMIN
 //
@@ -250,3 +250,16 @@ carbondioxide      -2  12.01  16.0  6. 8. 1.9768e-3 1  2
 goldcoatedcopper   2  63.54  196.97 29.  79.  9.0634  .99 .01
                    0  0  20.  .001
                    0
+//After AUTONULL the material definition has to include additional parameters
+//	name 	ncomp 	aw(1)[A1] 	aw(2)[A2] 	an(1)[Z1] 	an(2)[Z2] 	dens[g/cm^3] 	wm(1)[%] 	wm(2)[%]
+//	sensflag[bool] 	fldflag[bool] 	fld[kG] 	epsil[precision]
+//	madlfd 	maxstep[cm] 	maxde[%] 	minstep[cm]
+//	npckov
+AUTONULL
+
+//P10 at 1atm. maxstep=150um and minstep=0.01 um
+     
+P10								 3	12.011	1.008	39.95 6.	1.	18.	1.74e-3		 0.0623			0.0155			0.9222
+									 1			1					20.				0.001
+                   99. 		0.15   	 	0.001 		0.000001
+									 0

@@ -1,0 +1,38 @@
+The ele_output.root file contains the information from the electronics 
+plus the info coming from MCTrack (vertex information).
+The pad plane corners in the R3BROOT notation (Cave C) are: 
+							_________________________
+			 (x) ^ |b												c|
+					 | |												 |
+					 | |												 |
+					 | |												 |
+					 | |												 |
+					 | |a_______________________d|
+					-|---------------------------------->
+																			(z)	beam direction 
+						 
+a(5.8 , 15., 272.7) [cm]		
+b(14.6, 15., 272.7) [cm]					 
+c(14.6, 15., 298.3) [cm]					 
+d(5.8 , 15., 298.3) [cm]					 			 
+
+Target position: (-2.46, 0., 232.7) [cm]
+Drift velocity : 5 [cm/us]
+Pad size: 2x2mm^2
+						 
+The variables inside the tree are:
+
+-		eventID				->ID of the event
+-	  vertex_PDG		->PDG code
+-	  vertex_Mother	->Mother Id (-1 means primary particle)
+-	  vertex_x0			->X position of the vertez[cm]
+-	  vertex_y0			->Y position of the vertez[cm]
+-	  vertex_z0			->Z position of the vertez[cm]
+-	  vertex_px0		->Px momentum at the vertez[GeV/c]
+-	  vertex_py0		->Py momentum at the vertez[GeV/c]
+-	  vertex_pz0		->Pz momentum at the vertez[GeV/c]
+-	  x_Pad					->row x of the pad plane [0,44[
+-	  z_Pad					->column z of the pad plane [0,128[
+-	  t_Pad					->drift time [ns]
+-	  q_Pad					->charge [ADC channel]
+

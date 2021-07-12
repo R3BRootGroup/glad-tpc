@@ -1,0 +1,8 @@
+To run the Electronics macro it's necessary to build the program inside the build folder:
+cd build
+cmake ..
+make -jN
+./AGetElectronics
+These instructions are included in the bash script:
+. run_ele.sh
+use this because it is supposed to run in MT
