@@ -21,6 +21,10 @@
 #include "R3BGTPCPoint.h"
 #include "R3BGTPCProjPoint.h"
 #include "TClonesArray.h"
+#include "R3BGTPCGeoPar.h"
+#include "R3BGTPCGasPar.h"
+#include "R3BGTPCElecPar.h"
+
 
 /**
  * GTPC point projector task
@@ -50,7 +54,10 @@ class R3BGTPCProjector : public FairTask
 
   protected:
     /** Virtual method Init **/
-    InitStatus Init();
+    virtual InitStatus Init();
+
+    /** Virtual method ReInit **/
+    virtual InitStatus ReInit();
 
     /** Virtual method Finish **/
     void Finish();
@@ -58,13 +65,12 @@ class R3BGTPCProjector : public FairTask
     /** Virtual method SetParContainers **/
     void SetParContainers();
 
+    void SetParameter();
+
     TClonesArray* fGTPCPoints;
     TClonesArray* fGTPCProjPoint;
     // MCTrack- vertex information
     TClonesArray* MCTrackCA;
-
-    // R3BGTPCGeoPar* fGTPCGeoPar; //!< Geometry parameter container (TODO)
-    // R3BGTPCGasPar* fGTPCGasPar; //!< Gas parameter container (TODO)
 
   private:
     // Mapping of  virtualPadID to ProjPoint object pointer
@@ -79,6 +85,11 @@ class R3BGTPCProjector : public FairTask
     Double_t fHalfSizeTPC_Y;    //!< Half size Y of the TPC drift volume [cm]
     Double_t fHalfSizeTPC_Z;    //!< Half size Z of the TPC drift volume [cm]
     Double_t fSizeOfVirtualPad; //!< Number of virtual pad division per cm (default 1)
+    Int_t fDetectorType;        //!< Detector type: 1 for prototype, 2 for FullBeamIn, 3 for FullBeamOut
+
+    R3BGTPCGeoPar* fGTPCGeoPar; //!< Geometry parameter container
+    R3BGTPCGasPar* fGTPCGasPar; //!< Gas parameter container
+    R3BGTPCElecPar* fGTPCElecPar; //!< Electronics parameter container
 
     ClassDef(R3BGTPCProjector, 1)
 };

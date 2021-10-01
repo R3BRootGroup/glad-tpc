@@ -22,6 +22,10 @@
 #include "R3BGTPCProjPoint.h"
 #include "TClonesArray.h"
 #include "TVirtualMC.h"
+#include "R3BGTPCGeoPar.h"
+#include "R3BGTPCGasPar.h"
+#include "R3BGTPCElecPar.h"
+
 
 /**
  * GTPC drift calculation using Langevin equation task
@@ -52,7 +56,10 @@ class R3BGTPCLangevinTest : public FairTask
 
   protected:
     /** Virtual method Init **/
-    InitStatus Init();
+    virtual InitStatus Init();
+
+    /** Virtual method ReInit **/
+    virtual InitStatus ReInit();
 
     /** Virtual method Finish **/
     void Finish();
@@ -64,9 +71,6 @@ class R3BGTPCLangevinTest : public FairTask
     TClonesArray* fGTPCProjPoint;
     // MCTrack- vertex information
     TClonesArray* MCTrackCA;
-
-    // R3BGTPCGeoPar* fGTPCGeoPar; //!< Geometry parameter container (TODO)
-    // R3BGTPCGasPar* fGTPCGasPar; //!< Gas parameter container (TODO)
 
   private:
     // Mapping of  virtualPadID to ProjPoint object pointer
@@ -83,6 +87,10 @@ class R3BGTPCLangevinTest : public FairTask
     Double_t fSizeOfVirtualPad; //!< Number of virtual pad division per cm (default 1)
 
     Int_t fNumberOfGeneratedElectrons; //!< Number of electrons to generate in each point of the test
+
+    R3BGTPCGeoPar* fGTPCGeoPar; //!< Geometry parameter container
+    R3BGTPCGasPar* fGTPCGasPar; //!< Gas parameter container
+    R3BGTPCElecPar* fGTPCElecPar; //!< Electronic parameter container
 
     ClassDef(R3BGTPCLangevinTest, 1)
 };

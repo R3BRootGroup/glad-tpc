@@ -48,6 +48,23 @@ void create_tpc_geo(string geoTag = "FullBeamIn")
     gGeoMan = gGeoManager;
     // --------------------------------------------------------------------------
 
+    // -------   Parameters file name (input)   ----------------------------------
+    TString GTPCGeoParamsFile;
+    GTPCGeoParamsFile = geoPath + "/glad-tpc/params/HYDRAFullBeamIn_FileSetup.par";
+    GTPCGeoParamsFile.ReplaceAll("//", "/");
+
+    FairRuntimeDb* rtdb = FairRuntimeDb::instance();
+    R3BGTPCGeoPar* geoPar = (R3BGTPCGeoPar*)rtdb->getContainer("GTPCGeoPar");
+    if (!geoPar) {
+        cout << "No R3BGTPCGeoPar can be loaded from the rtdb";
+        return;
+    }
+
+    FairParAsciiFileIo* parIo1 = new FairParAsciiFileIo(); // Ascii file
+    parIo1->open(GTPCGeoParamsFile, "in");
+    rtdb->setFirstInput(parIo1);
+    rtdb->initContainers(0);
+
     // -------   Geometry file name (output)   ----------------------------------
     TString geoFileName = geoPath + "/glad-tpc/geometry/HYDRA_";
     geoFileName = geoFileName + geoTag + ".geo.root";
@@ -117,22 +134,18 @@ void create_tpc_geo(string geoTag = "FullBeamIn")
 
     cout << "\n \033[1;31m Warning\033[0m: the detector you are building is " << geoTag << "!!!!!\n" << endl;
 
-    R3BGTPCSetup* setup = new R3BGTPCSetup(geoTag, 1);
+    TPCLx = geoPar->GetTPCLx() / 2.;                   // cm
+    TPCLy = geoPar->GetTPCLy() / 2.;                   // cm
+    TPCLz = geoPar->GetTPCLz() / 2.;                   // cm
+    FrameThickness = geoPar->GetFrameThickness() / 2.; // cm
 
-    TPCLx = setup->GetTPCLx() / 2.;                   // cm
-    TPCLy = setup->GetTPCLy() / 2.;                   // cm
-    TPCLz = setup->GetTPCLz() / 2.;                   // cm
-    FrameThickness = setup->GetFrameThickness() / 2.; // cm
+    ActiveRegionx = geoPar->GetActiveRegionx() / 2.; // cm
+    ActiveRegiony = geoPar->GetActiveRegiony() / 2.; // cm
+    ActiveRegionz = geoPar->GetActiveRegionz() / 2.; // cm
 
-    ActiveRegionx = setup->GetActiveRegionx() / 2.; // cm
-    ActiveRegiony = setup->GetActiveRegiony() / 2.; // cm
-    ActiveRegionz = setup->GetActiveRegionz() / 2.; // cm
-
-    Windowx = setup->GetWindowx() / 2.; // cm
-    Windowy = setup->GetWindowy() / 2.; // cm
-    Windowz = setup->GetWindowz() / 2.; // cm
-
-    delete setup;
+    Windowx = geoPar->GetWindowx() / 2.; // cm
+    Windowy = geoPar->GetWindowy() / 2.; // cm
+    Windowz = geoPar->GetWindowz() / 2.; // cm
 
     /*
       TPCLx 							 	 =22.5														//cm

@@ -24,10 +24,11 @@
 #include "FairRootManager.h"
 #include "FairRunAna.h"
 #include "FairRuntimeDb.h"
-#include "R3BGTPCSetup.h"
+using namespace std;
 
 R3BGTPCLangevinTest::R3BGTPCLangevinTest()
     : FairTask("R3BGTPCLangevinTest")
+    ,fGTPCGeoPar(NULL),fGTPCGasPar(NULL),fGTPCElecPar(NULL)
 {
     // ALL UNITS IN cm, ns, V/cm, Tesla and GeV
     fEIonization = 15.e-9;           // [GeV] NOTUSED
@@ -63,19 +64,21 @@ void R3BGTPCLangevinTest::SetParContainers()
         LOG(FATAL) << "R3BGTPCLangevinTest::SetParContainers: No runtime database";
         return;
     }
-    // PREPARE PROPER PARAMETER CONTAINERS
-    /*fGTPCGeoPar = (R3BGTPCGeoPar*)rtdb->getContainer("R3BGTPCGeoPar");
-      if (!fGTPCGeoPar) {
+    fGTPCGeoPar = (R3BGTPCGeoPar*)rtdb->getContainer("GTPCGeoPar");
+    if (!fGTPCGeoPar) {
       LOG(FATAL) << "R3BGTPCLangevinTest::SetParContainers: No R3BGTPCGeoPar";
       return;
-      }
-    */
-    /*fGTPCGasPar = (R3BGTPCGasPar*)rtdb->getContainer("R3BGTPCGasPar");
+    }
+    fGTPCGasPar = (R3BGTPCGasPar*)rtdb->getContainer("GTPCGasPar");
       if (!fGTPCGasPar) {
       LOG(FATAL) << "R3BGTPCLangevinTest::SetParContainers: No R3BGTPCGasPar";
       return;
-      }
-    */
+    }
+    fGTPCElecPar = (R3BGTPCElecPar*)rtdb->getContainer("GTPCElecPar");
+      if (!fGTPCElecPar) {
+      LOG(FATAL) << "R3BGTPCLangevinTest::SetParContainers: No R3BGTPCElecPar";
+      return;
+    }
 }
 
 InitStatus R3BGTPCLangevinTest::Init()
@@ -111,16 +114,16 @@ InitStatus R3BGTPCLangevinTest::Init()
          fCoefL    = fPar->GetCoefDiffusionLong()*sqrt(10.);  // [cm^(-1/2)] to [mm^(-1/2)]
     */
 
-    /*
-    R3BGTPCSetup* setup = new R3BGTPCSetup(1);
-    fHalfSizeTPC_X = setup->GetTPCLx()/2.;
-    fHalfSizeTPC_Y = setup->GetTPCLy()/2.;
-    fHalfSizeTPC_Z = setup->GetTPCLz()/2.;
-    delete setup;
-    */
-
     return kSUCCESS;
 }
+
+
+InitStatus R3BGTPCLangevinTest::ReInit()
+{
+    SetParContainers();
+    return kSUCCESS;
+}
+
 
 void R3BGTPCLangevinTest::SetDriftParameters(Double_t ion,
                                              Double_t driftv,

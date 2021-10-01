@@ -17,36 +17,25 @@
 #include "TMath.h"
 #include "TVirtualMC.h"
 #include "TVirtualMCStack.h"
-
 #include "R3BGladFieldMap.h"
-
 #include "FairLogger.h"
 #include "FairRootManager.h"
 #include "FairRunAna.h"
 #include "FairRuntimeDb.h"
-#include "R3BGTPCSetup.h"
-
-std::string tag = "Prototype";
-std::string tag1 = "FullBeamOut";
-std::string tag2 = "FullBeamIn";
-std::string TAG = tag;
 
 R3BGTPCLangevin::R3BGTPCLangevin()
     : FairTask("R3BGTPCLangevin")
 {
-    // ALL UNITS IN cm, ns, V/cm, Tesla and GeV
-    R3BGTPCSetup* setup = new R3BGTPCSetup(TAG, 1);
-    LOG(INFO) << "\033[1;31m Warning\033[0m: The detector is: " << TAG;
-    fEIonization = setup->GetEIonization();     // [GeV]-> typical value for a gas detector tens of eV
-    fDriftVelocity = setup->GetDriftVelocity(); // [cm/ns]-> Minos TPC with a Efield=152 V/cm
-    fTransDiff = setup->GetTransDiff();         // [cm^2/ns]?
-    fLongDiff = setup->GetLongDiff();           // [cm^2/ns]?
-    fFanoFactor = setup->GetFanoFactor();
-    fSizeOfVirtualPad = setup->GetPadSize(); // 1 means pads of 1cm^2, 10 means pads of 1mm^2, ...
-    fHalfSizeTPC_X = 0.;                     // to be filled during Init()
-    fHalfSizeTPC_Y = 0.;                     // to be filled during Init()
-    fHalfSizeTPC_Z = 0.;                     // to be filled during Init()
-    delete setup;
+    fEIonization = 0;
+    fDriftVelocity = 0;
+    fTransDiff = 0;
+    fLongDiff = 0;
+    fFanoFactor = 0;
+    fSizeOfVirtualPad = 0;
+    fHalfSizeTPC_X = 0.;
+    fHalfSizeTPC_Y = 0.;
+    fHalfSizeTPC_Z = 0.;
+    fDetectorType = 0;
 }
 
 R3BGTPCLangevin::~R3BGTPCLangevin()
@@ -70,19 +59,35 @@ void R3BGTPCLangevin::SetParContainers()
         LOG(FATAL) << "R3BGTPCLangevin::SetParContainers: No runtime database";
         return;
     }
-    // PREPARE PROPER PARAMETER CONTAINERS
-    /*fGTPCGeoPar = (R3BGTPCGeoPar*)rtdb->getContainer("R3BGTPCGeoPar");
-      if (!fGTPCGeoPar) {
+    fGTPCGeoPar = (R3BGTPCGeoPar*)rtdb->getContainer("R3BGTPCGeoPar");
+    if (!fGTPCGeoPar) {
       LOG(FATAL) << "R3BGTPCLangevin::SetParContainers: No R3BGTPCGeoPar";
       return;
-      }
-    */
-    /*fGTPCGasPar = (R3BGTPCGasPar*)rtdb->getContainer("R3BGTPCGasPar");
+    }
+    fGTPCGasPar = (R3BGTPCGasPar*)rtdb->getContainer("R3BGTPCGasPar");
       if (!fGTPCGasPar) {
       LOG(FATAL) << "R3BGTPCLangevin::SetParContainers: No R3BGTPCGasPar";
       return;
-      }
-    */
+    }
+    fGTPCElecPar = (R3BGTPCElecPar*)rtdb->getContainer("R3BGTPCElecPar");
+      if (!fGTPCElecPar) {
+      LOG(FATAL) << "R3BGTPCLangevin::SetParContainers: No R3BGTPCElecPar";
+      return;
+    }
+}
+
+void R3BGTPCLangevin::SetParameter()
+{
+  fEIonization = fGTPCGasPar->GetEIonization();     // [GeV]-> typical value for a gas detector tens of eV
+  fDriftVelocity = fGTPCGasPar->GetDriftVelocity(); // [cm/ns]-> Minos TPC with a Efield=152 V/cm
+  fTransDiff = fGTPCGasPar->GetTransDiff();         // [cm^2/ns]?
+  fLongDiff = fGTPCGasPar->GetLongDiff();           // [cm^2/ns]?
+  fFanoFactor = fGTPCGasPar->GetFanoFactor();
+  fSizeOfVirtualPad = fGTPCGeoPar->GetPadSize(); // 1 means pads of 1cm^2, 10 means pads of 1mm^2, ...
+  fHalfSizeTPC_X = fGTPCGeoPar->GetActiveRegionx() / 2.;
+  fHalfSizeTPC_Y = fGTPCGeoPar->GetActiveRegiony() / 2.;
+  fHalfSizeTPC_Z = fGTPCGeoPar->GetActiveRegionz() / 2.;
+  fDetectorType = fGTPCGeoPar->GetDetectorType();
 }
 
 InitStatus R3BGTPCLangevin::Init()
@@ -107,23 +112,19 @@ InitStatus R3BGTPCLangevin::Init()
         return kFATAL;
     }
     MCTrackCA = (TClonesArray*)ioman->GetObject("MCTrack");
+
     // Output: TClonesArray of R3BGTPCProjPoint
     fGTPCProjPoint = new TClonesArray("R3BGTPCProjPoint");
     ioman->Register("GTPCProjPoint", GetName(), fGTPCProjPoint, kTRUE);
 
-    /*   //PREPARE PROPER PARAMETER CONTAINERS FOR DRIFT PARAMETERS
-         fEIonize  = fPar->GetEIonize()/1000000000; // [GeV]
-         fVelDrift = fPar->GetDriftVelocity(); // [cm/us]
-         fCoefT    = fPar->GetCoefDiffusionTrans()*sqrt(10.); // [cm^(-1/2)] to [mm^(-1/2)]
-         fCoefL    = fPar->GetCoefDiffusionLong()*sqrt(10.);  // [cm^(-1/2)] to [mm^(-1/2)]
-    */
+    SetParameter();
 
-    R3BGTPCSetup* setup = new R3BGTPCSetup("Prototype", 1);
-    fHalfSizeTPC_X = setup->GetActiveRegionx() / 2.;
-    fHalfSizeTPC_Y = setup->GetActiveRegiony() / 2.;
-    fHalfSizeTPC_Z = setup->GetActiveRegionz() / 2.;
-    delete setup;
+    return kSUCCESS;
+}
 
+InitStatus R3BGTPCLangevin::ReInit()
+{
+    SetParContainers();
     return kSUCCESS;
 }
 
@@ -352,7 +353,7 @@ void R3BGTPCLangevin::Exec(Option_t*)
             if (projX > XOffset + 2 * fHalfSizeTPC_X)
                 projX = XOffset + 2 * fHalfSizeTPC_X;
             Int_t padID;
-            if (TAG.compare("Prototype") == 0)
+            if (fDetectorType==1)
                 padID = (44) * (Int_t)((projZ - ZOffset) / 0.2) + (Int_t)((projX - XOffset) / 0.2); // 2mm
             else
                 padID = (2 * fHalfSizeTPC_X * fSizeOfVirtualPad) * (Int_t)((projZ - ZOffset) * fSizeOfVirtualPad) +

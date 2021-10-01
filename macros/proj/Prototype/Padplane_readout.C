@@ -31,12 +31,34 @@ void reader(const char* inputSimFile)
     // SETUP
     string geoTag = "Prototype"; // Only prototype for the moment
     cout << "\n \033[1;31m Warning\033[0m: the detector you are building is " << geoTag << "!!!!!\n" << endl;
-    R3BGTPCSetup* setup = new R3BGTPCSetup(geoTag, 0);
-    Double_t fHalfSizeTPC_X = setup->GetActiveRegionx() / 2.; // X (row)
-    Double_t fHalfSizeTPC_Y = setup->GetActiveRegiony() / 2.; // Y (time)
-    Double_t fHalfSizeTPC_Z = setup->GetActiveRegionz() / 2.; // Z (column)
-    Double_t fSizeOfVirtualPad = setup->GetPadSize();         // 1: pads of 1cm^2 , 10: pads of 1mm^2
-    Double_t fMaxDriftTime = (round)((setup->GetActiveRegiony() / setup->GetDriftVelocity()) * pow(10, -3)); // us
+
+    // -------   Parameters file name (input)   ----------------------------------
+    TString geoPath = gSystem->Getenv("VMCWORKDIR");
+    TString GTPCGeoParamsFile;
+    GTPCGeoParamsFile = geoPath + "/glad-tpc/params/HYDRAprototype_FileSetup.par";
+    GTPCGeoParamsFile.ReplaceAll("//", "/");
+
+    FairRuntimeDb* rtdb = FairRuntimeDb::instance();
+    R3BGTPCGeoPar* geoPar = (R3BGTPCGeoPar*)rtdb->getContainer("GTPCGeoPar");
+    if (!geoPar) {
+        cout << "No R3BGTPCGeoPar can be loaded from the rtdb";
+        return;
+    }
+    R3BGTPCGasPar* gasPar = (R3BGTPCGasPar*)rtdb->getContainer("GTPCGasPar");
+    if (!gasPar) {
+        cout << "No R3BGTPCGasPar can be loaded from the rtdb";
+        return;
+    }
+    FairParAsciiFileIo* parIo1 = new FairParAsciiFileIo(); // Ascii file
+    parIo1->open(GTPCGeoParamsFile, "in");
+    rtdb->setFirstInput(parIo1);
+    rtdb->initContainers(0);
+
+    Double_t fHalfSizeTPC_X = geoPar->GetActiveRegionx() / 2.; // X (row)
+    Double_t fHalfSizeTPC_Y = geoPar->GetActiveRegiony() / 2.; // Y (time)
+    Double_t fHalfSizeTPC_Z = geoPar->GetActiveRegionz() / 2.; // Z (column)
+    Double_t fSizeOfVirtualPad = geoPar->GetPadSize();         // 1: pads of 1cm^2 , 10: pads of 1mm^2
+    Double_t fMaxDriftTime = (round)((geoPar->GetActiveRegiony() / gasPar->GetDriftVelocity()) * pow(10, -3)); // us
     // root style
     gROOT->SetStyle("Default");
     gStyle->SetOptTitle(0);

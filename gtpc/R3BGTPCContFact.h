@@ -1,5 +1,3 @@
-// clang-format off
-
 /******************************************************************************
  *   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
  *   Copyright (C) 2019 Members of R3B Collaboration                          *
@@ -13,28 +11,27 @@
  * or submit itself to any jurisdiction.                                      *
  ******************************************************************************/
 
-#ifdef __CINT__
+#ifndef R3BGTPCCONTFACT_H
+#define R3BGTPCCONTFACT_H
 
-#pragma link off all globals;
-#pragma link off all classes;
-#pragma link off all functions;
+#include "FairContFact.h"
 
-#pragma link C++ class R3BGTPC+;
-#pragma link C++ class R3BGTPCContFact;
+class FairContainer;
 
-#pragma link C++ class R3BGTPCProjector+;
-#pragma link C++ class R3BGTPCLangevin+;
-#pragma link C++ class R3BGTPCLangevinTest+;
+/**
+ * GTPC parameter container factory
+ */
 
-#pragma link C++ class R3BGTPCGeoPar+;
-//#pragma link C++ class R3BGLADTPCHitPar+;
-//#pragma link C++ class R3BGLADTPCCalPar+;
-//#pragma link C++ class R3BGLADTPCMappedPar+;
+class R3BGTPCContFact : public FairContFact
+{
+  private:
+    void setAllContainers();
 
-//#pragma link C++ class R3BGLADTPCCal2Hit+;
-//#pragma link C++ class R3BGLADTPCMapped2Cal+;
+  public:
+    R3BGTPCContFact();
+    //~R3BGTPCContFact() {}
+    FairParSet* createContainer(FairContainer*) override;
+    ClassDefOverride(R3BGTPCContFact, 0)
+};
 
-//#pragma link C++ class R3BGLADTPCCal2HitPar+;
-//#pragma link C++ class R3BGLADTPCMapped2CalPar+;
-
-#endif
+#endif // R3BGTPCCONTFACT_H

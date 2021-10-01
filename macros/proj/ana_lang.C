@@ -32,23 +32,28 @@ void ana_lang(TString GEOTAG = "Prototype")
     TString title2;
 
     // Input and outup file according to the GEOTAG
+    TString GTPCGeoParamsFile;
+    TString geoPath = gSystem->Getenv("VMCWORKDIR");
     if (GEOTAG.CompareTo("Prototype") == 0)
     {
         cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
         title1 = "./Prototype/lang.root";
         title2 = "./Prototype/proj.root";
+        GTPCGeoParamsFile = geoPath + "/glad-tpc/params/HYDRAprototype_FileSetup.par";
     }
     if (GEOTAG.CompareTo("FullBeamOut") == 0)
     {
         cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
         title1 = "./FullBeamOut/lang.root";
         title2 = "./FullBeamOut/proj.root";
+        GTPCGeoParamsFile = geoPath + "/glad-tpc/params/HYDRAFullBeamOut_FileSetup.par";
     }
     if (GEOTAG.CompareTo("FullBeamIn") == 0)
     {
         cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
         title1 = "./FullBeamIn/lang.root";
         title2 = "./FullBeamIn/proj.root";
+        GTPCGeoParamsFile = geoPath + "/glad-tpc/params/HYDRAFullBeamIn_FileSetup.par";
     }
 
     TFile* file1 = TFile::Open(title1); // langevin results
@@ -59,12 +64,18 @@ void ana_lang(TString GEOTAG = "Prototype")
     gStyle->SetOptStat(111111);
     gStyle->SetOptFit(0);
 
-    // SETUP
-    R3BGTPCSetup* setup = new R3BGTPCSetup();
-    Double_t fHalfSizeTPC_X = setup->GetActiveRegionx() / 2; // 50cm in X (row)
-    Double_t fHalfSizeTPC_Y = setup->GetActiveRegiony() / 2; // 20cm in Y (time)
-    Double_t fHalfSizeTPC_Z = setup->GetActiveRegionz() / 2; // 100cm in Z (column)
-    Double_t fSizeOfVirtualPad = setup->GetPadSize();        // 1: pads of 1cm^2 , 10: pads of 1mm^2
+    // RTDB
+    FairRuntimeDb* rtdb = FairRuntimeDb::instance();
+    R3BGTPCGeoPar* geoPar = (R3BGTPCGeoPar*)rtdb->getContainer("GTPCGeoPar");
+    if (!geoPar) {
+        cout << "No R3BGTPCGeoPar can be loaded from the rtdb";
+        return;
+    }
+
+    Double_t fHalfSizeTPC_X = geoPar->GetActiveRegionx() / 2; // 50cm in X (row)
+    Double_t fHalfSizeTPC_Y = geoPar->GetActiveRegiony() / 2; // 20cm in Y (time)
+    Double_t fHalfSizeTPC_Z = geoPar->GetActiveRegionz() / 2; // 100cm in Z (column)
+    Double_t fSizeOfVirtualPad = segeoPartup->GetPadSize();        // 1: pads of 1cm^2 , 10: pads of 1mm^2
 
     // END OF SETTINGS
 

@@ -1,0 +1,45 @@
+##############################################################################
+# Class:   GTPCGeoPar
+# Context: GTPCGeoParContext
+##############################################################################
+[GTPCGeoPar]
+//----------------------------------------------------------------------------
+GTPCActiveRegionx:   Double_t  7.2
+GTPCActiveRegiony:   Double_t  15.
+GTPCActiveRegionz:   Double_t  100.
+GTPCTPCLx:   Double_t  36.
+GTPCTPCLy:   Double_t  20.
+GTPCTPCLz:   Double_t  120.
+GTPCFrameThickness:   Double_t  1.
+GTPCWindowx:   Double_t  15.
+GTPCWindowy:   Double_t  5.
+GTPCWindowz:   Double_t  0.005
+GTPCPadSize:   Int_t  5
+GTPCTargetRadius:   Double_t  0.25
+GTPCTargetLength:   Double_t  5.
+GTPCTargetAngle:   Double_t  0.
+GTPCTargetOffsetX:   Double_t  -10.825
+GTPCTargetOffsetY:   Double_t  0.
+GTPCTargetOffsetZ:   Double_t  -91.85
+GTPCGladAngle:   Double_t  0.
+GTPCGladOffsetX:   Double_t  0.
+GTPCGladOffsetY:   Double_t  0.
+GTPCGladOffsetZ:   Double_t  230.06
+GTPCFieldAngle:   Double_t  0.
+GTPCFieldOffsetX:   Double_t  0.
+GTPCFieldOffsetY:   Double_t  0.
+GTPCFieldOffsetZ:   Double_t  113.4
+GTPCDetectorType:   Int_t  2
+##############################################################################
+##############################################################################
+# Class:   GTPCGasPar
+# Context: GTPCGasParContext
+##############################################################################
+[GTPCGasPar]
+//----------------------------------------------------------------------------
+GTPCLongDiff:   Double_t  0.000001
+GTPCTransDiff:   Double_t  0.0000001
+GTPCFanoFactor:   Double_t  0.2
+GTPCEIonization:   Double_t  15.e-9
+GTPCDriftVelocity:   Double_t  0.005
+##############################################################################

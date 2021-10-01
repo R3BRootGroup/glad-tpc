@@ -24,11 +24,8 @@ Double_t WorldSizeZ;
 
 void ConstructTPC(TGeoVolume* pWorld);
 
-string GEOTAG;
-
 void create_tpc_geo(const char* geoTag = "Target")
 {
-    GEOTAG = std::string(geoTag);
     fGlobalTrans->SetTranslation(0.0, 0.0, 0.0);
 
     // -------   Load media from media file   -----------------------------------
@@ -40,6 +37,23 @@ void create_tpc_geo(const char* geoTag = "Target")
     geoFace->readMedia();
     gGeoMan = gGeoManager;
     // --------------------------------------------------------------------------
+
+    // -------   Parameters file name (input)   ----------------------------------
+    TString GTPCGeoParamsFile;
+    GTPCGeoParamsFile = geoPath + "/glad-tpc/params/Target_FileSetup.par";
+    GTPCGeoParamsFile.ReplaceAll("//", "/");
+
+    FairRuntimeDb* rtdb = FairRuntimeDb::instance();
+    R3BGTPCGeoPar* geoPar = (R3BGTPCGeoPar*)rtdb->getContainer("GTPCGeoPar");
+    if (!geoPar) {
+        cout << "No R3BGTPCGeoPar can be loaded from the rtdb";
+        return;
+    }
+
+    FairParAsciiFileIo* parIo1 = new FairParAsciiFileIo(); // Ascii file
+    parIo1->open(GTPCGeoParamsFile, "in");
+    rtdb->setFirstInput(parIo1);
+    rtdb->initContainers(0);
 
     // -------   Geometry file name (output)   ----------------------------------
     TString geoFileName = geoPath + "/glad-tpc/geometry/passive/";
@@ -95,12 +109,8 @@ void create_tpc_geo(const char* geoTag = "Target")
     // --------------------------------------------------------------------------
     cout << "[INFO]: Bulding the target!!!!!\n" << endl;
 
-    R3BGTPCSetup* setup = new R3BGTPCSetup(geoTag, 0);
-    setup->Print();
-
-    TargetLength = setup->GetTargetLength() / 2.; // cm
-    TargetRadius = setup->GetTargetRadius();      // cm
-    delete setup;
+    TargetLength = geoPar->GetTargetLength() / 2.; // cm
+    TargetRadius = geoPar->GetTargetRadius();      // cm
 
     WorldSizeX = 2 * TargetLength;
     WorldSizeY = 2 * TargetLength;

@@ -1,0 +1,13 @@
+##############################################################################
+# Class:   GTPCElecPar
+# Context: GTPCElecParContext
+##############################################################################
+[GTPCElecPar]
+//----------------------------------------------------------------------------
+GTPCGain:   Double_t  4000.
+GTPCTheta:   Double_t  1.
+GTPCNoiseRMS:   Double_t  700.
+GTPCTimeBinSize:   Double_t  20.0
+GTPCShapingTime:   Double_t  300.
+GTPCThreshold:   Double_t  5.
+##############################################################################
