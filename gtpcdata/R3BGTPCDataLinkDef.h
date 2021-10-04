@@ -8,7 +8,8 @@
 
 #pragma link C++ class R3BGTPCPoint + ;
 #pragma link C++ class R3BGTPCProjPoint + ;
-//#pragma link C++ class R3BGTPCMappedData+;
-//#pragma link C++ class R3BGTPCCalData+;
+#pragma link C++ class R3BGTPCMappedData+;
+#pragma link C++ class R3BGTPCCalData+;
+#pragma link C++ class R3BGTPCHitData+;
 
 #endif

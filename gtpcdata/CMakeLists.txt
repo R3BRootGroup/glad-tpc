@@ -27,8 +27,9 @@ link_directories( ${LINK_DIRECTORIES})
 set(SRCS
 R3BGTPCPoint.cxx
 R3BGTPCProjPoint.cxx
-#R3BGTPCMappedData.cxx
-#R3BGTPCCalData.cxx
+R3BGTPCMappedData.cxx
+R3BGTPCCalData.cxx
+R3BGTPCHitData.cxx
 )
 
 # fill list of header files from list of source files
