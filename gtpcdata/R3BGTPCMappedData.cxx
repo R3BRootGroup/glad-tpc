@@ -22,13 +22,14 @@ R3BGTPCMappedData::R3BGTPCMappedData()
 }
 
 R3BGTPCMappedData::R3BGTPCMappedData(UShort_t padId,
-                                     std::vector<UShort_t>  adc,
+                                     std::vector<UShort_t> adc,
                                      Bool_t isValid,
                                      Bool_t isPedestalSubtracted)
     : fPadId(padId)
     , fADC(adc)
     , fIsValid(isValid)
-    , fIsPedestalSubtracted(isPedestalSubtracted){
+    , fIsPedestalSubtracted(isPedestalSubtracted)
+{
 }
 
 ClassImp(R3BGTPCMappedData);

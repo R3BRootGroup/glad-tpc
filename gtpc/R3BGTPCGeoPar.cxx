@@ -22,59 +22,54 @@
 #include <iostream>
 
 // ---- Standard Constructor ----------------------------------------------
-R3BGTPCGeoPar::R3BGTPCGeoPar(const char* name,
-                            const char* title, const char* context)
+R3BGTPCGeoPar::R3BGTPCGeoPar(const char* name, const char* title, const char* context)
     : FairParGenericSet(name, title, context)
 {
 }
 
 // ----  Destructor -------------------------------------------------------
-R3BGTPCGeoPar::~R3BGTPCGeoPar() {
-    clear();
-  }
+R3BGTPCGeoPar::~R3BGTPCGeoPar() { clear(); }
 
+// ----  Method clear ----------------------------------------------------------
+void R3BGTPCGeoPar::clear()
+{
+    status = kFALSE;
+    resetInputVersions();
+}
 
-  // ----  Method clear ----------------------------------------------------------
-  void R3BGTPCGeoPar::clear()
-  {
-      status = kFALSE;
-      resetInputVersions();
-  }
-
-
-  // ----  Method putParams ------------------------------------------------------
-  void R3BGTPCGeoPar::putParams(FairParamList* list)
-  {
-      LOG(INFO) << "R3BGTPCGeoPar::putParams() called";
-      if (!list)
-      {
-          return;
-      }
-      list->add("GTPCActiveRegionx", ActiveRegionx);
-      list->add("GTPCActiveRegiony", ActiveRegiony);
-      list->add("GTPCActiveRegionz", ActiveRegionz);
-      list->add("GTPCTPCLx", TPCLx);
-      list->add("GTPCTPCLy", TPCLy);
-      list->add("GTPCTPCLz", TPCLz);
-      list->add("GTPCFrameThickness", FrameThickness);
-      list->add("GTPCWindowx", Windowx);
-      list->add("GTPCWindowy", Windowy);
-      list->add("GTPCWindowz", Windowz);
-      list->add("GTPCPadSize", PadSize);
-      list->add("GTPCTargetRadius", TargetRadius);
-      list->add("GTPCTargetLength", TargetLength);
-      list->add("GTPCTargetAngle", TargetAngle);
-      list->add("GTPCTargetOffsetX", TargetOffsetX);
-      list->add("GTPCTargetOffsetY", TargetOffsetY);
-      list->add("GTPCTargetOffsetZ", TargetOffsetZ);
-      list->add("GTPCGladAngle", GladAngle);
-      list->add("GTPCGladOffsetX", GladOffsetX);
-      list->add("GTPCGladOffsetY", GladOffsetY);
-      list->add("GTPCGladOffsetZ", GladOffsetZ);
-      list->add("GTPCFieldAngle", FieldAngle);
-      list->add("GTPCFieldOffsetX", FieldOffsetX);
-      list->add("GTPCFieldOffsetY", FieldOffsetY);
-      list->add("GTPCFieldOffsetZ", FieldOffsetZ);
+// ----  Method putParams ------------------------------------------------------
+void R3BGTPCGeoPar::putParams(FairParamList* list)
+{
+    LOG(INFO) << "R3BGTPCGeoPar::putParams() called";
+    if (!list)
+    {
+        return;
+    }
+    list->add("GTPCActiveRegionx", ActiveRegionx);
+    list->add("GTPCActiveRegiony", ActiveRegiony);
+    list->add("GTPCActiveRegionz", ActiveRegionz);
+    list->add("GTPCTPCLx", TPCLx);
+    list->add("GTPCTPCLy", TPCLy);
+    list->add("GTPCTPCLz", TPCLz);
+    list->add("GTPCFrameThickness", FrameThickness);
+    list->add("GTPCWindowx", Windowx);
+    list->add("GTPCWindowy", Windowy);
+    list->add("GTPCWindowz", Windowz);
+    list->add("GTPCPadSize", PadSize);
+    list->add("GTPCTargetRadius", TargetRadius);
+    list->add("GTPCTargetLength", TargetLength);
+    list->add("GTPCTargetAngle", TargetAngle);
+    list->add("GTPCTargetOffsetX", TargetOffsetX);
+    list->add("GTPCTargetOffsetY", TargetOffsetY);
+    list->add("GTPCTargetOffsetZ", TargetOffsetZ);
+    list->add("GTPCGladAngle", GladAngle);
+    list->add("GTPCGladOffsetX", GladOffsetX);
+    list->add("GTPCGladOffsetY", GladOffsetY);
+    list->add("GTPCGladOffsetZ", GladOffsetZ);
+    list->add("GTPCFieldAngle", FieldAngle);
+    list->add("GTPCFieldOffsetX", FieldOffsetX);
+    list->add("GTPCFieldOffsetY", FieldOffsetY);
+    list->add("GTPCFieldOffsetZ", FieldOffsetZ);
 }
 
 // ----  Method getParams ------------------------------------------------------
@@ -214,7 +209,6 @@ Bool_t R3BGTPCGeoPar::getParams(FairParamList* list)
     return kTRUE;
 }
 
-
 // ----  Method print ----------------------------------------------------------
 void R3BGTPCGeoPar::print() { printParams(); }
 
@@ -224,30 +218,30 @@ void R3BGTPCGeoPar::printParams()
     LOG(INFO) << "R3BGTPCGeoPar: GTPC Geo Parameters:";
 
     LOG(INFO) << "GTPCActiveRegionx " << ActiveRegionx << " cm,  "
-    << "GTPCActiveRegiony " << ActiveRegiony << " cm,  "
-    << "GTPCActiveRegionz " << ActiveRegionz << " cm" << endl;
+              << "GTPCActiveRegiony " << ActiveRegiony << " cm,  "
+              << "GTPCActiveRegionz " << ActiveRegionz << " cm" << endl;
     LOG(INFO) << "GTPCTPCLx " << TPCLx << " cm,  "
-    << "GTPCTPCLy " << TPCLy << " cm,  "
-    << "GTPCTPCLz " << TPCLz << " cm,  "
-    << "GTPCFrameThickness " << FrameThickness << " cm" << endl;
+              << "GTPCTPCLy " << TPCLy << " cm,  "
+              << "GTPCTPCLz " << TPCLz << " cm,  "
+              << "GTPCFrameThickness " << FrameThickness << " cm" << endl;
     LOG(INFO) << "GTPCWindowx " << Windowx << " cm,  "
-    << "GTPCWindowy " << Windowy << " cm,  "
-    << "GTPCWindowz " << Windowz << " cm,  "
-    << "GTPCPadSize " << PadSize << endl;
+              << "GTPCWindowy " << Windowy << " cm,  "
+              << "GTPCWindowz " << Windowz << " cm,  "
+              << "GTPCPadSize " << PadSize << endl;
     LOG(INFO) << "GTPCTargetRadius " << TargetRadius << " cm,  "
-    << "GTPCTargetLength " << TargetLength << " cm,  "
-    << "GTPCTargetAngle " << TargetAngle << " deg,  "
-    << "GTPCTargetOffsetX " << TargetOffsetX << " cm,  "
-    << "GTPCTargetOffsetY " << TargetOffsetY << " cm,  "
-    << "GTPCTargetOffsetZ " << TargetOffsetZ << " cm" << endl;
+              << "GTPCTargetLength " << TargetLength << " cm,  "
+              << "GTPCTargetAngle " << TargetAngle << " deg,  "
+              << "GTPCTargetOffsetX " << TargetOffsetX << " cm,  "
+              << "GTPCTargetOffsetY " << TargetOffsetY << " cm,  "
+              << "GTPCTargetOffsetZ " << TargetOffsetZ << " cm" << endl;
     LOG(INFO) << "GTPCGladAngle " << GladAngle << " deg,  "
-    << "GTPCGladOffsetX " << GladOffsetX << " cm,  "
-    << "GTPCGladOffsetY " << GladOffsetY << " cm,  "
-    << "GTPCGladOffsetZ " << GladOffsetZ << " cm" << endl;
+              << "GTPCGladOffsetX " << GladOffsetX << " cm,  "
+              << "GTPCGladOffsetY " << GladOffsetY << " cm,  "
+              << "GTPCGladOffsetZ " << GladOffsetZ << " cm" << endl;
     LOG(INFO) << "GTPCFieldAngle " << FieldAngle << " deg,  "
-    << "GTPCFieldOffsetX " << FieldOffsetX << " cm,  "
-    << "GTPCFieldOffsetY " << FieldOffsetY << " cm,  "
-    << "GTPCFieldOffsetZ " << FieldOffsetZ << " cm" << endl;
+              << "GTPCFieldOffsetX " << FieldOffsetX << " cm,  "
+              << "GTPCFieldOffsetY " << FieldOffsetY << " cm,  "
+              << "GTPCFieldOffsetZ " << FieldOffsetZ << " cm" << endl;
 }
 
 ClassImp(R3BGTPCGeoPar);

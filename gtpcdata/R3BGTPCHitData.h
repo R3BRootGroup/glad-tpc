@@ -25,14 +25,13 @@ class R3BGTPCHitData : public TObject
     R3BGTPCHitData();
 
     /** Standard Constructor
-    *@param x          X position of the hit in the gas
-    *@param y          Y position of the hit in the gas
-    *@param z          Z position of the hit in the gas
-    *@param longWidth  Longitudinal width of electron cloud
-    *@param energy     Total energy atributed to the hit
+     *@param x          X position of the hit in the gas
+     *@param y          Y position of the hit in the gas
+     *@param z          Z position of the hit in the gas
+     *@param longWidth  Longitudinal width of electron cloud
+     *@param energy     Total energy atributed to the hit
      **/
-    R3BGTPCHitData(Double_t x, Double_t y, Double_t z,
-                   Double_t longWidth, Double_t energy);
+    R3BGTPCHitData(Double_t x, Double_t y, Double_t z, Double_t longWidth, Double_t energy);
 
     // Destructor
     virtual ~R3BGTPCHitData() {}

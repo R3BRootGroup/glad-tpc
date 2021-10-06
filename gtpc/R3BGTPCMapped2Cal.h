@@ -56,20 +56,19 @@ class R3BGTPCMapped2Cal : public FairTask
   private:
     void SetParameter();
 
-    //TArrayF* fCalParams;
+    // TArrayF* fCalParams;
     // or maybe
-    //Double_t fCalParam;
+    // Double_t fCalParam;
 
     R3BGTPCCalPar* fCal_Par;         /**< Parameter container. >*/
     TClonesArray* fGTPCMappedDataCA; /**< Array with GTPC Mapped- input data. >*/
     TClonesArray* fGTPCCalDataCA;    /**< Array with GTPC Cal- output data. >*/
 
-    Bool_t fOnline;            // Selector for online data storage
+    Bool_t fOnline; // Selector for online data storage
 
     /** Private method AddCalData **/
     //** Adds a GTPCCalData to the CalCollection
-    R3BGTPCCalData* AddCalData(UShort_t padId,
-                               std::vector<UShort_t> adc_calib);
+    R3BGTPCCalData* AddCalData(UShort_t padId, std::vector<UShort_t> adc_calib);
 
     ClassDef(R3BGTPCMapped2Cal, 1)
 };

@@ -19,8 +19,7 @@ R3BGTPCCalData::R3BGTPCCalData()
 {
 }
 
-R3BGTPCCalData::R3BGTPCCalData(UShort_t padId,
-                               std::vector<UShort_t>  adc)
+R3BGTPCCalData::R3BGTPCCalData(UShort_t padId, std::vector<UShort_t> adc)
     : fPadId(padId)
     , fADC(adc)
 {

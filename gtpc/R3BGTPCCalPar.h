@@ -59,7 +59,7 @@ class R3BGTPCCalPar : public FairParGenericSet
 
   private:
     TArrayF* fCalParams; /*< Calibration Parameters>*/
-    Int_t fNumParams;     /*< number of params>*/
+    Int_t fNumParams;    /*< number of params>*/
 
     const R3BGTPCCalPar& operator=(const R3BGTPCCalPar&);
     R3BGTPCCalPar(const R3BGTPCCalPar&);

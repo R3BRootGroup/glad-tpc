@@ -11,22 +11,22 @@
  * or submit itself to any jurisdiction.                                      *
  ******************************************************************************/
 
-#include "TClonesArray.h"
 #include "FairLogger.h"
 #include "FairRootManager.h"
 #include "FairRunAna.h"
 #include "FairRuntimeDb.h"
+#include "TClonesArray.h"
 
 #include "R3BGTPC.h"
-#include "R3BGTPCCalData.h"
-#include "R3BGTPCHitPar.h"
 #include "R3BGTPCCal2Hit.h"
+#include "R3BGTPCCalData.h"
 #include "R3BGTPCHitData.h"
+#include "R3BGTPCHitPar.h"
 
 // R3BGTPCCal2Hit: Constructor
 R3BGTPCCal2Hit::R3BGTPCCal2Hit()
     : FairTask("R3B GTPC Cal to Hit")
-//    , fHitParams(NULL)
+    //    , fHitParams(NULL)
     , fHit_Par(NULL)
     , fCalCA(NULL)
     , fHitCA(NULL)
@@ -45,7 +45,7 @@ R3BGTPCCal2Hit::~R3BGTPCCal2Hit()
 
 void R3BGTPCCal2Hit::SetParContainers()
 {
-  // Reading GTPCHitPar from FairRuntimeDb
+    // Reading GTPCHitPar from FairRuntimeDb
     FairRuntimeDb* rtdb = FairRuntimeDb::instance();
     if (!rtdb)
     {
@@ -66,10 +66,10 @@ void R3BGTPCCal2Hit::SetParContainers()
 void R3BGTPCCal2Hit::SetParameter()
 {
     //--- Parameter Container ---
-/*
-    fHitParams = new TArrayF();
-    fHitParams = fHit_Par->GetHitParams(); // Array with the Hit parameters
-*/
+    /*
+        fHitParams = new TArrayF();
+        fHitParams = fHit_Par->GetHitParams(); // Array with the Hit parameters
+    */
 }
 
 InitStatus R3BGTPCCal2Hit::Init()
@@ -94,7 +94,7 @@ InitStatus R3BGTPCCal2Hit::Init()
     }
     else
     {
-      ioManager->Register("GTPCHitData", "GTPC Hit", fHitCA, kFALSE);
+        ioManager->Register("GTPCHitData", "GTPC Hit", fHitCA, kFALSE);
     }
 
     SetParameter();
@@ -106,7 +106,6 @@ InitStatus R3BGTPCCal2Hit::ReInit()
     SetParContainers();
     return kSUCCESS;
 }
-
 
 void R3BGTPCCal2Hit::Exec(Option_t* opt)
 {
@@ -123,7 +122,7 @@ void R3BGTPCCal2Hit::Exec(Option_t* opt)
     if (!nCals)
         return;
 
-    Double_t x=0,y=0,z=0,lW=0,ene=0;
+    Double_t x = 0, y = 0, z = 0, lW = 0, ene = 0;
 
     R3BGTPCCalData** calData;
     calData = new R3BGTPCCalData*[nCals];
@@ -133,10 +132,10 @@ void R3BGTPCCal2Hit::Exec(Option_t* opt)
         calData[i] = (R3BGTPCCalData*)(fCalCA->At(i));
         UShort_t pad = calData[i]->GetPadId();
         std::vector<UShort_t> adc_cal = calData[i]->GetADC();
-        //just a null hit at the moment, reconstruction should be included here
+        // just a null hit at the moment, reconstruction should be included here
     }
 
-    AddHitData(x,y,z,lW,ene);
+    AddHitData(x, y, z, lW, ene);
 
     if (calData)
         delete calData;
@@ -152,17 +151,12 @@ void R3BGTPCCal2Hit::Reset()
         fHitCA->Clear();
 }
 
-
-R3BGTPCHitData* R3BGTPCCal2Hit::AddHitData(Double_t x,
-                       Double_t y,
-                       Double_t z,
-                       Double_t longWidth,
-                       Double_t energy)
+R3BGTPCHitData* R3BGTPCCal2Hit::AddHitData(Double_t x, Double_t y, Double_t z, Double_t longWidth, Double_t energy)
 {
     // It fills the R3BGTPCCalData
     TClonesArray& clref = *fHitCA;
     Int_t size = clref.GetEntriesFast();
-    return new (clref[size]) R3BGTPCHitData(x,y,z,longWidth,energy);
+    return new (clref[size]) R3BGTPCHitData(x, y, z, longWidth, energy);
 }
 
 ClassImp(R3BGTPCCal2Hit)

@@ -13,10 +13,10 @@
 #ifndef R3BGTPCELECPAR_H
 #define R3BGTPCELECPAR_H 1
 
+#include "FairLogger.h"
+#include "FairParGenericSet.h"
 #include "TMath.h"
 #include "TObject.h"
-#include "FairParGenericSet.h"
-#include "FairLogger.h"
 
 using namespace std;
 
@@ -27,8 +27,8 @@ class R3BGTPCElecPar : public FairParGenericSet
 
   public:
     R3BGTPCElecPar(const char* name = "GTPCElecPar",
-                        const char* title = "GTPC Elecronic Parameters",
-                        const char* context = "GTPCElecParContext");
+                   const char* title = "GTPC Elecronic Parameters",
+                   const char* context = "GTPCElecParContext");
 
     ~R3BGTPCElecPar();
 
@@ -53,12 +53,12 @@ class R3BGTPCElecPar : public FairParGenericSet
     const Double_t GetShapingTime() { return ShapingTime; }
     const Double_t GetThreshold() { return Threshold; }
 
-    void SetGain(Double_t value) {Gain=value;}
-    void SetTheta(Double_t value) {Theta=value;}
-    void SetNoiseRMS(Double_t value) {NoiseRMS=value;}
-    void SetTimeBinSize(Double_t value) {TimeBinSize=value;}
-    void SetShapingTime(Double_t value) {ShapingTime=value;}
-    void SetThreshold(Double_t value) {Threshold=value;}
+    void SetGain(Double_t value) { Gain = value; }
+    void SetTheta(Double_t value) { Theta = value; }
+    void SetNoiseRMS(Double_t value) { NoiseRMS = value; }
+    void SetTimeBinSize(Double_t value) { TimeBinSize = value; }
+    void SetShapingTime(Double_t value) { ShapingTime = value; }
+    void SetThreshold(Double_t value) { Threshold = value; }
 
   private:
     Double_t Gain;

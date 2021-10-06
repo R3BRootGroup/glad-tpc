@@ -18,14 +18,13 @@
 #define R3BGTPCLANGEVIN_H
 
 #include "FairTask.h"
+#include "R3BGTPCElecPar.h"
+#include "R3BGTPCGasPar.h"
+#include "R3BGTPCGeoPar.h"
 #include "R3BGTPCPoint.h"
 #include "R3BGTPCProjPoint.h"
 #include "TClonesArray.h"
 #include "TVirtualMC.h"
-#include "R3BGTPCGeoPar.h"
-#include "R3BGTPCGasPar.h"
-#include "R3BGTPCElecPar.h"
-
 
 /**
  * GTPC drift calculation using Langevin equation task
@@ -88,8 +87,8 @@ class R3BGTPCLangevin : public FairTask
     Double_t fSizeOfVirtualPad; //!< Number of virtual pad division per cm (default 1)
     Int_t fDetectorType;        //!< Detector type: 1 for prototype, 2 for FullBeamIn, 3 for FullBeamOut
 
-    R3BGTPCGeoPar* fGTPCGeoPar; //!< Geometry parameter container
-    R3BGTPCGasPar* fGTPCGasPar; //!< Gas parameter container
+    R3BGTPCGeoPar* fGTPCGeoPar;   //!< Geometry parameter container
+    R3BGTPCGasPar* fGTPCGasPar;   //!< Gas parameter container
     R3BGTPCElecPar* fGTPCElecPar; //!< Electronic parameter container
 
     ClassDef(R3BGTPCLangevin, 1)

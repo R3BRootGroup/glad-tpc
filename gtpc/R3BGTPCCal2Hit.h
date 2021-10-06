@@ -15,9 +15,9 @@
 #define R3BGTPCCAL2HIT_H
 
 #include "FairTask.h"
+#include "R3BGTPCCalData.h"
 #include "R3BGTPCHitData.h"
 #include "R3BGTPCHitPar.h"
-#include "R3BGTPCCalData.h"
 
 class TClonesArray;
 class R3BGTPCHitPar;
@@ -55,23 +55,19 @@ class R3BGTPCCal2Hit : public FairTask
   private:
     void SetParameter();
 
-    //TArrayF* fHitParams;
+    // TArrayF* fHitParams;
     // or maybe
-    //Double_t fHitParam;
+    // Double_t fHitParam;
 
-    R3BGTPCHitPar* fHit_Par;         /**< Parameter container. >*/
+    R3BGTPCHitPar* fHit_Par; /**< Parameter container. >*/
     TClonesArray* fCalCA;
     TClonesArray* fHitCA;
 
-    Bool_t fOnline;              // Selector for online data storage
+    Bool_t fOnline; // Selector for online data storage
 
     /** Private method AddHitData**/
     //** Adds a Hit to the HitCollection
-    R3BGTPCHitData* AddHitData(Double_t x,
-                           Double_t y,
-                           Double_t z,
-                           Double_t longWidth,
-                           Double_t energy);
+    R3BGTPCHitData* AddHitData(Double_t x, Double_t y, Double_t z, Double_t longWidth, Double_t energy);
 
     ClassDef(R3BGTPCCal2Hit, 1);
 };

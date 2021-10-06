@@ -22,40 +22,35 @@
 #include <iostream>
 
 // ---- Standard Constructor ----------------------------------------------
-R3BGTPCElecPar::R3BGTPCElecPar(const char* name,
-                            const char* title, const char* context)
+R3BGTPCElecPar::R3BGTPCElecPar(const char* name, const char* title, const char* context)
     : FairParGenericSet(name, title, context)
 {
 }
 
 // ----  Destructor -------------------------------------------------------
-R3BGTPCElecPar::~R3BGTPCElecPar() {
-    clear();
-  }
+R3BGTPCElecPar::~R3BGTPCElecPar() { clear(); }
 
+// ----  Method clear ----------------------------------------------------------
+void R3BGTPCElecPar::clear()
+{
+    status = kFALSE;
+    resetInputVersions();
+}
 
-  // ----  Method clear ----------------------------------------------------------
-  void R3BGTPCElecPar::clear()
-  {
-      status = kFALSE;
-      resetInputVersions();
-  }
-
-
-  // ----  Method putParams ------------------------------------------------------
-  void R3BGTPCElecPar::putParams(FairParamList* list)
-  {
-      LOG(INFO) << "R3BGTPCElecPar::putParams() called";
-      if (!list)
-      {
-          return;
-      }
-      list->add("GTPCGain", Gain);
-      list->add("GTPCTheta", Theta);
-      list->add("GTPCNoiseRMS", NoiseRMS);
-      list->add("GTPCTimeBinSize", TimeBinSize);
-      list->add("GTPCShapingTime", ShapingTime);
-      list->add("GTPCThreshold", Threshold);
+// ----  Method putParams ------------------------------------------------------
+void R3BGTPCElecPar::putParams(FairParamList* list)
+{
+    LOG(INFO) << "R3BGTPCElecPar::putParams() called";
+    if (!list)
+    {
+        return;
+    }
+    list->add("GTPCGain", Gain);
+    list->add("GTPCTheta", Theta);
+    list->add("GTPCNoiseRMS", NoiseRMS);
+    list->add("GTPCTimeBinSize", TimeBinSize);
+    list->add("GTPCShapingTime", ShapingTime);
+    list->add("GTPCThreshold", Threshold);
 }
 
 // ----  Method getParams ------------------------------------------------------
@@ -99,7 +94,6 @@ Bool_t R3BGTPCElecPar::getParams(FairParamList* list)
     return kTRUE;
 }
 
-
 // ----  Method print ----------------------------------------------------------
 void R3BGTPCElecPar::print() { printParams(); }
 
@@ -109,12 +103,11 @@ void R3BGTPCElecPar::printParams()
     LOG(INFO) << "R3BGTPCElecPar: GTPC Elec Parameters:";
 
     LOG(INFO) << "GTPCGain " << Gain << ",  "
-    << "GTPCTheta (Polya) " << Theta << ",  "
-    << "GTPCNoiseRMS " << NoiseRMS << " e- RMS,  "
-    << "GTPCTimeBinSize " << TimeBinSize << " ns,  "
-    << "GTPCShapingTime " << ShapingTime << " ns"
-    << "GTPCThreshold " << Threshold << " times noise rms"<< endl;
-  
+              << "GTPCTheta (Polya) " << Theta << ",  "
+              << "GTPCNoiseRMS " << NoiseRMS << " e- RMS,  "
+              << "GTPCTimeBinSize " << TimeBinSize << " ns,  "
+              << "GTPCShapingTime " << ShapingTime << " ns"
+              << "GTPCThreshold " << Threshold << " times noise rms" << endl;
 }
 
 ClassImp(R3BGTPCElecPar);

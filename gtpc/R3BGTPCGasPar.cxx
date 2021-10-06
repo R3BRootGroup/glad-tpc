@@ -22,39 +22,34 @@
 #include <iostream>
 
 // ---- Standard Constructor ----------------------------------------------
-R3BGTPCGasPar::R3BGTPCGasPar(const char* name,
-                            const char* title, const char* context)
+R3BGTPCGasPar::R3BGTPCGasPar(const char* name, const char* title, const char* context)
     : FairParGenericSet(name, title, context)
 {
 }
 
 // ----  Destructor -------------------------------------------------------
-R3BGTPCGasPar::~R3BGTPCGasPar() {
-    clear();
-  }
+R3BGTPCGasPar::~R3BGTPCGasPar() { clear(); }
 
+// ----  Method clear ----------------------------------------------------------
+void R3BGTPCGasPar::clear()
+{
+    status = kFALSE;
+    resetInputVersions();
+}
 
-  // ----  Method clear ----------------------------------------------------------
-  void R3BGTPCGasPar::clear()
-  {
-      status = kFALSE;
-      resetInputVersions();
-  }
-
-
-  // ----  Method putParams ------------------------------------------------------
-  void R3BGTPCGasPar::putParams(FairParamList* list)
-  {
-      LOG(INFO) << "R3BGTPCGasPar::putParams() called";
-      if (!list)
-      {
-          return;
-      }
-      list->add("GTPCLongDiff", LongDiff);
-      list->add("GTPCTransDiff", TransDiff);
-      list->add("GTPCFanoFactor", FanoFactor);
-      list->add("GTPCEIonization", EIonization);
-      list->add("GTPCDriftVelocity", DriftVelocity);
+// ----  Method putParams ------------------------------------------------------
+void R3BGTPCGasPar::putParams(FairParamList* list)
+{
+    LOG(INFO) << "R3BGTPCGasPar::putParams() called";
+    if (!list)
+    {
+        return;
+    }
+    list->add("GTPCLongDiff", LongDiff);
+    list->add("GTPCTransDiff", TransDiff);
+    list->add("GTPCFanoFactor", FanoFactor);
+    list->add("GTPCEIonization", EIonization);
+    list->add("GTPCDriftVelocity", DriftVelocity);
 }
 
 // ----  Method getParams ------------------------------------------------------
@@ -93,7 +88,6 @@ Bool_t R3BGTPCGasPar::getParams(FairParamList* list)
     return kTRUE;
 }
 
-
 // ----  Method print ----------------------------------------------------------
 void R3BGTPCGasPar::print() { printParams(); }
 
@@ -102,12 +96,11 @@ void R3BGTPCGasPar::printParams()
 {
     LOG(INFO) << "R3BGTPCGasPar: GTPC Gas Parameters:";
 
-    LOG(INFO) <<  "GTPCLongDiff " << LongDiff << " cm^2/ns,  "
-    << "GTPCTransDiff " << TransDiff << " cm^2/ns" << endl;
+    LOG(INFO) << "GTPCLongDiff " << LongDiff << " cm^2/ns,  "
+              << "GTPCTransDiff " << TransDiff << " cm^2/ns" << endl;
     LOG(INFO) << "GTPCFanoFactor " << FanoFactor << ",  "
-    << "GTPCEIonization " << EIonization << " GeV,  "
-    << "GTPCDriftVelocity " << DriftVelocity << " cm/ns,  "
-    << endl;
+              << "GTPCEIonization " << EIonization << " GeV,  "
+              << "GTPCDriftVelocity " << DriftVelocity << " cm/ns,  " << endl;
 }
 
 ClassImp(R3BGTPCGasPar);

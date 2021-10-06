@@ -28,7 +28,9 @@ using namespace std;
 
 R3BGTPCLangevinTest::R3BGTPCLangevinTest()
     : FairTask("R3BGTPCLangevinTest")
-    ,fGTPCGeoPar(NULL),fGTPCGasPar(NULL),fGTPCElecPar(NULL)
+    , fGTPCGeoPar(NULL)
+    , fGTPCGasPar(NULL)
+    , fGTPCElecPar(NULL)
 {
     // ALL UNITS IN cm, ns, V/cm, Tesla and GeV
     fEIonization = 15.e-9;           // [GeV] NOTUSED
@@ -65,19 +67,22 @@ void R3BGTPCLangevinTest::SetParContainers()
         return;
     }
     fGTPCGeoPar = (R3BGTPCGeoPar*)rtdb->getContainer("GTPCGeoPar");
-    if (!fGTPCGeoPar) {
-      LOG(FATAL) << "R3BGTPCLangevinTest::SetParContainers: No R3BGTPCGeoPar";
-      return;
+    if (!fGTPCGeoPar)
+    {
+        LOG(FATAL) << "R3BGTPCLangevinTest::SetParContainers: No R3BGTPCGeoPar";
+        return;
     }
     fGTPCGasPar = (R3BGTPCGasPar*)rtdb->getContainer("GTPCGasPar");
-      if (!fGTPCGasPar) {
-      LOG(FATAL) << "R3BGTPCLangevinTest::SetParContainers: No R3BGTPCGasPar";
-      return;
+    if (!fGTPCGasPar)
+    {
+        LOG(FATAL) << "R3BGTPCLangevinTest::SetParContainers: No R3BGTPCGasPar";
+        return;
     }
     fGTPCElecPar = (R3BGTPCElecPar*)rtdb->getContainer("GTPCElecPar");
-      if (!fGTPCElecPar) {
-      LOG(FATAL) << "R3BGTPCLangevinTest::SetParContainers: No R3BGTPCElecPar";
-      return;
+    if (!fGTPCElecPar)
+    {
+        LOG(FATAL) << "R3BGTPCLangevinTest::SetParContainers: No R3BGTPCElecPar";
+        return;
     }
 }
 
@@ -117,13 +122,11 @@ InitStatus R3BGTPCLangevinTest::Init()
     return kSUCCESS;
 }
 
-
 InitStatus R3BGTPCLangevinTest::ReInit()
 {
     SetParContainers();
     return kSUCCESS;
 }
-
 
 void R3BGTPCLangevinTest::SetDriftParameters(Double_t ion,
                                              Double_t driftv,

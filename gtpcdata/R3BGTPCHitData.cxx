@@ -22,8 +22,7 @@ R3BGTPCHitData::R3BGTPCHitData()
 {
 }
 
-R3BGTPCHitData::R3BGTPCHitData(Double_t x, Double_t y, Double_t z,
-               Double_t longWidth, Double_t energy)
+R3BGTPCHitData::R3BGTPCHitData(Double_t x, Double_t y, Double_t z, Double_t longWidth, Double_t energy)
     : fX(x)
     , fY(y)
     , fZ(z)

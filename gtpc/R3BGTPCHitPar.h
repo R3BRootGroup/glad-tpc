@@ -59,7 +59,7 @@ class R3BGTPCHitPar : public FairParGenericSet
 
   private:
     TArrayF* fHitParams; /*< Cal 2 Hit Parameters>*/
-    Int_t fNumParams;     /*< number of params>*/
+    Int_t fNumParams;    /*< number of params>*/
 
     const R3BGTPCHitPar& operator=(const R3BGTPCHitPar&);
     R3BGTPCHitPar(const R3BGTPCHitPar&);

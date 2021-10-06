@@ -12,11 +12,11 @@
  ******************************************************************************/
 
 #include "R3BGTPCContFact.h"
-#include "FairRuntimeDb.h"
-#include "R3BGTPCGeoPar.h"
-#include "R3BGTPCGasPar.h"
-#include "R3BGTPCElecPar.h"
 #include "FairLogger.h"
+#include "FairRuntimeDb.h"
+#include "R3BGTPCElecPar.h"
+#include "R3BGTPCGasPar.h"
+#include "R3BGTPCGeoPar.h"
 
 static R3BGTPCContFact gR3BGTPCContFact;
 
@@ -46,7 +46,6 @@ void R3BGTPCContFact::setAllContainers()
     FairContainer* p3 = new FairContainer("GTPCElecPar", "GTPC Electronic Parameters", "GTPCElecParContext");
     p3->addContext("GTPCElecParContext");
     containers->Add(p3);
-
 }
 
 FairParSet* R3BGTPCContFact::createContainer(FairContainer* c)

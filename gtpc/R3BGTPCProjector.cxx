@@ -61,34 +61,37 @@ void R3BGTPCProjector::SetParContainers()
     }
 
     fGTPCGeoPar = (R3BGTPCGeoPar*)rtdb->getContainer("R3BGTPCGeoPar");
-    if (!fGTPCGeoPar) {
-      LOG(FATAL) << "R3BGTPCLangevin::SetParContainers: No R3BGTPCGeoPar";
-      return;
+    if (!fGTPCGeoPar)
+    {
+        LOG(FATAL) << "R3BGTPCLangevin::SetParContainers: No R3BGTPCGeoPar";
+        return;
     }
     fGTPCGasPar = (R3BGTPCGasPar*)rtdb->getContainer("R3BGTPCGasPar");
-    if (!fGTPCGasPar) {
-      LOG(FATAL) << "R3BGTPCLangevin::SetParContainers: No R3BGTPCGasPar";
-      return;
+    if (!fGTPCGasPar)
+    {
+        LOG(FATAL) << "R3BGTPCLangevin::SetParContainers: No R3BGTPCGasPar";
+        return;
     }
     fGTPCElecPar = (R3BGTPCElecPar*)rtdb->getContainer("R3BGTPCElecPar");
-    if (!fGTPCElecPar) {
-      LOG(FATAL) << "R3BGTPCLangevin::SetParContainers: No R3BGTPCElecPar";
-      return;
+    if (!fGTPCElecPar)
+    {
+        LOG(FATAL) << "R3BGTPCLangevin::SetParContainers: No R3BGTPCElecPar";
+        return;
     }
 }
 
 void R3BGTPCProjector::SetParameter()
 {
-  fEIonization = fGTPCGasPar->GetEIonization();     // [GeV]-> typical value for a gas detector tens of eV
-  fDriftVelocity = fGTPCGasPar->GetDriftVelocity(); // [cm/ns]-> Minos TPC with a Efield=152 V/cm
-  fTransDiff = fGTPCGasPar->GetTransDiff();         // [cm^2/ns]?
-  fLongDiff = fGTPCGasPar->GetLongDiff();           // [cm^2/ns]?
-  fFanoFactor = fGTPCGasPar->GetFanoFactor();
-  fSizeOfVirtualPad = fGTPCGeoPar->GetPadSize(); // 1 means pads of 1cm^2, 10 means pads of 1mm^2, ...
-  fHalfSizeTPC_X = fGTPCGeoPar->GetActiveRegionx() / 2.;
-  fHalfSizeTPC_Y = fGTPCGeoPar->GetActiveRegiony() / 2.;
-  fHalfSizeTPC_Z = fGTPCGeoPar->GetActiveRegionz() / 2.;
-  fDetectorType = fGTPCGeoPar->GetDetectorType();
+    fEIonization = fGTPCGasPar->GetEIonization();     // [GeV]-> typical value for a gas detector tens of eV
+    fDriftVelocity = fGTPCGasPar->GetDriftVelocity(); // [cm/ns]-> Minos TPC with a Efield=152 V/cm
+    fTransDiff = fGTPCGasPar->GetTransDiff();         // [cm^2/ns]?
+    fLongDiff = fGTPCGasPar->GetLongDiff();           // [cm^2/ns]?
+    fFanoFactor = fGTPCGasPar->GetFanoFactor();
+    fSizeOfVirtualPad = fGTPCGeoPar->GetPadSize(); // 1 means pads of 1cm^2, 10 means pads of 1mm^2, ...
+    fHalfSizeTPC_X = fGTPCGeoPar->GetActiveRegionx() / 2.;
+    fHalfSizeTPC_Y = fGTPCGeoPar->GetActiveRegiony() / 2.;
+    fHalfSizeTPC_Z = fGTPCGeoPar->GetActiveRegionz() / 2.;
+    fDetectorType = fGTPCGeoPar->GetDetectorType();
 }
 
 InitStatus R3BGTPCProjector::Init()
@@ -274,7 +277,7 @@ void R3BGTPCProjector::Exec(Option_t*)
             if (projX > XOffset + 2 * fHalfSizeTPC_X)
                 projX = XOffset + 2 * fHalfSizeTPC_X;
             Int_t padID;
-            if (fDetectorType==1)
+            if (fDetectorType == 1)
                 padID = (44) * (Int_t)((projZ - ZOffset) / 0.2) + (Int_t)((projX - XOffset) / 0.2); // 2mm
             else
                 padID = (2 * fHalfSizeTPC_X * fSizeOfVirtualPad) * (Int_t)((projZ - ZOffset) * fSizeOfVirtualPad) +

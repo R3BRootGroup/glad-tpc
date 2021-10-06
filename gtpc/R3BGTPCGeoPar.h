@@ -13,10 +13,10 @@
 #ifndef R3BGTPCGEOPAR_H
 #define R3BGTPCGEOPAR_H 1
 
+#include "FairLogger.h"
+#include "FairParGenericSet.h"
 #include "TMath.h"
 #include "TObject.h"
-#include "FairParGenericSet.h"
-#include "FairLogger.h"
 
 using namespace std;
 
@@ -27,8 +27,8 @@ class R3BGTPCGeoPar : public FairParGenericSet
 
   public:
     R3BGTPCGeoPar(const char* name = "GTPCGeoPar",
-                        const char* title = "GTPC Geometric Parameters",
-                        const char* context = "GTPCGeoParContext");
+                  const char* title = "GTPC Geometric Parameters",
+                  const char* context = "GTPCGeoParContext");
 
     ~R3BGTPCGeoPar();
 
@@ -77,35 +77,35 @@ class R3BGTPCGeoPar : public FairParGenericSet
     const Int_t GetDetectorType() { return DetectorType; }
 
     // Target__________________________________________________________________________
-    void SetTargetLength(Double_t value) {TargetLength=value;}
-    void SetTargetRadius(Double_t value) {TargetRadius=value;}
-    void SetTargetAngle(Double_t value) {TargetAngle=value;}
-    void SetTargetOffsetX(Double_t value) {TargetOffsetX=value;}
-    void SetTargetOffsetY(Double_t value) {TargetOffsetY=value;}
-    void SetTargetOffsetZ(Double_t value) {TargetOffsetZ=value;}
+    void SetTargetLength(Double_t value) { TargetLength = value; }
+    void SetTargetRadius(Double_t value) { TargetRadius = value; }
+    void SetTargetAngle(Double_t value) { TargetAngle = value; }
+    void SetTargetOffsetX(Double_t value) { TargetOffsetX = value; }
+    void SetTargetOffsetY(Double_t value) { TargetOffsetY = value; }
+    void SetTargetOffsetZ(Double_t value) { TargetOffsetZ = value; }
     // TPC_____________________________________________________________________________
-    void SetActiveRegionx(Double_t value) {ActiveRegionx=value;}
-    void SetActiveRegiony(Double_t value) {ActiveRegiony=value;}
-    void SetActiveRegionz(Double_t value) {ActiveRegionz=value;}
-    void SetTPCLx(Double_t value) {TPCLx=value;}
-    void SetTPCLy(Double_t value) {TPCLy=value;}
-    void SetTPCLz(Double_t value) {TPCLz=value;}
-    void SetFrameThickness(Double_t value) {FrameThickness=value;}
-    void SetWindowx(Double_t value) {Windowx=value;}
-    void SetWindowy(Double_t value) {Windowy=value;}
-    void SetWindowz(Double_t value) {Windowz=value;}
-    void SetPadSize(Int_t value) {PadSize=value;}
+    void SetActiveRegionx(Double_t value) { ActiveRegionx = value; }
+    void SetActiveRegiony(Double_t value) { ActiveRegiony = value; }
+    void SetActiveRegionz(Double_t value) { ActiveRegionz = value; }
+    void SetTPCLx(Double_t value) { TPCLx = value; }
+    void SetTPCLy(Double_t value) { TPCLy = value; }
+    void SetTPCLz(Double_t value) { TPCLz = value; }
+    void SetFrameThickness(Double_t value) { FrameThickness = value; }
+    void SetWindowx(Double_t value) { Windowx = value; }
+    void SetWindowy(Double_t value) { Windowy = value; }
+    void SetWindowz(Double_t value) { Windowz = value; }
+    void SetPadSize(Int_t value) { PadSize = value; }
 
     // GLAD____________________________________________________________________________
-    void SetFieldAngle(Double_t value) {FieldAngle=value;}
-    void SetFieldOffsetX(Double_t value) {FieldOffsetX=value;}
-    void SetFieldOffsetY(Double_t value) {FieldOffsetY=value;}
-    void SetFieldOffsetZ(Double_t value) {FieldOffsetZ=value;}
-    void SetGladAngle(Double_t value) {GladAngle=value;}
-    void SetGladOffsetX(Double_t value) {GladOffsetX=value;}
-    void SetGladOffsetY(Double_t value) {GladOffsetY=value;}
-    void SetGladOffsetZ(Double_t value) {GladOffsetZ=value;}
-    void SetDetectorType(Int_t value) {DetectorType=value;}
+    void SetFieldAngle(Double_t value) { FieldAngle = value; }
+    void SetFieldOffsetX(Double_t value) { FieldOffsetX = value; }
+    void SetFieldOffsetY(Double_t value) { FieldOffsetY = value; }
+    void SetFieldOffsetZ(Double_t value) { FieldOffsetZ = value; }
+    void SetGladAngle(Double_t value) { GladAngle = value; }
+    void SetGladOffsetX(Double_t value) { GladOffsetX = value; }
+    void SetGladOffsetY(Double_t value) { GladOffsetY = value; }
+    void SetGladOffsetZ(Double_t value) { GladOffsetZ = value; }
+    void SetDetectorType(Int_t value) { DetectorType = value; }
 
   private:
     Double_t ActiveRegionx;
@@ -123,7 +123,7 @@ class R3BGTPCGeoPar : public FairParGenericSet
     Double_t GladOffsetX, GladOffsetY, GladOffsetZ;
     Double_t FieldAngle;
     Double_t FieldOffsetX, FieldOffsetY, FieldOffsetZ;
-    Int_t DetectorType;   //1 for prototype, 2 for FullBeamIn, 3 for FullBeamOut
+    Int_t DetectorType; // 1 for prototype, 2 for FullBeamIn, 3 for FullBeamOut
 
     const R3BGTPCGeoPar& operator=(const R3BGTPCGeoPar&); /*< an assignment operator>*/
     R3BGTPCGeoPar(const R3BGTPCGeoPar&);                  /*< a copy constructor >*/

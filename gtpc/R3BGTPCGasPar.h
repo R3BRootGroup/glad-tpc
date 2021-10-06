@@ -13,10 +13,10 @@
 #ifndef R3BGTPCGASPAR_H
 #define R3BGTPCGASPAR_H 1
 
+#include "FairLogger.h"
+#include "FairParGenericSet.h"
 #include "TMath.h"
 #include "TObject.h"
-#include "FairParGenericSet.h"
-#include "FairLogger.h"
 
 using namespace std;
 
@@ -27,8 +27,8 @@ class R3BGTPCGasPar : public FairParGenericSet
 
   public:
     R3BGTPCGasPar(const char* name = "GTPCGasPar",
-                        const char* title = "GTPC Gas Parameters",
-                        const char* context = "GTPCGasParContext");
+                  const char* title = "GTPC Gas Parameters",
+                  const char* context = "GTPCGasParContext");
 
     ~R3BGTPCGasPar();
 
@@ -52,14 +52,14 @@ class R3BGTPCGasPar : public FairParGenericSet
     const Double_t GetEIonization() { return EIonization; }
     const Double_t GetDriftVelocity() { return DriftVelocity; }
 
-    void SetLongDiff(Double_t value) {LongDiff=value;}
-    void SetTransDiff(Double_t value) {TransDiff=value;}
-    void SetFanoFactor(Double_t value) {FanoFactor=value;}
-    void SetEIonization(Double_t value) {EIonization=value;}
-    void SetDriftVelocity(Double_t value) {DriftVelocity=value;}
+    void SetLongDiff(Double_t value) { LongDiff = value; }
+    void SetTransDiff(Double_t value) { TransDiff = value; }
+    void SetFanoFactor(Double_t value) { FanoFactor = value; }
+    void SetEIonization(Double_t value) { EIonization = value; }
+    void SetDriftVelocity(Double_t value) { DriftVelocity = value; }
 
   private:
-    Double_t LongDiff,TransDiff;
+    Double_t LongDiff, TransDiff;
     Double_t FanoFactor;
     Double_t EIonization;
     Double_t DriftVelocity;

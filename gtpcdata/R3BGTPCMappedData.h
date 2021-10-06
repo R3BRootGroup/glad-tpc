@@ -30,10 +30,7 @@ class R3BGTPCMappedData : public TObject
      *@param isValid              Data validity check
      *@param isPedestalSubtracted Pedestal subtraction flag
      **/
-    R3BGTPCMappedData(UShort_t padId,
-                      std::vector<UShort_t>  adc,
-                      Bool_t isValid,
-                      Bool_t isPedestalSubtracted);
+    R3BGTPCMappedData(UShort_t padId, std::vector<UShort_t> adc, Bool_t isValid, Bool_t isPedestalSubtracted);
 
     // Destructor
     virtual ~R3BGTPCMappedData() {}
@@ -42,14 +39,13 @@ class R3BGTPCMappedData : public TObject
     inline const UShort_t& GetPadId() const { return fPadId; }
     inline const std::vector<UShort_t>& GetADC() const { return fADC; }
     inline const Bool_t& IsValid() const { return fIsValid; }
-    inline const Bool_t& IsPedestalSubtracted() const
-    { return fIsPedestalSubtracted; }
+    inline const Bool_t& IsPedestalSubtracted() const { return fIsPedestalSubtracted; }
 
   protected:
-    UShort_t fPadId;                // Pad unique identifier
-    std::vector<UShort_t> fADC;     // ADC measurements, variable time bucket
-    Bool_t fIsValid;                // Valid check NEEDED??
-    Bool_t fIsPedestalSubtracted;   // Needed? REMOVE ME IF IT IS A CTE. CHARACTERISTIC OF DATA
+    UShort_t fPadId;              // Pad unique identifier
+    std::vector<UShort_t> fADC;   // ADC measurements, variable time bucket
+    Bool_t fIsValid;              // Valid check NEEDED??
+    Bool_t fIsPedestalSubtracted; // Needed? REMOVE ME IF IT IS A CTE. CHARACTERISTIC OF DATA
 
   public:
     ClassDef(R3BGTPCMappedData, 1)

@@ -11,11 +11,11 @@
  * or submit itself to any jurisdiction.                                      *
  ******************************************************************************/
 
-#include "TClonesArray.h"
 #include "FairLogger.h"
 #include "FairRootManager.h"
 #include "FairRunAna.h"
 #include "FairRuntimeDb.h"
+#include "TClonesArray.h"
 
 #include "R3BGTPC.h"
 #include "R3BGTPCCalData.h"
@@ -26,7 +26,7 @@
 // R3BGTPCMapped2Cal: Constructor
 R3BGTPCMapped2Cal::R3BGTPCMapped2Cal()
     : FairTask("R3B GTPC Calibrator")
-//    , fCalParams(NULL)
+    //    , fCalParams(NULL)
     , fCal_Par(NULL)
     , fGTPCMappedDataCA(NULL)
     , fGTPCCalDataCA(NULL)
@@ -66,10 +66,10 @@ void R3BGTPCMapped2Cal::SetParContainers()
 void R3BGTPCMapped2Cal::SetParameter()
 {
     //--- Parameter Container ---
-/*
-    fCalParams = new TArrayF();
-    fCalParams = fCal_Par->GetCalParams(); // Array with the Cal parameters
-*/
+    /*
+        fCalParams = new TArrayF();
+        fCalParams = fCal_Par->GetCalParams(); // Array with the Cal parameters
+    */
 }
 
 InitStatus R3BGTPCMapped2Cal::Init()
@@ -122,20 +122,18 @@ void R3BGTPCMapped2Cal::Exec(Option_t* option)
     if (!nHits)
         return;
 
-    UShort_t pad =0;
+    UShort_t pad = 0;
     std::vector<UShort_t> adc_cal;
 
     R3BGTPCMappedData** mappedData;
     mappedData = new R3BGTPCMappedData*[nHits];
-
 
     for (Int_t i = 0; i < nHits; i++)
     {
         mappedData[i] = (R3BGTPCMappedData*)(fGTPCMappedDataCA->At(i));
         pad = mappedData[i]->GetPadId();
         adc_cal = mappedData[i]->GetADC();
-        //just copying, calibrating should be included here
-
+        // just copying, calibrating should be included here
     }
     AddCalData(pad, adc_cal);
 
@@ -153,8 +151,7 @@ void R3BGTPCMapped2Cal::Reset()
         fGTPCCalDataCA->Clear();
 }
 
-R3BGTPCCalData* R3BGTPCMapped2Cal::AddCalData(UShort_t padId,
-                           std::vector<UShort_t> adc_calib)
+R3BGTPCCalData* R3BGTPCMapped2Cal::AddCalData(UShort_t padId, std::vector<UShort_t> adc_calib)
 {
     // It fills the R3BGTPCCalData
     TClonesArray& clref = *fGTPCCalDataCA;
