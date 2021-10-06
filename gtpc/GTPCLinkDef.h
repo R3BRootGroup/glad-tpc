@@ -27,14 +27,17 @@
 #pragma link C++ class R3BGTPCLangevinTest+;
 
 #pragma link C++ class R3BGTPCGeoPar+;
-//#pragma link C++ class R3BGLADTPCHitPar+;
-//#pragma link C++ class R3BGLADTPCCalPar+;
-//#pragma link C++ class R3BGLADTPCMappedPar+;
+#pragma link C++ class R3BGTPCGasPar+;
+#pragma link C++ class R3BGTPCElecPar+;
 
-//#pragma link C++ class R3BGLADTPCCal2Hit+;
-//#pragma link C++ class R3BGLADTPCMapped2Cal+;
+#pragma link C++ class R3BGTPCHitPar+;
+#pragma link C++ class R3BGTPCCalPar+;
+//#pragma link C++ class R3BGTPCMappedPar+;
 
-//#pragma link C++ class R3BGLADTPCCal2HitPar+;
-//#pragma link C++ class R3BGLADTPCMapped2CalPar+;
+#pragma link C++ class R3BGTPCCal2Hit+;
+#pragma link C++ class R3BGTPCMapped2Cal+;
+
+//#pragma link C++ class R3BGTPCCal2HitPar+;
+//#pragma link C++ class R3BGTPCMapped2CalPar+;
 
 #endif

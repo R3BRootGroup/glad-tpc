@@ -36,7 +36,7 @@ class R3BGTPCCalData : public TObject
 
     // Getters
     inline const UShort_t& GetPadId() const { return fPadId; }
-    inline const std::vector<UShort_t>& GetEnergy() const { return fADC; }
+    inline const std::vector<UShort_t>& GetADC() const { return fADC; }
 
   protected:
     UShort_t fPadId;          // Pad unique identifier

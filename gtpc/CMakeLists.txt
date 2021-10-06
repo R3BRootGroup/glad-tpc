@@ -46,11 +46,13 @@ R3BGTPCLangevin.cxx
 R3BGTPCLangevinTest.cxx
 R3BGTPCContFact.cxx
 R3BGTPCGeoPar.cxx
-#R3BGTPCHitPar.cxx
-#R3BGTPCCalPar.cxx
+R3BGTPCGasPar.cxx
+R3BGTPCElecPar.cxx
+R3BGTPCHitPar.cxx
+R3BGTPCCalPar.cxx
 #R3BGTPCMappedPar.cxx
-#R3BGTPCCal2Hit.cxx
-#R3BGTPCMapped2Cal.cxx
+R3BGTPCCal2Hit.cxx
+R3BGTPCMapped2Cal.cxx
 #R3BGTPCCal2HitPar.cxx
 #R3BGTPCMapped2CalPar.cxx
 )
