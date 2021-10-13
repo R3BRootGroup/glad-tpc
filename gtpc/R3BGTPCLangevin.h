@@ -18,6 +18,7 @@
 #define R3BGTPCLANGEVIN_H
 
 #include "FairTask.h"
+#include "R3BGTPCCalData.h"
 #include "R3BGTPCElecPar.h"
 #include "R3BGTPCGasPar.h"
 #include "R3BGTPCGeoPar.h"
@@ -32,6 +33,7 @@
  *
  * For each event, get the R3BGTPCPoints and determine the projection on the pad plane
  *   Input:  Branch GTPCPoints = TClonesArray("R3BGTPCPoint")
+ *   Output: Branch GTPCCalData = TClonesArray("R3BGTPCCalData")
  *   Output: Branch GTPCProjPoint = TClonesArray("R3BGTPCProjPoint")
  */
 
@@ -44,17 +46,11 @@ class R3BGTPCLangevin : public FairTask
     /** Destructor **/
     ~R3BGTPCLangevin();
 
-    /** Virtual method Exec **/
-    void Exec(Option_t*);
-
-    /** Set parameters -- To be removed when parameter containers are ready **/
-    void SetDriftParameters(Double_t ion, Double_t driftv, Double_t tDiff, Double_t lDiff, Double_t fanoFactor);
-
-    void SetSizeOfVirtualPad(Double_t size);
-
-  protected:
     /** Virtual method Init **/
     virtual InitStatus Init();
+
+    /** Virtual method Exec **/
+    void Exec(Option_t*);
 
     /** Virtual method ReInit **/
     virtual InitStatus ReInit();
@@ -67,10 +63,8 @@ class R3BGTPCLangevin : public FairTask
 
     void SetParameter();
 
-    TClonesArray* fGTPCPoints;
-    TClonesArray* fGTPCProjPoint;
-    // MCTrack- vertex information
-    TClonesArray* MCTrackCA;
+    void SetProjPointsAsOutput() { outputMode = 1; }
+    void SetCalDataAsOutput() { outputMode = 0; }
 
   private:
     // Mapping of  virtualPadID to ProjPoint object pointer
@@ -85,13 +79,25 @@ class R3BGTPCLangevin : public FairTask
     Double_t fHalfSizeTPC_Y;    //!< Half size Y of the TPC drift volume [cm]
     Double_t fHalfSizeTPC_Z;    //!< Half size Z of the TPC drift volume [cm]
     Double_t fSizeOfVirtualPad; //!< Number of virtual pad division per cm (default 1)
-    Int_t fDetectorType;        //!< Detector type: 1 for prototype, 2 for FullBeamIn, 3 for FullBeamOut
+    Double_t fDriftEField;      //!< Drift electric field [V/m]
+    Double_t fDriftTimeStep;    //!< Time Step between drift parameters calculation
+
+    Int_t fDetectorType; //!< Detector type: 1 for prototype, 2 for FullBeamIn, 3 for FullBeamOut
 
     R3BGTPCGeoPar* fGTPCGeoPar;   //!< Geometry parameter container
     R3BGTPCGasPar* fGTPCGasPar;   //!< Gas parameter container
     R3BGTPCElecPar* fGTPCElecPar; //!< Electronic parameter container
 
-    ClassDef(R3BGTPCLangevin, 1)
+    Int_t outputMode; //!< Selects Cal(0) or ProjPoint(1) as output level. Default 0
+    TClonesArray* fGTPCPointsCA;
+    TClonesArray* fGTPCCalDataCA;
+    TClonesArray* fGTPCProjPointCA;
+    // MCTrack- vertex information
+    TClonesArray* fMCTrackCA;
+
+    // R3BGTPCCalData* AddCalData();
+
+    ClassDef(R3BGTPCLangevin, 2)
 };
 
 #endif // R3BGTPCLANGEVIN_H

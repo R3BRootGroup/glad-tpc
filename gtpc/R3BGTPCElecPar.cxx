@@ -51,6 +51,8 @@ void R3BGTPCElecPar::putParams(FairParamList* list)
     list->add("GTPCTimeBinSize", TimeBinSize);
     list->add("GTPCShapingTime", ShapingTime);
     list->add("GTPCThreshold", Threshold);
+    list->add("GTPCDriftEField", DriftEField);
+    list->add("GTPCDriftTimeStep", DriftTimeStep);
 }
 
 // ----  Method getParams ------------------------------------------------------
@@ -91,6 +93,17 @@ Bool_t R3BGTPCElecPar::getParams(FairParamList* list)
         LOG(INFO) << "---Could not initialize GTPCThreshold";
         return kFALSE;
     }
+    if (!(list->fill("GTPCDriftEField", &DriftEField)))
+    {
+        LOG(INFO) << "---Could not initialize GTPCDriftEField";
+        return kFALSE;
+    }
+    if (!(list->fill("GTPCDriftTimeStep", &DriftTimeStep)))
+    {
+        LOG(INFO) << "---Could not initialize GTPCDriftTimeStep";
+        return kFALSE;
+    }
+
     return kTRUE;
 }
 
@@ -106,8 +119,10 @@ void R3BGTPCElecPar::printParams()
               << "GTPCTheta (Polya) " << Theta << ",  "
               << "GTPCNoiseRMS " << NoiseRMS << " e- RMS,  "
               << "GTPCTimeBinSize " << TimeBinSize << " ns,  "
-              << "GTPCShapingTime " << ShapingTime << " ns"
-              << "GTPCThreshold " << Threshold << " times noise rms" << endl;
+              << "GTPCShapingTime " << ShapingTime << " ns, "
+              << "GTPCThreshold " << Threshold << " times noise rms, "
+              << "GTPCDriftEField " << DriftEField << " V/m, "
+              << "GTPCDriftTimeStep " << DriftTimeStep << " ns" << endl;
 }
 
 ClassImp(R3BGTPCElecPar);

@@ -10,4 +10,6 @@ GTPCNoiseRMS:   Double_t  700.
 GTPCTimeBinSize:   Double_t  20.0
 GTPCShapingTime:   Double_t  300.
 GTPCThreshold:   Double_t  5.
+GTPCDriftEField:   Double_t  100000.
+GTPCDriftTimeStep:   Double_t  500.
 ##############################################################################

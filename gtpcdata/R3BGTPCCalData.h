@@ -26,7 +26,7 @@ class R3BGTPCCalData : public TObject
 
     /** Standard Constructor
      *@param padId               Crystal unique identifier
-     *@param adc                  Calibrated adc energies
+     *@param adc                 Calibrated adc energies
      **/
     R3BGTPCCalData(UShort_t padId, std::vector<UShort_t> adc);
 
@@ -36,6 +36,10 @@ class R3BGTPCCalData : public TObject
     // Getters
     inline const UShort_t& GetPadId() const { return fPadId; }
     inline const std::vector<UShort_t>& GetADC() const { return fADC; }
+
+    // Setter
+    void SetPadId(UShort_t padId) { fPadId = padId; }
+    void SetADC(Double_t time) { fADC.at(time)++; }
 
   protected:
     UShort_t fPadId;            // Pad unique identifier

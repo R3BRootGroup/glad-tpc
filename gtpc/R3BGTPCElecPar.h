@@ -52,6 +52,8 @@ class R3BGTPCElecPar : public FairParGenericSet
     const Double_t GetTimeBinSize() { return TimeBinSize; }
     const Double_t GetShapingTime() { return ShapingTime; }
     const Double_t GetThreshold() { return Threshold; }
+    const Double_t GetDriftEField() { return DriftEField; }
+    const Double_t GetDriftTimeStep() { return DriftTimeStep; }
 
     void SetGain(Double_t value) { Gain = value; }
     void SetTheta(Double_t value) { Theta = value; }
@@ -59,6 +61,8 @@ class R3BGTPCElecPar : public FairParGenericSet
     void SetTimeBinSize(Double_t value) { TimeBinSize = value; }
     void SetShapingTime(Double_t value) { ShapingTime = value; }
     void SetThreshold(Double_t value) { Threshold = value; }
+    void SetDriftEField(Double_t value) { DriftEField = value; }
+    void SetDriftTimeStep(Double_t value) { DriftTimeStep = value; }
 
   private:
     Double_t Gain;
@@ -67,6 +71,8 @@ class R3BGTPCElecPar : public FairParGenericSet
     Double_t TimeBinSize;
     Double_t ShapingTime;
     Double_t Threshold;
+    Double_t DriftEField;
+    Double_t DriftTimeStep;
 
     const R3BGTPCElecPar& operator=(const R3BGTPCElecPar&); /*< an assignment operator>*/
     R3BGTPCElecPar(const R3BGTPCElecPar&);                  /*< a copy constructor >*/
