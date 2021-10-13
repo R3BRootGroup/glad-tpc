@@ -227,7 +227,7 @@ void R3BGTPCGeoPar::printParams()
     LOG(INFO) << "GTPCWindowx " << Windowx << " cm,  "
               << "GTPCWindowy " << Windowy << " cm,  "
               << "GTPCWindowz " << Windowz << " cm,  "
-              << "GTPCPadSize " << PadSize << endl;
+              << "GTPCPadSize " << PadSize << " arbitrary units (virtual)" << endl;
     LOG(INFO) << "GTPCTargetRadius " << TargetRadius << " cm,  "
               << "GTPCTargetLength " << TargetLength << " cm,  "
               << "GTPCTargetAngle " << TargetAngle << " deg,  "

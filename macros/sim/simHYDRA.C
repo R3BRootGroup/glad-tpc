@@ -13,7 +13,7 @@ void simHYDRA(Int_t nEvents = 1, TString GEOTAG = "Prototype", TString generator
 {
     Bool_t storeTrajectories = kTRUE; //  To store particle trajectories
     Bool_t magnet = kTRUE;            //	Switch on/off the B field
-    Bool_t constBfield = kTRUE;       //	Constant magnetic field
+    Bool_t constBfield = kFALSE;       //	Constant magnetic field
     Bool_t printGLAD = kFALSE;        //	print the inner glad vessel and the HYDRA detector
     Float_t fieldScale = -1.;
 

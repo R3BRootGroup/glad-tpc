@@ -65,14 +65,14 @@ class R3BGTPCElecPar : public FairParGenericSet
     void SetDriftTimeStep(Double_t value) { DriftTimeStep = value; }
 
   private:
-    Double_t Gain;
-    Double_t Theta;
-    Double_t NoiseRMS;
-    Double_t TimeBinSize;
-    Double_t ShapingTime;
-    Double_t Threshold;
-    Double_t DriftEField;
-    Double_t DriftTimeStep;
+    Double_t Gain;          //
+    Double_t Theta;         //
+    Double_t NoiseRMS;      //
+    Double_t TimeBinSize;   // [ns]
+    Double_t ShapingTime;   //
+    Double_t Threshold;     //
+    Double_t DriftEField;   // [V/cm]
+    Double_t DriftTimeStep; // [ns]
 
     const R3BGTPCElecPar& operator=(const R3BGTPCElecPar&); /*< an assignment operator>*/
     R3BGTPCElecPar(const R3BGTPCElecPar&);                  /*< a copy constructor >*/

@@ -59,10 +59,10 @@ class R3BGTPCGasPar : public FairParGenericSet
     void SetDriftVelocity(Double_t value) { DriftVelocity = value; }
 
   private:
-    Double_t LongDiff, TransDiff;
+    Double_t LongDiff, TransDiff; // [cm^2/ns]
     Double_t FanoFactor;
-    Double_t EIonization;
-    Double_t DriftVelocity;
+    Double_t EIonization;   // [GeV]
+    Double_t DriftVelocity; // [cm/ns]
 
     const R3BGTPCGasPar& operator=(const R3BGTPCGasPar&); /*< an assignment operator>*/
     R3BGTPCGasPar(const R3BGTPCGasPar&);                  /*< a copy constructor >*/

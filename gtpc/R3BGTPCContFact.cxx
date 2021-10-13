@@ -56,7 +56,7 @@ FairParSet* R3BGTPCContFact::createContainer(FairContainer* c)
      */
 
     const char* name = c->GetName();
-    LOG(INFO) << "R3BCalifaContFact: Create container name: " << name;
+    LOG(INFO) << "R3BGTPCContFact: Create container name: " << name;
     FairParSet* p = 0;
 
     if (strcmp(name, "GTPCGeoPar") == 0)

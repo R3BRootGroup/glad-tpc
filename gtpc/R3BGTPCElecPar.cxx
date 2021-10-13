@@ -121,7 +121,7 @@ void R3BGTPCElecPar::printParams()
               << "GTPCTimeBinSize " << TimeBinSize << " ns,  "
               << "GTPCShapingTime " << ShapingTime << " ns, "
               << "GTPCThreshold " << Threshold << " times noise rms, "
-              << "GTPCDriftEField " << DriftEField << " V/m, "
+              << "GTPCDriftEField " << DriftEField << " V/cm, "
               << "GTPCDriftTimeStep " << DriftTimeStep << " ns" << endl;
 }
 

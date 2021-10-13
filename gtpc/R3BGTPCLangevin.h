@@ -79,8 +79,9 @@ class R3BGTPCLangevin : public FairTask
     Double_t fHalfSizeTPC_Y;    //!< Half size Y of the TPC drift volume [cm]
     Double_t fHalfSizeTPC_Z;    //!< Half size Z of the TPC drift volume [cm]
     Double_t fSizeOfVirtualPad; //!< Number of virtual pad division per cm (default 1)
-    Double_t fDriftEField;      //!< Drift electric field [V/m]
-    Double_t fDriftTimeStep;    //!< Time Step between drift parameters calculation
+    Double_t fDriftEField;      //!< Drift electric field [V/cm]
+    Double_t fDriftTimeStep;    //!< Time Step between drift parameters calculation [ns]
+    Double_t fTimeBinSize;      //!< Time size of each bin in the time vector [ns]
 
     Int_t fDetectorType; //!< Detector type: 1 for prototype, 2 for FullBeamIn, 3 for FullBeamOut
 

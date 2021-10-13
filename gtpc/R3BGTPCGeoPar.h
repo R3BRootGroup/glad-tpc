@@ -108,22 +108,22 @@ class R3BGTPCGeoPar : public FairParGenericSet
     void SetDetectorType(Int_t value) { DetectorType = value; }
 
   private:
-    Double_t ActiveRegionx;
-    Double_t ActiveRegiony;
-    Double_t ActiveRegionz;
-    Double_t TPCLx, TPCLy, TPCLz;
-    Double_t FrameThickness;
-    Double_t Windowx, Windowy, Windowz;
-    Int_t PadSize;
-    Double_t TargetRadius;
-    Double_t TargetLength;
-    Double_t TargetAngle;
-    Double_t TargetOffsetX, TargetOffsetY, TargetOffsetZ;
-    Double_t GladAngle;
-    Double_t GladOffsetX, GladOffsetY, GladOffsetZ;
-    Double_t FieldAngle;
-    Double_t FieldOffsetX, FieldOffsetY, FieldOffsetZ;
-    Int_t DetectorType; // 1 for prototype, 2 for FullBeamIn, 3 for FullBeamOut
+    Double_t ActiveRegionx;                               // [cm]
+    Double_t ActiveRegiony;                               // [cm]
+    Double_t ActiveRegionz;                               // [cm]
+    Double_t TPCLx, TPCLy, TPCLz;                         // [cm]
+    Double_t FrameThickness;                              // [cm]
+    Double_t Windowx, Windowy, Windowz;                   // [cm]
+    Int_t PadSize;                                        // virtual: 1 means pads of 1cm^2, 10 means pads of 1mm^2, ...
+    Double_t TargetRadius;                                // [cm]
+    Double_t TargetLength;                                // [cm]
+    Double_t TargetAngle;                                 // [cm]
+    Double_t TargetOffsetX, TargetOffsetY, TargetOffsetZ; // [cm]
+    Double_t GladAngle;                                   // [deg]
+    Double_t GladOffsetX, GladOffsetY, GladOffsetZ;       // [cm]
+    Double_t FieldAngle;                                  // [deg]
+    Double_t FieldOffsetX, FieldOffsetY, FieldOffsetZ;    // [cm]
+    Int_t DetectorType;                                   // 1 for prototype, 2 for FullBeamIn, 3 for FullBeamOut
 
     const R3BGTPCGeoPar& operator=(const R3BGTPCGeoPar&); /*< an assignment operator>*/
     R3BGTPCGeoPar(const R3BGTPCGeoPar&);                  /*< a copy constructor >*/

@@ -40,6 +40,7 @@ R3BGTPCLangevin::R3BGTPCLangevin()
     fHalfSizeTPC_Y = 0.;
     fHalfSizeTPC_Z = 0.;
     fSizeOfVirtualPad = 0;
+    fTimeBinSize = 0;
     fDriftEField = 0.;
     fDriftTimeStep = 0.;
     fDetectorType = 0;
@@ -84,19 +85,19 @@ void R3BGTPCLangevin::SetParContainers()
         LOG(FATAL) << "R3BGTPCLangevin::SetParContainers: No runtime database";
         return;
     }
-    fGTPCGeoPar = (R3BGTPCGeoPar*)rtdb->getContainer("R3BGTPCGeoPar");
+    fGTPCGeoPar = (R3BGTPCGeoPar*)rtdb->getContainer("GTPCGeoPar");
     if (!fGTPCGeoPar)
     {
         LOG(FATAL) << "R3BGTPCLangevin::SetParContainers: No R3BGTPCGeoPar";
         return;
     }
-    fGTPCGasPar = (R3BGTPCGasPar*)rtdb->getContainer("R3BGTPCGasPar");
+    fGTPCGasPar = (R3BGTPCGasPar*)rtdb->getContainer("GTPCGasPar");
     if (!fGTPCGasPar)
     {
         LOG(FATAL) << "R3BGTPCLangevin::SetParContainers: No R3BGTPCGasPar";
         return;
     }
-    fGTPCElecPar = (R3BGTPCElecPar*)rtdb->getContainer("R3BGTPCElecPar");
+    fGTPCElecPar = (R3BGTPCElecPar*)rtdb->getContainer("GTPCElecPar");
     if (!fGTPCElecPar)
     {
         LOG(FATAL) << "R3BGTPCLangevin::SetParContainers: No R3BGTPCElecPar";
@@ -121,6 +122,7 @@ void R3BGTPCLangevin::SetParameter()
     // From electronic properties
     fDriftEField = fGTPCElecPar->GetDriftEField();     // drift E field in V/m
     fDriftTimeStep = fGTPCElecPar->GetDriftTimeStep(); // time step for drift params calculation
+    fTimeBinSize = fGTPCElecPar->GetTimeBinSize();     // time step for drift params calculation
 }
 
 InitStatus R3BGTPCLangevin::Init()
@@ -187,7 +189,6 @@ void R3BGTPCLangevin::Exec(Option_t*)
     R3BGladFieldMap* gladField = (R3BGladFieldMap*)FairRunAna::Instance()->GetField();
 
     R3BGTPCPoint* aPoint;
-    // R3BGTPCProjPoint* aProjPoint;
     Int_t presentTrackID = -10; // control of the point trackID
     Double_t xPre, yPre, zPre;
     Double_t xPost, yPost, zPost;
@@ -254,7 +255,7 @@ void R3BGTPCLangevin::Exec(Option_t*)
             yPost = aPoint->GetY();
             zPost = aPoint->GetZ();
             energyDep = aPoint->GetEnergyLoss();
-            timeBeforeDrift = aPoint->GetTime(); // REALLY IN ns?????
+            timeBeforeDrift = aPoint->GetTime(); // ns
         }
         electrons = energyDep / fEIonization;
         // electron number fluctuates as the square root of
@@ -274,7 +275,6 @@ void R3BGTPCLangevin::Exec(Option_t*)
         sigmaLongAtPadPlane = sqrt(driftDistance * 2 * fLongDiff / fDriftVelocity);
         sigmaTransvAtPadPlane = sqrt(driftDistance * 2 * fTransDiff / fDriftVelocity);
 
-        // Using here m, V, T, s just to simplify in SI system...
         Double_t E_x = 0;
         Double_t E_z = 0;
         Double_t E_y = fDriftEField; // in V/m
@@ -294,8 +294,10 @@ void R3BGTPCLangevin::Exec(Option_t*)
         Double_t productEB = 0;
         Double_t sigmaLongStep;
         Double_t sigmaTransvStep;
+        Double_t recoverDriftTimeStep = 0.;
+        Bool_t recoverStep = kTRUE;
 
-        Double_t mu = 1.E+5 * fDriftVelocity / E_y; // [m2 s-1 V-1] TODO check value
+        Double_t mu = fDriftVelocity / E_y; // [cm^2 ns^-1 V^-1]
 
         for (Int_t ele = 1; ele <= generatedElectrons; ele++)
         {
@@ -306,35 +308,42 @@ void R3BGTPCLangevin::Exec(Option_t*)
 
             LOG(DEBUG) << "R3BGTPCLangevin::Exec, INITIAL VALUES: timeBeforeDrift=" << accDriftTime << " [ns]"
                        << " ele_x=" << ele_x << " ele_y=" << ele_y << " ele_z=" << ele_z << " [cm]";
-
+            // cout   << "R3BGTPCLangevin::Exec, INITIAL VALUES: timeBeforeDrift=" << accDriftTime << " [ns]"
+            //                  << " ele_x=" << ele_x << " ele_y=" << ele_y << " ele_z=" << ele_z << " [cm]";
             while (ele_y > -fHalfSizeTPC_Y)
-            {                                                      // while not reaching the pad plane [cm]
-                B_x = 0.1 * gladField->GetBx(ele_x, ele_y, ele_z); // Field components return in [kG], moved to [T]
-                B_y = 0.1 * gladField->GetBy(ele_x, ele_y, ele_z);
-                B_z = 0.1 * gladField->GetBz(ele_x, ele_y, ele_z);
+            { // while not reaching the pad plane [cm]
+                B_x = 1e-14 *
+                      gladField->GetBx(ele_x, ele_y, ele_z); // Field components return in [kG], moved to [V ns cm^-2]
+                B_y = 1e-14 * gladField->GetBy(ele_x, ele_y, ele_z);
+                B_z = 1e-14 * gladField->GetBz(ele_x, ele_y, ele_z);
 
-                moduleB = TMath::Sqrt(B_x * B_x + B_y * B_y + B_z * B_z); // in [T]
-                cteMod = 1 / (1 + mu * mu * moduleB * moduleB);           // SI
-                cteMult = mu * cteMod;                                    // SI
+                moduleB = TMath::Sqrt(B_x * B_x + B_y * B_y + B_z * B_z); // in [V ns cm^-2]
+                cteMod = 1 / (1 + mu * mu * moduleB * moduleB);           // adimensional
+                cteMult = mu * cteMod;                                    // [cm^2 V^-1 ns^-1]
 
                 // assuming only vertical electric field in the next four lines
-                productEB = E_y * B_y; // E_x*B_x + E_y*B_y + E_z*B_z; SI
+                productEB = E_y * B_y; // E_x*B_x + E_y*B_y + E_z*B_z; [V^2 ns cm^-3]
 
-                vDrift_x = cteMult *
-                           (mu * (E_y * B_z) +
-                            mu * mu * productEB * B_x); // cte * (Ex + mu*(E_y*B_z-E_z*B_y) + mu*mu*productEB*B_x); SI
-                vDrift_y = cteMult * (E_y + mu * mu * productEB *
-                                                B_y); // cte * (Ey + mu*(E_z*B_x-E_x*B_z) + mu*mu*productEB*B_y); SI
-                vDrift_z = cteMult *
-                           (mu * (-E_y * B_x) +
-                            mu * mu * productEB * B_z); // cte * (Ez + mu*(E_x*B_y-E_y*B_x) + mu*mu*productEB*B_z); SI
+                vDrift_x = cteMult * (mu * (E_y * B_z) +
+                                      mu * mu * productEB *
+                                          B_x); // cte * (Ex + mu*(E_y*B_z-E_z*B_y) + mu*mu*productEB*B_x); [cm/ns]
+                vDrift_y =
+                    cteMult * (E_y + mu * mu * productEB *
+                                         B_y); // cte * (Ey + mu*(E_z*B_x-E_x*B_z) + mu*mu*productEB*B_y); [cm/ns]
+                vDrift_z = cteMult * (mu * (-E_y * B_x) +
+                                      mu * mu * productEB *
+                                          B_z); // cte * (Ez + mu*(E_x*B_y-E_y*B_x) + mu*mu*productEB*B_z); [cm/ns]
 
                 LOG(DEBUG) << "R3BGTPCLangevin::Exec, timeBeforeDrift=vDrift_x=" << vDrift_x << " vDrift_y=" << vDrift_y
-                           << " vDrift_z=" << vDrift_z << " [m/s]";
-
+                           << " vDrift_z=" << vDrift_z << " [cm/ns]";
                 // adjusting the last step before the pad plane
-                if (ele_y - 1.E-7 * vDrift_y * fDriftTimeStep < -fHalfSizeTPC_Y)
-                    fDriftTimeStep = (ele_y + fHalfSizeTPC_Y) / (1.E-7 * vDrift_y); // vDrift back to [cm/ns]
+                if (ele_y - vDrift_y * fDriftTimeStep < -fHalfSizeTPC_Y)
+                {
+                    if (recoverStep)
+                        recoverDriftTimeStep = fDriftTimeStep;
+                    recoverStep = kFALSE;
+                    fDriftTimeStep = (ele_y + fHalfSizeTPC_Y) / vDrift_y;
+                }
 
                 // reducing sigmaTransv (see http://web.ift.uib.no/~lipniack/detectors/lecture5/detector5.pdf)
                 // as B~B_y and E=E_y, let's simplify and apply the reduction to the transversal coefficient without
@@ -343,11 +352,10 @@ void R3BGTPCLangevin::Exec(Option_t*)
                     sqrt(fDriftTimeStep * 2 * fTransDiff * cteMod); // should be reduced by the factor cteMod=cteMult/mu
                 sigmaLongStep =
                     sqrt(fDriftTimeStep * 2 * fLongDiff); // should be the same scaled to the length of the step
-                ele_x =
-                    gRandom->Gaus(ele_x + 1.E-7 * vDrift_x * fDriftTimeStep, sigmaTransvStep); // vDrift back to [cm/ns]
-                ele_y = gRandom->Gaus(ele_y - 1.E-7 * vDrift_y * fDriftTimeStep, sigmaLongStep);
-                ele_z = gRandom->Gaus(ele_z + 1.E-7 * vDrift_z * fDriftTimeStep, sigmaTransvStep);
-                accDriftTime = accDriftTime + fDriftTimeStep;
+                ele_x = gRandom->Gaus(ele_x + vDrift_x * fDriftTimeStep, sigmaTransvStep); // [cm]
+                ele_y = gRandom->Gaus(ele_y - vDrift_y * fDriftTimeStep, sigmaLongStep);   // [cm]
+                ele_z = gRandom->Gaus(ele_z + vDrift_z * fDriftTimeStep, sigmaTransvStep); // [cm]
+                accDriftTime = accDriftTime + fDriftTimeStep;                              //[ns]
 
                 // TODO!!! CHECK THE NEGATIVE sign in the y directions three lines above...
                 // Could it be symmetric with the others (+) in case the electric field is negative in Y?
@@ -355,12 +363,20 @@ void R3BGTPCLangevin::Exec(Option_t*)
 
                 LOG(DEBUG) << "R3BGTPCLangevin::Exec, accDriftTime=" << accDriftTime << " [ns]"
                            << " ele_x=" << ele_x << " ele_y=" << ele_y << " ele_z=" << ele_z << " [cm]";
+                //  cout << "R3BGTPCLangevin::Exec, accDriftTime=" << accDriftTime << " [ns]"
+                //                  << " ele_x=" << ele_x << " ele_y=" << ele_y << " ele_z=" << ele_z << " [cm]" <<
+                //                  endl;
+            }
+            if (recoverDriftTimeStep)
+            {
+                fDriftTimeStep = recoverDriftTimeStep;
+                recoverDriftTimeStep = 0.;
+                recoverStep = kTRUE;
             }
             // FINAL RESULT: X,Z position and time of the electron after Langevin calculation:
             projX = ele_x;
             projZ = ele_z;
             projTime = accDriftTime;
-
             // obtain padID for projX, projZ (simple algorithm)
             // the algorithm assigns a pad number which depends on the XZ size of the chamber,
             // according to the fSizeOfVirtualPad parameter: if it is 1, the pad size is cm^2
@@ -395,8 +411,12 @@ void R3BGTPCLangevin::Exec(Option_t*)
                 {
                     if (((R3BGTPCCalData*)fGTPCCalDataCA->At(pp))->GetPadId() == padID)
                     {
-                        // already existing R3BGTPCProjPoint... add time and electron
-                        projTime = projTime / 1000; // moving from ns to micros
+                        // already existing R3BGTPCCalData... add time and electron
+                        projTime = projTime / fTimeBinSize; // moving from ns to binsize
+                        if (projTime < 0)
+                            projTime = 0; // Fills (first) underflow bin
+                        else if (projTime > 511)
+                            projTime = 511; // Fills (last) overflow bin
                         ((R3BGTPCCalData*)fGTPCCalDataCA->At(pp))->SetADC(projTime);
                         padFound = kTRUE;
                         break;
@@ -405,7 +425,7 @@ void R3BGTPCLangevin::Exec(Option_t*)
                 if (!padFound)
                 {
                     std::vector<UShort_t> adc(512, 0);
-                    projTime = projTime / 1000; // moving from ns to micros
+                    projTime = projTime / fTimeBinSize; // moving from ns to binsize
                     if (projTime < 0)
                         projTime = 0; // Fills (first) underflow bin
                     else if (projTime > 511)
@@ -424,7 +444,8 @@ void R3BGTPCLangevin::Exec(Option_t*)
                     {
                         // already existing R3BGTPCProjPoint... add time and electron
                         ((R3BGTPCProjPoint*)fGTPCProjPointCA->At(pp))->AddCharge();
-                        ((R3BGTPCProjPoint*)fGTPCProjPointCA->At(pp))->SetTimeDistr(projTime / 1000, 1); // micros
+                        ((R3BGTPCProjPoint*)fGTPCProjPointCA->At(pp))
+                            ->SetTimeDistr(projTime / fTimeBinSize, 1); // micros
                         padFound = kTRUE;
                         break;
                     }
@@ -432,7 +453,7 @@ void R3BGTPCLangevin::Exec(Option_t*)
                 if (!padFound)
                 {
                     new ((*fGTPCProjPointCA)[nProjPoints]) R3BGTPCProjPoint(padID,
-                                                                            projTime / 1000, // micros
+                                                                            projTime / fTimeBinSize, // micros
                                                                             1,
                                                                             evtID,
                                                                             PDGCode,

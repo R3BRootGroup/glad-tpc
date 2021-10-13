@@ -43,3 +43,18 @@ GTPCFanoFactor:   Double_t  0.2
 GTPCEIonization:   Double_t  15.e-9
 GTPCDriftVelocity:   Double_t  0.005
 ##############################################################################
+##############################################################################
+# Class:   GTPCElecPar
+# Context: GTPCElecParContext
+##############################################################################
+[GTPCElecPar]
+//----------------------------------------------------------------------------
+GTPCGain:   Double_t  4000.
+GTPCTheta:   Double_t  1.
+GTPCNoiseRMS:   Double_t  700.
+GTPCTimeBinSize:   Double_t  20.0
+GTPCShapingTime:   Double_t  300.
+GTPCThreshold:   Double_t  5.
+GTPCDriftEField:   Double_t  1000.
+GTPCDriftTimeStep:   Double_t  500.
+##############################################################################

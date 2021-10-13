@@ -153,7 +153,7 @@ Bool_t R3BGTPC::ProcessHits(FairVolume* vol)
                          vol->getModId(),                          // check if getModId or CurrentVolOffID(1,modID)
                          pos.Vect(),                               // pos from gMC->TrackPosition(pos);
                          mom.Vect(),                               // mom from gMC->TrackMomentum(pos);
-                         gMC->TrackTime(),                         // time in s
+                         gMC->TrackTime(),                         // time in ns
                          gMC->TrackLength(),  // Return the length of the current track from its origin (in cm)
                          gMC->Edep(),         // eloss
                          gMC->CurrentEvent(), // EventID
