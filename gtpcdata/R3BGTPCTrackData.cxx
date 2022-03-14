@@ -14,14 +14,14 @@
 #include "R3BGTPCTrackData.h"
 
 R3BGTPCTrackData::R3BGTPCTrackData()
-  : fTrackId(0)
-  , fHitArray(0)
+    : fTrackId(0)
+    , fHitArray(0)
 {
 }
 
-R3BGTPCTrackData::R3BGTPCTrackData(std::size_t trackId,std::vector<R3BGTPCHitData> hitArray)
-  : fTrackId(trackId)
-  , fHitArray(hitArray)
+R3BGTPCTrackData::R3BGTPCTrackData(std::size_t trackId, std::vector<R3BGTPCHitData> hitArray)
+    : fTrackId(trackId)
+    , fHitArray(hitArray)
 {
 }
 

@@ -18,23 +18,23 @@
 #define R3BGTPCPROJECTOR_H
 
 #include "FairTask.h"
+#include "R3BGTPCCalData.h"
 #include "R3BGTPCElecPar.h"
 #include "R3BGTPCGasPar.h"
 #include "R3BGTPCGeoPar.h"
+#include "R3BGTPCMap.h"
 #include "R3BGTPCPoint.h"
 #include "R3BGTPCProjPoint.h"
-#include "R3BGTPCCalData.h"
-#include "R3BGTPCMap.h"
 #include "TClonesArray.h"
 
 /**
  * GTPC point projector task
  * @author Héctor Alvarez Pol
- *       
+ *
  * For each event, get the R3BGTPCPoints and determine the projection on the pad plane
  *   Input:  Branch GTPCPoints = TClonesArray("R3BGTPCPoint")
  *   Output: Branch GTPCProjPoint = TClonesArray("R3BGTPCProjPoint")
- * 
+ *
  * Updated (@author Yassid Ayyad)
  *  Added R3BGTPCMap as map manager
  *  Output: Branch GTPCCalData = TClonesArray("R3BGTPCCalData")
@@ -59,7 +59,6 @@ class R3BGTPCProjector : public FairTask
 
     void SetProjPointsAsOutput() { outputMode = 1; }
     void SetCalDataAsOutput() { outputMode = 0; }
-
 
   protected:
     /** Virtual method Init **/
@@ -103,10 +102,8 @@ class R3BGTPCProjector : public FairTask
     R3BGTPCGasPar* fGTPCGasPar;   //!< Gas parameter container
     R3BGTPCElecPar* fGTPCElecPar; //!< Electronics parameter container
 
-    
-    std::shared_ptr<R3BGTPCMap> fTPCMap;//!< Map container
-    TH2Poly*    fPadPlane;//!< Pad Plane object
-
+    std::shared_ptr<R3BGTPCMap> fTPCMap; //!< Map container
+    TH2Poly* fPadPlane;                  //!< Pad Plane object
 
     ClassDef(R3BGTPCProjector, 1)
 };

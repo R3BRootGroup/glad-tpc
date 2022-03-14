@@ -14,35 +14,35 @@
 #ifndef R3BGTPCTRACKDATA_H
 #define R3BGTPCTRACKDATA_H
 
+#include "R3BGTPCHitData.h"
 #include "TObject.h"
 #include <stdint.h>
-#include "R3BGTPCHitData.h"
 
 class R3BGTPCTrackData : public TObject
 {
 
- public:
-  // Default Constructor
-  R3BGTPCTrackData();
+  public:
+    // Default Constructor
+    R3BGTPCTrackData();
 
-  /** Standard Constructor
-  
-  **/
-  R3BGTPCTrackData(std::size_t trackId,std::vector<R3BGTPCHitData> hitArray);
+    /** Standard Constructor
 
-  // Destructor
-  virtual ~R3BGTPCTrackData() {}
+    **/
+    R3BGTPCTrackData(std::size_t trackId, std::vector<R3BGTPCHitData> hitArray);
 
-  // Getters
-  inline const std::size_t GetTrackId() const { return fTrackId; }
-  inline const std::vector<R3BGTPCHitData>* GetHitArray() const { return &fHitArray; }
-  
- protected:
-  std::size_t fTrackId;                          // Track Id
-  std::vector<R3BGTPCHitData> fHitArray;         // Track Hit Array
-  
- public:
-  ClassDef(R3BGTPCTrackData, 1)
-    };
+    // Destructor
+    virtual ~R3BGTPCTrackData() {}
+
+    // Getters
+    inline const std::size_t GetTrackId() const { return fTrackId; }
+    inline const std::vector<R3BGTPCHitData>* GetHitArray() const { return &fHitArray; }
+
+  protected:
+    std::size_t fTrackId;                  // Track Id
+    std::vector<R3BGTPCHitData> fHitArray; // Track Hit Array
+
+  public:
+    ClassDef(R3BGTPCTrackData, 1)
+};
 
 #endif

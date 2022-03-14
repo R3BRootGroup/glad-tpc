@@ -12,6 +12,6 @@
 #include "pointcloud.h"
 
 // compute first quartile of the mean squared distance from the points
-double first_quartile(const PointCloud &cloud);
+double first_quartile(const PointCloud& cloud);
 
 #endif

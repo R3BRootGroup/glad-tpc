@@ -19,123 +19,121 @@
 
 #include "R3BGTPC.h"
 #include "R3BGTPCHit2Track.h"
-#include "R3BGTPCTrackData.h"
 #include "R3BGTPCHitData.h"
+#include "R3BGTPCTrackData.h"
 //#include "R3BGTPCHitPar.h"
 
 // R3BGTPCHit2Track: Constructor
 R3BGTPCHit2Track::R3BGTPCHit2Track()
-  : FairTask("R3B GTPC Hit to Track")
+    : FairTask("R3B GTPC Hit to Track")
     //    , fHitParams(NULL)
     //, fHit_Par(NULL)
-  , fHitCA(NULL)
-  , fTrackCA(NULL)
-  , fOnline(kFALSE)
+    , fHitCA(NULL)
+    , fTrackCA(NULL)
+    , fOnline(kFALSE)
 {
 }
 
 R3BGTPCHit2Track::~R3BGTPCHit2Track()
 {
-  LOG(INFO) << "R3BGTPCHit2Track: Delete instance";
-  if (fHitCA)
-    delete fHitCA;
-  if (fTrackCA)
-    delete fTrackCA;
+    LOG(INFO) << "R3BGTPCHit2Track: Delete instance";
+    if (fHitCA)
+        delete fHitCA;
+    if (fTrackCA)
+        delete fTrackCA;
 }
 
 void R3BGTPCHit2Track::SetParContainers()
 {
-  // Reading GTPCHitPar from FairRuntimeDb
-  //FairRuntimeDb* rtdb = FairRuntimeDb::instance();
-  //if (!rtdb)
-  // {
-  //  LOG(ERROR) << "R3BGTPCMapped2Cal:: FairRuntimeDb not opened!";
-  // }
+    // Reading GTPCHitPar from FairRuntimeDb
+    // FairRuntimeDb* rtdb = FairRuntimeDb::instance();
+    // if (!rtdb)
+    // {
+    //  LOG(ERROR) << "R3BGTPCMapped2Cal:: FairRuntimeDb not opened!";
+    // }
 
-  //fHit_Par = (R3BGTPCHitPar*)rtdb->getContainer("GTPCHitPar");
-  //if (!fHit_Par)
-  // {
-  //  LOG(ERROR) << "R3BGTPCCal2Hit::Init() Couldn't get handle on GTPCHitPar container";
-  // }
-  //else
-  // {
-  //   LOG(INFO) << "R3BGTPCCal2Hit:: GTPCHitPar container open";
-  // }
+    // fHit_Par = (R3BGTPCHitPar*)rtdb->getContainer("GTPCHitPar");
+    // if (!fHit_Par)
+    // {
+    //  LOG(ERROR) << "R3BGTPCCal2Hit::Init() Couldn't get handle on GTPCHitPar container";
+    // }
+    // else
+    // {
+    //   LOG(INFO) << "R3BGTPCCal2Hit:: GTPCHitPar container open";
+    // }
 }
-
 
 void R3BGTPCHit2Track::SetParameter()
 {
-  //--- Parameter Container ---
-  /*
-        fHitParams = new TArrayF();
-        fHitParams = fHit_Par->GetHitParams(); // Array with the Hit parameters
-  */
+    //--- Parameter Container ---
+    /*
+          fHitParams = new TArrayF();
+          fHitParams = fHit_Par->GetHitParams(); // Array with the Hit parameters
+    */
 }
 
 InitStatus R3BGTPCHit2Track::Init()
 {
-  LOG(INFO) << "R3BGTPCHit2Track::Init() ";
-  assert(!fTrackCA); // in case someone calls Init() twice.
+    LOG(INFO) << "R3BGTPCHit2Track::Init() ";
+    assert(!fTrackCA); // in case someone calls Init() twice.
 
-  // INPUT DATA - Cal
-  FairRootManager* ioManager = FairRootManager::Instance();
-  if (!ioManager)
-    LOG(fatal) << "Init: No FairRootManager";
+    // INPUT DATA - Cal
+    FairRootManager* ioManager = FairRootManager::Instance();
+    if (!ioManager)
+        LOG(fatal) << "Init: No FairRootManager";
 
-  fHitCA = (TClonesArray*)ioManager->GetObject("GTPCHitData");
-  if (!fHitCA)
-    LOG(fatal) << "Init: No GTPCHitData";
+    fHitCA = (TClonesArray*)ioManager->GetObject("GTPCHitData");
+    if (!fHitCA)
+        LOG(fatal) << "Init: No GTPCHitData";
 
-  // Register output - Track
-  fTrackCA = new TClonesArray("R3BGTPCTrackData", 50);
-  if (!fOnline)
+    // Register output - Track
+    fTrackCA = new TClonesArray("R3BGTPCTrackData", 50);
+    if (!fOnline)
     {
-      ioManager->Register("GTPCTrackData", "GTPC Track", fTrackCA, kTRUE);
+        ioManager->Register("GTPCTrackData", "GTPC Track", fTrackCA, kTRUE);
     }
-  else
+    else
     {
-      ioManager->Register("GTPCTrackData", "GTPC Track", fTrackCA, kFALSE);
+        ioManager->Register("GTPCTrackData", "GTPC Track", fTrackCA, kFALSE);
     }
-  
-  SetParameter();
-  return kSUCCESS;
+
+    SetParameter();
+    return kSUCCESS;
 }
 
 InitStatus R3BGTPCHit2Track::ReInit()
 {
-  SetParContainers();
-  return kSUCCESS;
+    SetParContainers();
+    return kSUCCESS;
 }
 
 void R3BGTPCHit2Track::Exec(Option_t* opt)
 {
-  Reset(); // Reset entries in output arrays, local arrays
+    Reset(); // Reset entries in output arrays, local arrays
 
-  //if (!fTrack_Par)
-  // {
-  //   LOG(WARNING) << "R3BGTPCHit2Track::NO Container Parameter!!";
-  // }
+    // if (!fTrack_Par)
+    // {
+    //   LOG(WARNING) << "R3BGTPCHit2Track::NO Container Parameter!!";
+    // }
 
-
-  return;
+    return;
 }
 
 void R3BGTPCHit2Track::Finish() {}
 
 void R3BGTPCHit2Track::Reset()
 {
-  LOG(DEBUG) << "Clearing TrackData Structure";
-     if (fTrackCA)
-      fTrackCA->Clear();
+    LOG(DEBUG) << "Clearing TrackData Structure";
+    if (fTrackCA)
+        fTrackCA->Clear();
 }
 
-R3BGTPCTrackData* R3BGTPCHit2Track::AddTrackData(std::size_t trackId, std::vector<R3BGTPCHitData> &hitArray)
+R3BGTPCTrackData* R3BGTPCHit2Track::AddTrackData(std::size_t trackId, std::vector<R3BGTPCHitData>& hitArray)
 {
-  // It fills the R3BGTPCTrackData
-  TClonesArray& clref = *fTrackCA;
-  Int_t size = clref.GetEntriesFast();
-  return new (clref[size]) R3BGTPCTrackData(trackId,std::move(hitArray));
+    // It fills the R3BGTPCTrackData
+    TClonesArray& clref = *fTrackCA;
+    Int_t size = clref.GetEntriesFast();
+    return new (clref[size]) R3BGTPCTrackData(trackId, std::move(hitArray));
 }
 
 ClassImp(R3BGTPCHit2Track)

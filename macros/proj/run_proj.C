@@ -56,7 +56,7 @@ void run_proj(TString GEOTAG = "Prototype")
     rtdb->setSecondInput(parIo1);
     rtdb->print();
 
-     R3BGTPCGeoPar* geoPar = (R3BGTPCGeoPar*)rtdb->getContainer("GTPCGeoPar");
+    R3BGTPCGeoPar* geoPar = (R3BGTPCGeoPar*)rtdb->getContainer("GTPCGeoPar");
     if (!geoPar) {
         cout << "No R3BGTPCGeoPar can be loaded from the rtdb";
         return;
@@ -65,10 +65,8 @@ void run_proj(TString GEOTAG = "Prototype")
     if (!gasPar) {
         cout << "No R3BGTPCGasPar can be loaded from the rtdb";
         return;
-	}
+    }
 
-
-  
     R3BGTPCProjector* pro = new R3BGTPCProjector();
     pro->SetDriftParameters(gasPar->GetEIonization(),
                             gasPar->GetDriftVelocity(),
@@ -76,9 +74,7 @@ void run_proj(TString GEOTAG = "Prototype")
                             gasPar->GetTransDiff(),
                             gasPar->GetFanoFactor());
     pro->SetSizeOfVirtualPad(geoPar->GetPadSize()); // 1 means pads of 1cm^2, 10 means pads of 1mm^2...
-    
 
-    
     fRun->AddTask(pro);
 
     fRun->Init();

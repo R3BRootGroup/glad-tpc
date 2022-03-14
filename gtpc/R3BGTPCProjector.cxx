@@ -14,7 +14,6 @@
 #include "R3BMCTrack.h"
 #include "TClonesArray.h"
 
-
 #include "FairLogger.h"
 #include "FairRootManager.h"
 #include "FairRunAna.h"
@@ -49,28 +48,28 @@ R3BGTPCProjector::R3BGTPCProjector()
 
 R3BGTPCProjector::~R3BGTPCProjector()
 {
-    
-  if (fGTPCPoints)
-	{
-	  fGTPCPoints->Delete();
-	  delete fGTPCPoints;
-	}
-   if (fGTPCCalDataCA)
-      {
+
+    if (fGTPCPoints)
+    {
+        fGTPCPoints->Delete();
+        delete fGTPCPoints;
+    }
+    if (fGTPCCalDataCA)
+    {
         fGTPCCalDataCA->Delete();
         delete fGTPCCalDataCA;
-      }
-   /*if (fGTPCProjPoint)
-      {
-	
-        fGTPCProjPoint->Delete();
-        delete fGTPCProjPoint;
-	}*/
-     if (MCTrackCA)
-      {
+    }
+    /*if (fGTPCProjPoint)
+       {
+
+         fGTPCProjPoint->Delete();
+         delete fGTPCProjPoint;
+     }*/
+    if (MCTrackCA)
+    {
         MCTrackCA->Delete();
         delete MCTrackCA;
-	}
+    }
 }
 
 void R3BGTPCProjector::SetParContainers()
@@ -120,13 +119,12 @@ void R3BGTPCProjector::SetParameter()
     fHalfSizeTPC_Y = fGTPCGeoPar->GetActiveRegiony() / 2.;
     fHalfSizeTPC_Z = fGTPCGeoPar->GetActiveRegionz() / 2.;
     fDetectorType = fGTPCGeoPar->GetDetectorType();
-   
-    //TODO
+
+    // TODO
     // From electronic properties
-    //fDriftEField = fGTPCElecPar->GetDriftEField();     // drift E field in V/m
-    //fDriftTimeStep = fGTPCElecPar->GetDriftTimeStep(); // time step for drift params calculation
-    fTimeBinSize = 1000.0; //fGTPCElecPar->GetTimeBinSize();     // time step for drift params calculation
-   
+    // fDriftEField = fGTPCElecPar->GetDriftEField();     // drift E field in V/m
+    // fDriftTimeStep = fGTPCElecPar->GetDriftTimeStep(); // time step for drift params calculation
+    fTimeBinSize = 1000.0; // fGTPCElecPar->GetTimeBinSize();     // time step for drift params calculation
 }
 
 InitStatus R3BGTPCProjector::Init()
@@ -154,29 +152,28 @@ InitStatus R3BGTPCProjector::Init()
 
     fGTPCCalDataCA = new TClonesArray("R3BGTPCCalData");
     fGTPCProjPoint = new TClonesArray("R3BGTPCProjPoint");
-if (outputMode == 0)
-      { // Output: TClonesArray of R3BGTPCCalData       
+    if (outputMode == 0)
+    { // Output: TClonesArray of R3BGTPCCalData
         ioman->Register("GTPCCalData", GetName(), fGTPCCalDataCA, kTRUE);
-      }
-     else if (outputMode == 1)
-      { // Output: TClonesArray of R3BGTPCProjPoint
-        
-        ioman->Register("GTPCProjPoint", GetName(), fGTPCProjPoint, kTRUE);
-      }
+    }
+    else if (outputMode == 1)
+    { // Output: TClonesArray of R3BGTPCProjPoint
 
-    
+        ioman->Register("GTPCProjPoint", GetName(), fGTPCProjPoint, kTRUE);
+    }
 
     SetParameter();
 
-    //Pad plane generation
-    fTPCMap->GeneratePadPlane(); 
+    // Pad plane generation
+    fTPCMap->GeneratePadPlane();
     fPadPlane = fTPCMap->GetPadPlane();
 
-    if(fPadPlane==NULL)
-      {
-	std::cout<<" R3BGTPCProjector::Init() error! - Could not retrieve pad plane. Exiting..."<<"\n";
-	return kERROR;
-	}
+    if (fPadPlane == NULL)
+    {
+        std::cout << " R3BGTPCProjector::Init() error! - Could not retrieve pad plane. Exiting..."
+                  << "\n";
+        return kERROR;
+    }
 
     return kSUCCESS;
 }
@@ -207,13 +204,15 @@ void R3BGTPCProjector::SetSizeOfVirtualPad(Double_t size)
 
 void R3BGTPCProjector::Exec(Option_t*)
 {
-  
 
-  if(outputMode==0){
-    fGTPCCalDataCA->Clear("C");
-  }else if(outputMode==1){
-    fGTPCProjPoint->Clear("C");
-  }
+    if (outputMode == 0)
+    {
+        fGTPCCalDataCA->Clear("C");
+    }
+    else if (outputMode == 1)
+    {
+        fGTPCProjPoint->Clear("C");
+    }
 
     Int_t nPoints = fGTPCPoints->GetEntries();
     LOG(INFO) << "R3BGTPCProjector: processing " << nPoints << " points";
@@ -254,8 +253,8 @@ void R3BGTPCProjector::Exec(Option_t*)
             xPre = aPoint->GetX();
             yPre = aPoint->GetY();
             zPre = aPoint->GetZ();
-	    //std::cout<<" xPre "<<xPre<<" - yPre "<<yPre<<" - zPre "<<zPre<<"\n";
-	    R3BMCTrack* Track = (R3BMCTrack*)MCTrackCA->At(presentTrackID);
+            // std::cout<<" xPre "<<xPre<<" - yPre "<<yPre<<" - zPre "<<zPre<<"\n";
+            R3BMCTrack* Track = (R3BMCTrack*)MCTrackCA->At(presentTrackID);
             PDGCode = Track->GetPdgCode();
             MotherId = Track->GetMotherId();
             Vertex_x0 = Track->GetStartX();
@@ -311,8 +310,7 @@ void R3BGTPCProjector::Exec(Option_t*)
         sigmaLongAtPadPlane = sqrt(driftDistance * 2 * fLongDiff / fDriftVelocity);
         sigmaTransvAtPadPlane = sqrt(driftDistance * 2 * fTransDiff / fDriftVelocity);
 
-		
-	for (Int_t ele = 1; ele <= generatedElectrons; ele++) // following each electrons from production to pad
+        for (Int_t ele = 1; ele <= generatedElectrons; ele++) // following each electrons from production to pad
         {
             driftTime = ((yPre + stepY * ele) + fHalfSizeTPC_Y) / fDriftVelocity;
             projX = gRandom->Gaus(xPre + stepX * ele, sigmaTransvAtPadPlane);
@@ -330,8 +328,8 @@ void R3BGTPCProjector::Exec(Option_t*)
             double ZOffset = 272.7;
             // XOffset-x-> the first pad column in the laboratory frame
             double XOffset = 5.8;
-            
-	    if (projZ < ZOffset)
+
+            if (projZ < ZOffset)
                 projZ = ZOffset;
             if (projZ > ZOffset + 2 * fHalfSizeTPC_Z)
                 projZ = ZOffset + 2 * fHalfSizeTPC_Z;
@@ -339,92 +337,89 @@ void R3BGTPCProjector::Exec(Option_t*)
                 projX = XOffset;
             if (projX > XOffset + 2 * fHalfSizeTPC_X)
                 projX = XOffset + 2 * fHalfSizeTPC_X;
-            
 
-	    Int_t padID = fPadPlane->Fill((projZ-ZOffset)*10.0,(projX-XOffset)*10.0);//in mm
-	    
-	    
-            //Deprecated code to remove 
+            Int_t padID = fPadPlane->Fill((projZ - ZOffset) * 10.0, (projX - XOffset) * 10.0); // in mm
+
+            // Deprecated code to remove
             /*(if (fDetectorType == 1)
                 padID = (44) * (Int_t)((projZ - ZOffset) / 0.2) + (Int_t)((projX - XOffset) / 0.2); // 2mm
             else
                 padID = (2 * fHalfSizeTPC_X * fSizeOfVirtualPad) * (Int_t)((projZ - ZOffset) * fSizeOfVirtualPad) +
                         (Int_t)((projX - XOffset) * fSizeOfVirtualPad); // FULL HYDRA padplane has not been decided yet
-	    */
+        */
 
-	    if (outputMode == 0)
-	      { // Output: TClonesArray of R3BGTPCCalData
+            if (outputMode == 0)
+            { // Output: TClonesArray of R3BGTPCCalData
                 Int_t nCalData = fGTPCCalDataCA->GetEntriesFast();
                 for (Int_t pp = 0; pp < nCalData; pp++)
-		  {
+                {
                     if (((R3BGTPCCalData*)fGTPCCalDataCA->At(pp))->GetPadId() == padID)
-		      {
+                    {
                         // already existing R3BGTPCCalData... add time and electron
                         projTime = projTime / fTimeBinSize; // moving from ns to binsize
                         if (projTime < 0)
-			  projTime = 0; // Fills (first) underflow bin
+                            projTime = 0; // Fills (first) underflow bin
                         else if (projTime > 511)
-			  projTime = 511; // Fills (last) overflow bin
+                            projTime = 511; // Fills (last) overflow bin
                         ((R3BGTPCCalData*)fGTPCCalDataCA->At(pp))->SetADC(projTime);
                         padFound = kTRUE;
                         break;
-		      }
-		  }
+                    }
+                }
                 if (!padFound)
-		  {
-		    std::vector<UShort_t> adc(512, 0);
+                {
+                    std::vector<UShort_t> adc(512, 0);
                     projTime = projTime / fTimeBinSize; // moving from ns to binsize
                     if (projTime < 0)
-		      projTime = 0; // Fills (first) underflow bin
+                        projTime = 0; // Fills (first) underflow bin
                     else if (projTime > 511)
-		      projTime = 511; // Fills (last) overflow bin
+                        projTime = 511; // Fills (last) overflow bin
                     adc.at(projTime)++;
-		    
-		    new ((*fGTPCCalDataCA)[nCalData]) R3BGTPCCalData(padID, adc);
-		  }
-                padFound = kFALSE;
 
-	    }else if (outputMode == 1){
-       
-	      Int_t nProjPoints = fGTPCProjPoint->GetEntriesFast();
-
-            for (Int_t pp = 0; pp < nProjPoints; pp++)
-            {
-                if (((R3BGTPCProjPoint*)fGTPCProjPoint->At(pp))->GetVirtualPadID() == padID)
-                {
-                    // already existing R3BGTPCProjPoint... add time and electron
-                    ((R3BGTPCProjPoint*)fGTPCProjPoint->At(pp))->AddCharge();                      //
-                    ((R3BGTPCProjPoint*)fGTPCProjPoint->At(pp))->SetTimeDistr(projTime / 1000, 1); // micros
-                    padFound = kTRUE;
-                    break;
+                    new ((*fGTPCCalDataCA)[nCalData]) R3BGTPCCalData(padID, adc);
                 }
+                padFound = kFALSE;
             }
-            if (!padFound)
+            else if (outputMode == 1)
             {
-                new ((*fGTPCProjPoint)[nProjPoints]) R3BGTPCProjPoint(padID,
-                                                                      projTime / 1000, // micros
-                                                                      1,
-                                                                      evtID,
-                                                                      PDGCode,
-                                                                      MotherId,
-                                                                      Vertex_x0,
-                                                                      Vertex_y0,
-                                                                      Vertex_z0,
-                                                                      Vertex_px0,
-                                                                      Vertex_py0,
-                                                                      Vertex_pz0);
-            }
-            padFound = kFALSE;
+
+                Int_t nProjPoints = fGTPCProjPoint->GetEntriesFast();
+
+                for (Int_t pp = 0; pp < nProjPoints; pp++)
+                {
+                    if (((R3BGTPCProjPoint*)fGTPCProjPoint->At(pp))->GetVirtualPadID() == padID)
+                    {
+                        // already existing R3BGTPCProjPoint... add time and electron
+                        ((R3BGTPCProjPoint*)fGTPCProjPoint->At(pp))->AddCharge();                      //
+                        ((R3BGTPCProjPoint*)fGTPCProjPoint->At(pp))->SetTimeDistr(projTime / 1000, 1); // micros
+                        padFound = kTRUE;
+                        break;
+                    }
+                }
+                if (!padFound)
+                {
+                    new ((*fGTPCProjPoint)[nProjPoints]) R3BGTPCProjPoint(padID,
+                                                                          projTime / 1000, // micros
+                                                                          1,
+                                                                          evtID,
+                                                                          PDGCode,
+                                                                          MotherId,
+                                                                          Vertex_x0,
+                                                                          Vertex_y0,
+                                                                          Vertex_z0,
+                                                                          Vertex_px0,
+                                                                          Vertex_py0,
+                                                                          Vertex_pz0);
+                }
+                padFound = kFALSE;
         }
-    }
+        }
 
         xPre = xPost;
         yPre = yPost;
         zPre = zPost;
 
-	
-
-    }//Simulated points
+    } // Simulated points
     LOG(INFO) << "R3BGTPCProjector: produced " << fGTPCProjPoint->GetEntries() << " projPoints";
 }
 

@@ -21,16 +21,17 @@
 #include "R3BGTPCCal2Hit.h"
 
 // R3BGTPCCal2Hit: Constructor
-R3BGTPCCal2Hit::R3BGTPCCal2Hit() : PadCoordArr(boost::extents[5632][4][2])
-				 , FairTask("R3B GTPC Cal to Hit")
+R3BGTPCCal2Hit::R3BGTPCCal2Hit()
+    : PadCoordArr(boost::extents[5632][4][2])
+    , FairTask("R3B GTPC Cal to Hit")
     //    , fHitParams(NULL)
     , fHit_Par(NULL)
     , fCalCA(NULL)
     , fHitCA(NULL)
-    , fTPCMap(NULL)  
+    , fTPCMap(NULL)
     , fOnline(kFALSE)
 {
-  fTPCMap = std::make_shared<R3BGTPCMap>();
+    fTPCMap = std::make_shared<R3BGTPCMap>();
 }
 
 R3BGTPCCal2Hit::~R3BGTPCCal2Hit()
@@ -99,7 +100,6 @@ InitStatus R3BGTPCCal2Hit::Init()
     SetParameter();
 
     fTPCMap->GeneratePadPlane();
-       
 
     return kSUCCESS;
 }
@@ -116,18 +116,15 @@ void R3BGTPCCal2Hit::Exec(Option_t* opt)
 
     if (!fHit_Par)
     {
-         LOG(WARNING) << "R3BGTPCCal2Hit::NO Container Parameter!!";
+        LOG(WARNING) << "R3BGTPCCal2Hit::NO Container Parameter!!";
     }
 
     // ALGORITHMS FOR HIT FINDING
     // Nb of CrystalHits in current event
     Int_t nCals = fCalCA->GetEntries();
-    
-    
-if (!nCals)
-        return;
 
-    
+    if (!nCals)
+        return;
 
     Double_t x = 0, y = 0, z = 0, lW = 0, ene = 0;
 
@@ -140,46 +137,40 @@ if (!nCals)
         UShort_t pad = calData[i]->GetPadId();
         std::vector<UShort_t> adc_cal = calData[i]->GetADC();
 
-	Double_t max = 0; //TODO: Different algorithms for finding pulses have to be implemented here.
-	Int_t time = 0;
+        Double_t max = 0; // TODO: Different algorithms for finding pulses have to be implemented here.
+        Int_t time = 0;
 
-	for(auto iadc=0;iadc<adc_cal.size();++iadc)
-	{
-	  //std::cout<<iadc<<" "<<adc_cal[iadc]<<"\n";
-	  if(adc_cal[iadc]>max)
-	    {
-	      max  = adc_cal[iadc];
-	      time = iadc;
-	    }
+        for (auto iadc = 0; iadc < adc_cal.size(); ++iadc)
+        {
+            // std::cout<<iadc<<" "<<adc_cal[iadc]<<"\n";
+            if (adc_cal[iadc] > max)
+            {
+                max = adc_cal[iadc];
+                time = iadc;
+            }
+        }
 
-	}
-
-	
-	
         auto PadCenterCoord = fTPCMap->CalcPadCenter(pad);
-	
-	if(PadCenterCoord[0]>-9000){
-	 z = PadCenterCoord[0];
-         x = PadCenterCoord[1];
-	} 
 
-        //TODO: To parameter container
-	double ZOffset = 272.7*10.0;
-	double XOffset = 5.8*10.0;
-	Int_t iniTB = 512; //Initial Time Bucket
-	Double_t driftVel = 1.0; //cm/us
-	Double_t samplingRate = 0.080;//us 12.5 MHz
-	y = (time - 512)*driftVel*samplingRate;//cm
+        if (PadCenterCoord[0] > -9000)
+        {
+            z = PadCenterCoord[0];
+            x = PadCenterCoord[1];
+        }
 
-	//std::cout<<" Pad - "<<pad<<" x - y - z - time >>>  "<<x<<" "<<y<<" "<<z<<" "<<time<<"\n";
-	
-	//NB: Translation into GLAD frame for physics.
-	AddHitData(x+XOffset, y, z+ZOffset, lW, max);
+        // TODO: To parameter container
+        double ZOffset = 272.7 * 10.0;
+        double XOffset = 5.8 * 10.0;
+        Int_t iniTB = 512;                          // Initial Time Bucket
+        Double_t driftVel = 1.0;                    // cm/us
+        Double_t samplingRate = 0.080;              // us 12.5 MHz
+        y = (time - 512) * driftVel * samplingRate; // cm
 
-       
+        // std::cout<<" Pad - "<<pad<<" x - y - z - time >>>  "<<x<<" "<<y<<" "<<z<<" "<<time<<"\n";
+
+        // NB: Translation into GLAD frame for physics.
+        AddHitData(x + XOffset, y, z + ZOffset, lW, max);
     }
-
-    
 
     if (calData)
         delete calData;

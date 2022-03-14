@@ -62,12 +62,12 @@ void cutree_cdist(int n, const int* merge, double* height, double cdist, int* la
 //   1 = invalid method
 //
 int hclust_fast(int n, double* distmat, int method, int* merge, double* height);
-enum hclust_fast_methods {
-  HCLUST_METHOD_SINGLE = 0,
-  HCLUST_METHOD_COMPLETE = 1,
-  HCLUST_METHOD_AVERAGE = 2,
-  HCLUST_METHOD_MEDIAN = 3
+enum hclust_fast_methods
+{
+    HCLUST_METHOD_SINGLE = 0,
+    HCLUST_METHOD_COMPLETE = 1,
+    HCLUST_METHOD_AVERAGE = 2,
+    HCLUST_METHOD_MEDIAN = 3
 };
-  
 
 #endif

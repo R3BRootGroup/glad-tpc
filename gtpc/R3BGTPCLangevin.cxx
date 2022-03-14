@@ -146,7 +146,7 @@ InitStatus R3BGTPCLangevin::Init()
         LOG(FATAL) << "R3BMCTrack::Init No MCTrack!";
         return kFATAL;
     }
-  
+
     fMCTrackCA = (TClonesArray*)ioman->GetObject("MCTrack");
 
     if (outputMode == 0)

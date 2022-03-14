@@ -19,55 +19,53 @@
 #include "R3BGTPCTrackData.h"
 //#include "R3BGTPCHitPar.h" TrackPar?
 
-
-
 class R3BGTPCHit2Track : public FairTask
 {
- public:
-  /** Default constructor **/
-  R3BGTPCHit2Track();
+  public:
+    /** Default constructor **/
+    R3BGTPCHit2Track();
 
-  /** Destructor **/
-  ~R3BGTPCHit2Track();
+    /** Destructor **/
+    ~R3BGTPCHit2Track();
 
-  /** Virtual method Exec **/
-  virtual void Exec(Option_t* opt);
+    /** Virtual method Exec **/
+    virtual void Exec(Option_t* opt);
 
-  /** Virtual method Reset **/
-  virtual void Reset();
+    /** Virtual method Reset **/
+    virtual void Reset();
 
-  /** Virtual method SetParContainers **/
-  virtual void SetParContainers();
+    /** Virtual method SetParContainers **/
+    virtual void SetParContainers();
 
-  /** Virtual method Init **/
-  virtual InitStatus Init();
+    /** Virtual method Init **/
+    virtual InitStatus Init();
 
-  /** Virtual method ReInit **/
-  virtual InitStatus ReInit();
+    /** Virtual method ReInit **/
+    virtual InitStatus ReInit();
 
-  /** Virtual method Finish **/
-  virtual void Finish();
+    /** Virtual method Finish **/
+    virtual void Finish();
 
-  /** Accessor to select online mode **/
-  void SetOnline(Bool_t option) { fOnline = option; }
+    /** Accessor to select online mode **/
+    void SetOnline(Bool_t option) { fOnline = option; }
 
- private:
-  void SetParameter();
+  private:
+    void SetParameter();
 
-  // TArrayF* fHitParams;
-  // or maybe
-  // Double_t fHitParam;
+    // TArrayF* fHitParams;
+    // or maybe
+    // Double_t fHitParam;
 
-  //R3BGTPCHitPar* fHit_Par; /**< Parameter container. >*/
-  TClonesArray* fHitCA;
-  TClonesArray* fTrackCA;
+    // R3BGTPCHitPar* fHit_Par; /**< Parameter container. >*/
+    TClonesArray* fHitCA;
+    TClonesArray* fTrackCA;
 
-  Bool_t fOnline; // Selector for online data storage
+    Bool_t fOnline; // Selector for online data storage
 
-  /** Private method AddTrackData**/
-  //** Adds a Track to the TrackCollection
-  R3BGTPCTrackData* AddTrackData(std::size_t trackId, std::vector<R3BGTPCHitData> &hitArray);
+    /** Private method AddTrackData**/
+    //** Adds a Track to the TrackCollection
+    R3BGTPCTrackData* AddTrackData(std::size_t trackId, std::vector<R3BGTPCHitData>& hitArray);
 
-  ClassDef(R3BGTPCHit2Track, 1);
+    ClassDef(R3BGTPCHit2Track, 1);
 };
 #endif

@@ -10,7 +10,12 @@
 #ifndef UTIL_H
 #define UTIL_H
 
-enum Linkage { SINGLE, COMPLETE, AVERAGE };
+enum Linkage
+{
+    SINGLE,
+    COMPLETE,
+    AVERAGE
+};
 
 // converts *str* to double.
 double stod(const char* str);

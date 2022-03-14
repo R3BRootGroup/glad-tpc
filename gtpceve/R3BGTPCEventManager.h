@@ -1,13 +1,13 @@
 #ifndef R3BGTPCEVENTMANAGER_H
 #define R3BGTPCEVENTMANAGER_H
 
-#include "TEveEventManager.h"
 #include "FairEventManager.h"
-#include "TGNumberEntry.h"
+#include "TEveEventManager.h"
 #include "TGCanvas.h"
+#include "TGNumberEntry.h"
 
-#include "FairRunAna.h"
 #include "FairRootManager.h"
+#include "FairRunAna.h"
 #include "FairTask.h"
 
 #include "TCanvas.h"
@@ -15,52 +15,48 @@
 
 class TGListTreeItem;
 
-class R3BGTPCEventManager : public TEveEventManager {
- 
-public:
-  static R3BGTPCEventManager *Instance();
-  R3BGTPCEventManager();
-  virtual ~R3BGTPCEventManager();
+class R3BGTPCEventManager : public TEveEventManager
+{
 
-  virtual void GotoEvent(Int_t event); ///< *MENU*
-  virtual void NextEvent();            ///< *MENU*
-  virtual void PrevEvent();            ///< *MENU*
-  virtual void make_gui();
-  virtual void SelectEvent();
-  //virtual void Select3DThres();
+  public:
+    static R3BGTPCEventManager* Instance();
+    R3BGTPCEventManager();
+    virtual ~R3BGTPCEventManager();
 
-  void AddTask(FairTask *task);
-  virtual void Init(Int_t option = 1, Int_t level = 3, Int_t nNodes = 10000);
+    virtual void GotoEvent(Int_t event); ///< *MENU*
+    virtual void NextEvent();            ///< *MENU*
+    virtual void PrevEvent();            ///< *MENU*
+    virtual void make_gui();
+    virtual void SelectEvent();
+    // virtual void Select3DThres();
 
-  virtual Int_t GetCurrentEvent() { return fEntry; }
+    void AddTask(FairTask* task);
+    virtual void Init(Int_t option = 1, Int_t level = 3, Int_t nNodes = 10000);
 
-  TCanvas *GetCvsPadPlane() { return fCvsPadPlane; }
+    virtual Int_t GetCurrentEvent() { return fEntry; }
 
+    TCanvas* GetCvsPadPlane() { return fCvsPadPlane; }
 
+    void RunEvent();
 
-  void RunEvent();
+  private:
+    FairRootManager* fRootManager;
+    FairRunAna* fRunAna;
 
-private:
+    Int_t fEntry;
+    TGListTreeItem* fEvent;
+    TGNumberEntry* fCurrentEvent;
 
-  FairRootManager *fRootManager;
-  FairRunAna *fRunAna;
+    static R3BGTPCEventManager* fInstance;
 
-  Int_t fEntry;
-  TGListTreeItem *fEvent;
-  TGNumberEntry *fCurrentEvent;
-  
-  static R3BGTPCEventManager *fInstance;
+    // Canvas
+    TCanvas* fCvsPadPlane;
+    TCanvas* fPadWave;
 
-  //Canvas
-  TCanvas *fCvsPadPlane;
-  TCanvas *fPadWave;
-  
+    R3BGTPCEventManager(const R3BGTPCEventManager&);
+    R3BGTPCEventManager& operator=(const R3BGTPCEventManager&);
 
-  R3BGTPCEventManager(const R3BGTPCEventManager &);
-  R3BGTPCEventManager &operator=(const R3BGTPCEventManager &);
-
-  ClassDef(R3BGTPCEventManager, 1);
+    ClassDef(R3BGTPCEventManager, 1);
 };
 
-
-#endif 
+#endif

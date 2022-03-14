@@ -68,7 +68,6 @@ class R3BGTPCCal2Hit : public FairTask
     TClonesArray* fCalCA;
     TClonesArray* fHitCA;
     std::shared_ptr<R3BGTPCMap> fTPCMap;
-    
 
     Bool_t fOnline; // Selector for online data storage
 
