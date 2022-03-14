@@ -18,6 +18,7 @@
 #include "R3BGTPCCalData.h"
 #include "R3BGTPCHitData.h"
 #include "R3BGTPCHitPar.h"
+#include "R3BGTPCMap.h"
 
 class TClonesArray;
 class R3BGTPCHitPar;
@@ -52,6 +53,10 @@ class R3BGTPCCal2Hit : public FairTask
     /** Accessor to select online mode **/
     void SetOnline(Bool_t option) { fOnline = option; }
 
+    typedef boost::multi_array<double, 3> multiarray;
+    typedef multiarray::index index;
+    multiarray PadCoordArr;
+
   private:
     void SetParameter();
 
@@ -62,6 +67,8 @@ class R3BGTPCCal2Hit : public FairTask
     R3BGTPCHitPar* fHit_Par; /**< Parameter container. >*/
     TClonesArray* fCalCA;
     TClonesArray* fHitCA;
+    std::shared_ptr<R3BGTPCMap> fTPCMap;
+    
 
     Bool_t fOnline; // Selector for online data storage
 

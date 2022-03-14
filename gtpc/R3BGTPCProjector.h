@@ -23,15 +23,21 @@
 #include "R3BGTPCGeoPar.h"
 #include "R3BGTPCPoint.h"
 #include "R3BGTPCProjPoint.h"
+#include "R3BGTPCCalData.h"
+#include "R3BGTPCMap.h"
 #include "TClonesArray.h"
 
 /**
  * GTPC point projector task
  * @author Héctor Alvarez Pol
- *
+ *       
  * For each event, get the R3BGTPCPoints and determine the projection on the pad plane
  *   Input:  Branch GTPCPoints = TClonesArray("R3BGTPCPoint")
  *   Output: Branch GTPCProjPoint = TClonesArray("R3BGTPCProjPoint")
+ * 
+ * Updated (@author Yassid Ayyad)
+ *  Added R3BGTPCMap as map manager
+ *  Output: Branch GTPCCalData = TClonesArray("R3BGTPCCalData")
  */
 
 class R3BGTPCProjector : public FairTask
@@ -51,6 +57,10 @@ class R3BGTPCProjector : public FairTask
 
     void SetSizeOfVirtualPad(Double_t size);
 
+    void SetProjPointsAsOutput() { outputMode = 1; }
+    void SetCalDataAsOutput() { outputMode = 0; }
+
+
   protected:
     /** Virtual method Init **/
     virtual InitStatus Init();
@@ -68,6 +78,7 @@ class R3BGTPCProjector : public FairTask
 
     TClonesArray* fGTPCPoints;
     TClonesArray* fGTPCProjPoint;
+    TClonesArray* fGTPCCalDataCA;
     // MCTrack- vertex information
     TClonesArray* MCTrackCA;
 
@@ -84,11 +95,18 @@ class R3BGTPCProjector : public FairTask
     Double_t fHalfSizeTPC_Y;    //!< Half size Y of the TPC drift volume [cm]
     Double_t fHalfSizeTPC_Z;    //!< Half size Z of the TPC drift volume [cm]
     Double_t fSizeOfVirtualPad; //!< Number of virtual pad division per cm (default 1)
+    Double_t fTimeBinSize;      //!< Time size of each bin in the time vector [ns]
     Int_t fDetectorType;        //!< Detector type: 1 for prototype, 2 for FullBeamIn, 3 for FullBeamOut
+    Int_t outputMode;           //!< Selects Cal(0) or ProjPoint(1) as output level. Default 0
 
     R3BGTPCGeoPar* fGTPCGeoPar;   //!< Geometry parameter container
     R3BGTPCGasPar* fGTPCGasPar;   //!< Gas parameter container
     R3BGTPCElecPar* fGTPCElecPar; //!< Electronics parameter container
+
+    
+    std::shared_ptr<R3BGTPCMap> fTPCMap;//!< Map container
+    TH2Poly*    fPadPlane;//!< Pad Plane object
+
 
     ClassDef(R3BGTPCProjector, 1)
 };

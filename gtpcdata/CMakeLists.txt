@@ -30,6 +30,7 @@ R3BGTPCProjPoint.cxx
 R3BGTPCMappedData.cxx
 R3BGTPCCalData.cxx
 R3BGTPCHitData.cxx
+R3BGTPCTrackData.cxx
 )
 
 # fill list of header files from list of source files

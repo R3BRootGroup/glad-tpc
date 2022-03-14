@@ -8,4 +8,6 @@ add_subdirectory (gtpcdata)
 #endif (WITH_UCESB)
 add_subdirectory (macros)
 add_subdirectory (gtpc)
-
+add_subdirectory (gtpceve)
+add_subdirectory (gtpcreconstruction)
+add_subdirectory (gtpcmap)

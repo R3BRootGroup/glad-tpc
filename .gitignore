@@ -1,0 +1,40 @@
+*.swp
+*.root
+*.log
+gphysi.dat
+core_dump*
+build
+!*/build
+data
+.vscode
+*~
+
+*#*
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.ko
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+*.lib
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+
+# Compressed packages
+*.tar.bz2
+*.tar.gz
+*.zip
