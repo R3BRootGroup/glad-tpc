@@ -15,9 +15,8 @@
 // Code by Daniel Müllner
 // workaround to make it usable as a standalone version (without R)
 bool fc_isnan(double x) { return false; }
-#include "fastcluster_R_dm.cpp"
 #include "fastcluster_dm.cpp"
-
+#include "fastcluster_R_dm.cpp"
 //
 // Assigns cluster labels (0, ..., nclust-1) to the n points such
 // that the cluster result is split into nclust clusters.
