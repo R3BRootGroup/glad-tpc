@@ -18,6 +18,7 @@
 #include "R3BGTPCHitData.h"
 #include "R3BGTPCTrackData.h"
 //#include "R3BGTPCHitPar.h" TrackPar?
+#include "R3BGTPCTrackFinder.h"
 
 class R3BGTPCHit2Track : public FairTask
 {
@@ -65,6 +66,8 @@ class R3BGTPCHit2Track : public FairTask
     /** Private method AddTrackData**/
     //** Adds a Track to the TrackCollection
     R3BGTPCTrackData* AddTrackData(std::size_t trackId, std::vector<R3BGTPCHitData>& hitArray);
+
+    R3BGTPCTrackFinder *fTrackFinder{};
 
     ClassDef(R3BGTPCHit2Track, 1);
 };

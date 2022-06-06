@@ -23,6 +23,12 @@
 #include "R3BGTPCTrackData.h"
 //#include "R3BGTPCHitPar.h"
 
+#include "dnn.h"
+#include "graph.h"
+#include "output.h"
+#include "pointcloud.h"
+#include "option.h"
+
 // R3BGTPCHit2Track: Constructor
 R3BGTPCHit2Track::R3BGTPCHit2Track()
     : FairTask("R3B GTPC Hit to Track")
@@ -61,6 +67,9 @@ void R3BGTPCHit2Track::SetParContainers()
     // {
     //   LOG(INFO) << "R3BGTPCCal2Hit:: GTPCHitPar container open";
     // }
+
+    fTrackFinder = new R3BGTPCTrackFinder();
+
 }
 
 void R3BGTPCHit2Track::SetParameter()
@@ -116,6 +125,15 @@ void R3BGTPCHit2Track::Exec(Option_t* opt)
     //   LOG(WARNING) << "R3BGTPCHit2Track::NO Container Parameter!!";
     // }
 
+  
+	Opt opt_params;
+	int opt_verbose = opt_params.get_verbosity(); 
+	PointCloud cloud_xyz;
+	fTrackFinder->eventToClusters(fHitCA,cloud_xyz); 
+	
+        
+
+    
     return;
 }
 

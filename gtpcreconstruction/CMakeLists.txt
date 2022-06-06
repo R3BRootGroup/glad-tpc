@@ -27,9 +27,9 @@ ${R3BGTPC_SOURCE_DIR}/gtpc
 ${R3BGTPC_SOURCE_DIR}/gtpcdata
 ${R3BROOT_SOURCE_DIR}/field
 ${R3BGTPC_SOURCE_DIR}/gtpcreconstruction
-${R3BGTPC_SOURCE_DIR}/gtpcreconstruction/tripclust/src
-${R3BGTPC_SOURCE_DIR}/gtpcreconstruction/tripclust/src/hclust
-${R3BGTPC_SOURCE_DIR}/gtpcreconstruction/tripclust/src/kdtree
+${R3BGTPC_SOURCE_DIR}/gtpcreconstruction/triplclust/src
+${R3BGTPC_SOURCE_DIR}/gtpcreconstruction/triplclust/src/hclust
+${R3BGTPC_SOURCE_DIR}/gtpcreconstruction/triplclust/src/kdtree
 )
 
 include_directories( ${INCLUDE_DIRECTORIES})
@@ -43,17 +43,18 @@ ${FAIRROOT_LIBRARY_DIR}
 link_directories( ${LINK_DIRECTORIES})
 
 set(SRCS
-tripclust/src/cluster.cpp 
-tripclust/src/triplet.cpp 
-tripclust/src/main.cpp 
-tripclust/src/dnn.cpp 
-tripclust/src/hclust/fastcluster.cpp 
-tripclust/src/kdtree/kdtree.cpp 
-tripclust/src/pointcloud.cpp 
-tripclust/src/output.cpp 
-tripclust/src/option.cpp 
-tripclust/src/util.cpp 
-tripclust/src/graph.cpp
+triplclust/src/cluster.cpp 
+triplclust/src/triplet.cpp 
+triplclust/src/main.cpp 
+triplclust/src/dnn.cpp 
+triplclust/src/hclust/fastcluster.cpp 
+triplclust/src/kdtree/kdtree.cpp 
+triplclust/src/pointcloud.cpp 
+triplclust/src/output.cpp 
+triplclust/src/option.cpp 
+triplclust/src/util.cpp 
+triplclust/src/graph.cpp
+R3BGTPCTrackFinder.cxx
 )
 
 # fill list of header files from list of source files

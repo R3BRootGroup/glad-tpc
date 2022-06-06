@@ -78,7 +78,7 @@ void run_proj(TString GEOTAG = "Prototype")
     fRun->AddTask(pro);
 
     fRun->Init();
-    fRun->Run(0, 0);
+    fRun->Run(0,0);
     delete fRun;
 
     timer.Stop();

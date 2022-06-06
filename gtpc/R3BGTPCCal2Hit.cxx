@@ -166,7 +166,7 @@ void R3BGTPCCal2Hit::Exec(Option_t* opt)
         Double_t samplingRate = 0.080;              // us 12.5 MHz
         y = (time - 512) * driftVel * samplingRate; // cm
 
-        // std::cout<<" Pad - "<<pad<<" x - y - z - time >>>  "<<x<<" "<<y<<" "<<z<<" "<<time<<"\n";
+        //std::cout<<" Pad - "<<pad<<" x - y - z - time >>>  "<<x<<" "<<y<<" "<<z<<" "<<time<<"\n";
 
         // NB: Translation into GLAD frame for physics.
         AddHitData(x + XOffset, y, z + ZOffset, lW, max);

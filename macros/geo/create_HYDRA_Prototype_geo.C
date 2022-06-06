@@ -197,7 +197,7 @@ void create_tpc_geo(string geoTag = "Prototype")
     TFile* geoFile = new TFile(geoFileName, "RECREATE");
     top->Draw("ogl");
     top->Write();
-    gGeoMan->Write();
+    //gGeoMan->Write();
     geoFile->Close();
 }
 //________________________________________________________________

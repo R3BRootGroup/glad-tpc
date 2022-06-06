@@ -37,7 +37,7 @@ void run_reconstruction(TString fileName = "proj.root")
     fRun->AddTask(cal2hit);
 
     fRun->Init();
-    fRun->Run(0, 0);
+    fRun->Run(0,0);
     delete fRun;
 
     timer.Stop();

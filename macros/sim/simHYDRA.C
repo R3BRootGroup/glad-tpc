@@ -9,7 +9,7 @@ HOW TO USE:
 ALTERNATIVE:
     use the macro run_simHYDRA.C: root -l run_simHYDRA.C
 */
-void simHYDRA(Int_t nEvents = 1, TString GEOTAG = "Prototype", TString generator = "good_evt")
+void simHYDRA(Int_t nEvents = 1000, TString GEOTAG = "Prototype", TString generator = "good_evt")
 {
     Bool_t storeTrajectories = kTRUE; //  To store particle trajectories
     Bool_t magnet = kTRUE;            //	Switch on/off the B field

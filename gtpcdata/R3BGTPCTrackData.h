@@ -42,6 +42,8 @@ class R3BGTPCTrackData : public TObject
     std::vector<R3BGTPCHitData> fHitArray; // Track Hit Array
 
   public:
+    void AddHit(R3BGTPCHitData &&hit) { fHitArray.push_back(hit); }
+
     ClassDef(R3BGTPCTrackData, 1)
 };
 

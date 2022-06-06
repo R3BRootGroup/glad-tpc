@@ -47,7 +47,7 @@ void loadfunction(double& percentage)
 const char* geoTag = "Prototype";
 const char* geoTag1 = "FullBeamOut";
 const char* geoTag2 = "FullBeamIn";
-void Generate_background(TString GEOTAG = string(geoTag2)) // choose the detector
+void Generate_background(TString GEOTAG = string(geoTag)) // choose the detector
 {
     TRandom3 r3(0);
     ofstream asciifile;
