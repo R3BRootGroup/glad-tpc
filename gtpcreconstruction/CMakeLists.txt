@@ -50,9 +50,9 @@ triplclust/src/dnn.cpp
 triplclust/src/hclust/fastcluster.cpp 
 triplclust/src/kdtree/kdtree.cpp 
 triplclust/src/pointcloud.cpp 
-#triplclust/src/output.cpp 
+triplclust/src/output.cpp 
 triplclust/src/option.cpp 
-#triplclust/src/util.cpp 
+triplclust/src/util.cpp 
 #triplclust/src/graph.cpp
 R3BGTPCTrackFinder.cxx
 )

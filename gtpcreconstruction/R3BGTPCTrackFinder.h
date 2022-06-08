@@ -30,9 +30,10 @@ class R3BGTPCTrackFinder{
   tc_params inputParams{.s = 0.3, .k = 19, .n = 2, .m = 15, .r = 2, .a = 0.03, .t = 4.0};    
   
  public:
+
   R3BGTPCTrackFinder();
   virtual ~R3BGTPCTrackFinder() = default;
-
+  void Clusterize(R3BGTPCTrackData &track, Float_t distance, Float_t radius);
   void eventToClusters(TClonesArray* hitCA, PointCloud& cloud);
   std::unique_ptr<R3BGTPCTrackData> clustersToTrack(PointCloud &cloud, const std::vector<cluster_t> &clusters, TClonesArray* trackCA, TClonesArray* hitCA);
 
@@ -42,12 +43,9 @@ class R3BGTPCTrackFinder{
   void SetMcluster(size_t m) { inputParams.m = m; }
   void SetRsmooth(float r) { inputParams.r = r; }
   void SetAtriplet(float a) { inputParams.a = a; }
-  void SetTcluster(float t) { inputParams.t = t; }
-  
+  void SetTcluster(float t) { inputParams.t = t; }  
 
- private:
-      
-  void Clusterize(R3BGTPCTrackData &track, Float_t distance, Float_t radius);
+   
   
 
   ClassDef(R3BGTPCTrackFinder, 1);

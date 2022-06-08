@@ -133,7 +133,7 @@ void R3BGTPCHit2Track::Exec(Option_t* opt)
 	
 	if (cloud_xyz.size() == 0) {
 	  std::cerr << "[Error] empty cloud " << std::endl;
-
+	  return;
 	  
 	}
 
@@ -146,7 +146,7 @@ void R3BGTPCHit2Track::Exec(Option_t* opt)
 	  if (dnn == 0.0) {
 	    std::cerr << "[Error] dnn computed as zero. "
 		      << "Suggestion: remove doublets, e.g. with 'sort -u'" << std::endl;
-	    
+	    return;
 	  }
 	}
 
@@ -174,11 +174,14 @@ void R3BGTPCHit2Track::Exec(Option_t* opt)
 	  }
 	  cl_group = cleaned_up_cluster_group;
 	}
-        
+
+	        
         // store cluster labels in points
 	add_clusters(cloud_xyz, cl_group, opt_params.is_gnuplot());
     
-    return;
+	// Adapt clusters to AtTrack
+	fTrackFinder->clustersToTrack(cloud_xyz, cl_group,fTrackCA,fHitCA);
+	return;
 }
 
 void R3BGTPCHit2Track::Finish() {}
@@ -190,6 +193,7 @@ void R3BGTPCHit2Track::Reset()
         fTrackCA->Clear();
 }
 
+[[deprecated]]
 R3BGTPCTrackData* R3BGTPCHit2Track::AddTrackData(std::size_t trackId, std::vector<R3BGTPCHitData>& hitArray)
 {
     // It fills the R3BGTPCTrackData

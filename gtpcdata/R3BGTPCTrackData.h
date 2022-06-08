@@ -18,6 +18,7 @@
 #include "R3BGTPCHitClusterData.h"
 #include "TObject.h"
 #include <stdint.h>
+#include <memory.h>
 
 class R3BGTPCTrackData : public TObject
 {
@@ -41,8 +42,8 @@ class R3BGTPCTrackData : public TObject
 
     //Setters
     void SetTrackId(Int_t val) { fTrackId   = val; }
-    void AddHit(R3BGTPCHitData &hit) { fHitArray.push_back(hit); }
-    void AddClusterHit(std::shared_ptr<R3BGTPCHitClusterData> hitCluster);
+    void AddHit(R3BGTPCHitData& hit) { fHitArray.push_back(hit); }
+    void AddClusterHit(std::shared_ptr<R3BGTPCHitClusterData> hitCluster) {fHitClusterArray.push_back(std::move(*hitCluster));}
 
   protected:
     Int_t fTrackId{-1};                  // Track Id

@@ -25,6 +25,11 @@
 #include <Rtypes.h>
 #include <TObject.h>
 
+constexpr auto cRED = "\033[1;31m";
+constexpr auto cYELLOW = "\033[1;33m";
+constexpr auto cNORMAL = "\033[0m";
+constexpr auto cGREEN = "\033[1;32m";
+
 R3BGTPCTrackFinder::R3BGTPCTrackFinder()
 {
 }
@@ -67,6 +72,7 @@ std::unique_ptr<R3BGTPCTrackData> R3BGTPCTrackFinder::clustersToTrack(PointCloud
     {
 
         R3BGTPCTrackData track; // One track per cluster
+     
 
         const std::vector<size_t>& point_indices = clusters[cluster_index];
         if (point_indices.size() == 0)
@@ -79,13 +85,17 @@ std::unique_ptr<R3BGTPCTrackData> R3BGTPCTrackFinder::clustersToTrack(PointCloud
             const Point& point = cloud[*it];
 
             Int_t nHits = hitCA->GetEntries();
+	    
             R3BGTPCHitData** hitData;
-            hitData = new R3BGTPCHitData* [nHits];
+            hitData = new R3BGTPCHitData*[nHits];
 
-            track.AddHit(*hitData[point.GetID()]);
+	    if (hitData){
+	      
+	      hitData[point.GetID()] = (R3BGTPCHitData*)(hitCA->At(point.GetID()));	      
+	      track.AddHit(*hitData[point.GetID()]);	           
+	      delete hitData;
 
-            if (hitData)
-                delete hitData;
+	    }
 
             // remove current point from vector points
             for (std::vector<Point>::iterator p = points.begin(); p != points.end(); p++)
@@ -95,18 +105,39 @@ std::unique_ptr<R3BGTPCTrackData> R3BGTPCTrackFinder::clustersToTrack(PointCloud
                     points.erase(p);
                     break;
                 }
-            }
+	    }
 
         } // Point indices
 
         track.SetTrackId(cluster_index);
+	Clusterize(track, 15.0, 30.5);
+
+	tracks.push_back(track);
 
     } // Clusters loop
+    
+    std::cout << cRED << " Tracks found " << tracks.size() << cNORMAL << "\n";
+    
+    // Dump noise into pattern event
+    //auto retEvent = std::make_unique<AtPatternEvent>();
+    //for (const auto &point : points)
+    //retEvent->AddNoise(event.GetHit(point.intensity));
+
+    /*for (auto &track : tracks) {
+      //if (track.GetHitArray().size() > 0)
+	//SetTrackInitialParameters(track);
+      
+      TClonesArray& clref = *trackCA;
+      Int_t size = clref.GetEntriesFast();
+      new (clref[size]) R3BGTPCTrackData(track.GetTrackId(), std::move(track.GetHitArray()));
+
+      }*/
+    
 
     return NULL;
 }
 
-void Clusterize(R3BGTPCTrackData& track, Float_t distance, Float_t radius)
+void R3BGTPCTrackFinder::Clusterize(R3BGTPCTrackData& track, Float_t distance, Float_t radius)
 {
 
     std::vector<R3BGTPCHitData> hitArray = track.GetHitArray();
