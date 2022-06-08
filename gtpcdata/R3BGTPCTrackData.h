@@ -15,6 +15,7 @@
 #define R3BGTPCTRACKDATA_H
 
 #include "R3BGTPCHitData.h"
+#include "R3BGTPCHitClusterData.h"
 #include "TObject.h"
 #include <stdint.h>
 
@@ -34,15 +35,19 @@ class R3BGTPCTrackData : public TObject
     virtual ~R3BGTPCTrackData() {}
 
     // Getters
-    inline const std::size_t GetTrackId() const { return fTrackId; }
-    inline const std::vector<R3BGTPCHitData>* GetHitArray() const { return &fHitArray; }
+    Int_t GetTrackId() { return fTrackId; }
+    std::vector<R3BGTPCHitData> &GetHitArray() { return fHitArray; }
+    std::vector<R3BGTPCHitClusterData> *GetHitClusterArray() { return &fHitClusterArray; }
+
+    //Setters
+    void SetTrackId(Int_t val) { fTrackId   = val; }
+    void AddHit(R3BGTPCHitData &hit) { fHitArray.push_back(hit); }
+    void AddClusterHit(std::shared_ptr<R3BGTPCHitClusterData> hitCluster);
 
   protected:
-    std::size_t fTrackId;                  // Track Id
+    Int_t fTrackId{-1};                  // Track Id
     std::vector<R3BGTPCHitData> fHitArray; // Track Hit Array
-
-  public:
-    void AddHit(R3BGTPCHitData &&hit) { fHitArray.push_back(hit); }
+    std::vector<R3BGTPCHitClusterData> fHitClusterArray;
 
     ClassDef(R3BGTPCTrackData, 1)
 };

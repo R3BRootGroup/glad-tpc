@@ -45,15 +45,15 @@ link_directories( ${LINK_DIRECTORIES})
 set(SRCS
 triplclust/src/cluster.cpp 
 triplclust/src/triplet.cpp 
-triplclust/src/main.cpp 
+#triplclust/src/main.cpp 
 triplclust/src/dnn.cpp 
 triplclust/src/hclust/fastcluster.cpp 
 triplclust/src/kdtree/kdtree.cpp 
 triplclust/src/pointcloud.cpp 
-triplclust/src/output.cpp 
+#triplclust/src/output.cpp 
 triplclust/src/option.cpp 
-triplclust/src/util.cpp 
-triplclust/src/graph.cpp
+#triplclust/src/util.cpp 
+#triplclust/src/graph.cpp
 R3BGTPCTrackFinder.cxx
 )
 
@@ -61,7 +61,7 @@ R3BGTPCTrackFinder.cxx
 # by exchanging the file extension
 CHANGE_FILE_EXTENSION(*.cxx *.h HEADERS "${SRCS}")
 
-#set(LINKDEF R3BGTPCReconstructionLinkDef.h)
+set(LINKDEF R3BGTPCReconstructionLinkDef.h)
 set(LIBRARY_NAME R3BGTPCReconstruction)
 set(DEPENDENCIES
     R3BBase R3BGTPCData)

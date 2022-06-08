@@ -78,6 +78,7 @@ Point& Point::operator=(const Point& other)
     x = other.x;
     y = other.y;
     z = other.z;
+    id = other.id;
     return *this;
 }
 

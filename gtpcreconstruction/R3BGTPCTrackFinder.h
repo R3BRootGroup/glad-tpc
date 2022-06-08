@@ -12,6 +12,7 @@
 #include <vector> // for vector
 
 #include "R3BGTPCTrackData.h"
+#include "R3BGTPCHitClusterData.h"
 
 struct tc_params {
   float s;
@@ -30,10 +31,10 @@ class R3BGTPCTrackFinder{
   
  public:
   R3BGTPCTrackFinder();
-  ~R3BGTPCTrackFinder() = default;
+  virtual ~R3BGTPCTrackFinder() = default;
 
-  std::unique_ptr<R3BGTPCTrackData> FindTracks(R3BGTPCHitData** hitData);
   void eventToClusters(TClonesArray* hitCA, PointCloud& cloud);
+  std::unique_ptr<R3BGTPCTrackData> clustersToTrack(PointCloud &cloud, const std::vector<cluster_t> &clusters, TClonesArray* trackCA, TClonesArray* hitCA);
 
   void SetScluster(float s) { inputParams.s = s; }
   void SetKtriplet(size_t k) { inputParams.k = k; }
@@ -46,8 +47,7 @@ class R3BGTPCTrackFinder{
 
  private:
       
-    
-  //std::unique_ptr<AtPatternEvent> clustersToTrack(PointCloud& cloud, const std::vector<cluster_t> &clusters, AtEvent &event);
+  void Clusterize(R3BGTPCTrackData &track, Float_t distance, Float_t radius);
   
 
   ClassDef(R3BGTPCTrackFinder, 1);
