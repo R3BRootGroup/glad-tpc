@@ -12,7 +12,7 @@
 #include <vector>
 
 #include "dnn.h"
-#include "kdtree/kdtree.hpp"
+#include "kdtree/kdtree.h"
 
 //-------------------------------------------------------------------
 // Compute mean squared distances.

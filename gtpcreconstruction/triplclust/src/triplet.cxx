@@ -11,7 +11,7 @@
 #include <algorithm>
 #include <cmath>
 
-#include "kdtree/kdtree.hpp"
+#include "kdtree/kdtree.h"
 #include "triplet.h"
 
 //-------------------------------------------------------------------

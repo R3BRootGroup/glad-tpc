@@ -43,17 +43,17 @@ ${FAIRROOT_LIBRARY_DIR}
 link_directories( ${LINK_DIRECTORIES})
 
 set(SRCS
-triplclust/src/cluster.cpp 
-triplclust/src/triplet.cpp 
+triplclust/src/cluster.cxx 
+triplclust/src/triplet.cxx 
 #triplclust/src/main.cpp 
-triplclust/src/dnn.cpp 
-triplclust/src/hclust/fastcluster.cpp 
-triplclust/src/kdtree/kdtree.cpp 
-triplclust/src/pointcloud.cpp 
-triplclust/src/output.cpp 
-triplclust/src/option.cpp 
-triplclust/src/util.cpp 
-#triplclust/src/graph.cpp
+triplclust/src/dnn.cxx 
+triplclust/src/hclust/fastcluster.cxx 
+triplclust/src/kdtree/kdtree.cxx 
+triplclust/src/pointcloud.cxx 
+triplclust/src/output.cxx 
+triplclust/src/option.cxx 
+triplclust/src/util.cxx 
+#triplclust/src/graph.cxx
 R3BGTPCTrackFinder.cxx
 )
 

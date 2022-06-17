@@ -14,7 +14,7 @@
 #include <stdexcept>
 #include <string>
 
-#include "kdtree/kdtree.hpp"
+#include "kdtree/kdtree.h"
 #include "pointcloud.h"
 #include "util.h"
 
