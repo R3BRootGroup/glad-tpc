@@ -23,6 +23,9 @@
 #include "TVirtualMC.h"
 #include "TVirtualMCStack.h"
 
+#include "TF1.h"
+using namespace std;
+
 R3BGTPCLangevin::R3BGTPCLangevin()
     : FairTask("R3BGTPCLangevin")
     , fGTPCPointsCA(NULL)
@@ -45,6 +48,7 @@ R3BGTPCLangevin::R3BGTPCLangevin()
     fDriftTimeStep = 0.;
     fDetectorType = 0;
     outputMode = 0;
+    fTPCMap = std::make_shared<R3BGTPCMap>();
 }
 
 R3BGTPCLangevin::~R3BGTPCLangevin()
@@ -162,6 +166,18 @@ InitStatus R3BGTPCLangevin::Init()
 
     SetParameter();
 
+    // Pad plane generation
+    fTPCMap->GeneratePadPlane();
+    fPadPlane = fTPCMap->GetPadPlane();
+
+    if (fPadPlane == NULL)
+    {
+        std::cout << " R3BGTPCProjector::Init() error! - Could not retrieve pad plane. Exiting..."
+                  << "\n";
+        return kERROR;
+    }
+
+
     return kSUCCESS;
 }
 
@@ -188,7 +204,6 @@ void R3BGTPCLangevin::Exec(Option_t*)
     }
 
     R3BGladFieldMap* gladField = (R3BGladFieldMap*)FairRunAna::Instance()->GetField();
-
     R3BGTPCPoint* aPoint;
     Int_t presentTrackID = -10; // control of the point trackID
     Double_t xPre, yPre, zPre;
@@ -212,7 +227,7 @@ void R3BGTPCLangevin::Exec(Option_t*)
     {
         aPoint = (R3BGTPCPoint*)fGTPCPointsCA->At(i);
         evtID = aPoint->GetEventID();
-        if (aPoint->GetTrackStatus() == 11000 || aPoint->GetTrackStatus() == 10010010 ||
+        if (aPoint->GetTrackStatus() == 11000 || aPoint->GetTrackStatus() == 10010010 || 			//Secuencias de condiciones booleanas
             aPoint->GetTrackStatus() == 10010000 || aPoint->GetTrackStatus() == 10011000)
         {
             // entering the gas volume or new track inside the gas (is 10010010 or 10010000??)
@@ -293,6 +308,7 @@ void R3BGTPCLangevin::Exec(Option_t*)
         Double_t cteMult = 0;
         Double_t cteMod = 0;
         Double_t productEB = 0;
+
         Double_t sigmaLongStep;
         Double_t sigmaTransvStep;
         Double_t recoverDriftTimeStep = 0.;
@@ -302,6 +318,7 @@ void R3BGTPCLangevin::Exec(Option_t*)
 
         for (Int_t ele = 1; ele <= generatedElectrons; ele++)
         {
+            //For a single electron
             ele_x = xPre + stepX * ele; // homogeneous electron creation along the step [cm]
             ele_y = yPre + stepY * ele;
             ele_z = zPre + stepZ * ele;
@@ -317,6 +334,7 @@ void R3BGTPCLangevin::Exec(Option_t*)
                       gladField->GetBx(ele_x, ele_y, ele_z); // Field components return in [kG], moved to [V ns cm^-2]
                 B_y = 1e-14 * gladField->GetBy(ele_x, ele_y, ele_z);
                 B_z = 1e-14 * gladField->GetBz(ele_x, ele_y, ele_z);
+                //std::cout << "MAGNETIC FIELD || Bx: "<<B_x<< " By: "<<B_y<<" Bz: "<<B_z<< '\n';
 
                 moduleB = TMath::Sqrt(B_x * B_x + B_y * B_y + B_z * B_z); // in [V ns cm^-2]
                 cteMod = 1 / (1 + mu * mu * moduleB * moduleB);           // adimensional
@@ -335,7 +353,7 @@ void R3BGTPCLangevin::Exec(Option_t*)
                                       mu * mu * productEB *
                                           B_z); // cte * (Ez + mu*(E_x*B_y-E_y*B_x) + mu*mu*productEB*B_z); [cm/ns]
 
-                LOG(DEBUG) << "R3BGTPCLangevin::Exec, timeBeforeDrift=vDrift_x=" << vDrift_x << " vDrift_y=" << vDrift_y
+                LOG(DEBUG) << "R3BGTPCLangevin::Exec, DRIFT VELOCITIES: vDrift_x=" << vDrift_x << " vDrift_y=" << vDrift_y
                            << " vDrift_z=" << vDrift_z << " [cm/ns]";
                 // adjusting the last step before the pad plane
                 if (ele_y - vDrift_y * fDriftTimeStep < -fHalfSizeTPC_Y)
@@ -358,11 +376,13 @@ void R3BGTPCLangevin::Exec(Option_t*)
                 ele_z = gRandom->Gaus(ele_z + vDrift_z * fDriftTimeStep, sigmaTransvStep); // [cm]
                 accDriftTime = accDriftTime + fDriftTimeStep;                              //[ns]
 
+                //if (ele_x > 15) { std::cout << "\033[1;31m Debugging x\033[0m"  << '\n';}
+
                 // TODO!!! CHECK THE NEGATIVE sign in the y directions three lines above...
                 // Could it be symmetric with the others (+) in case the electric field is negative in Y?
                 // Does it change other cross terms? Which one is correct?
-
-                LOG(DEBUG) << "R3BGTPCLangevin::Exec, accDriftTime=" << accDriftTime << " [ns]"
+                //if (ele_x > 15){std::cout << ele_x << '\n';}
+                LOG(DEBUG) << "R3BGTPCLangevin::Exec, NEW VALUES: accDriftTime=" << accDriftTime << " [ns]"
                            << " ele_x=" << ele_x << " ele_y=" << ele_y << " ele_z=" << ele_z << " [cm]";
                 //  cout << "R3BGTPCLangevin::Exec, accDriftTime=" << accDriftTime << " [ns]"
                 //                  << " ele_x=" << ele_x << " ele_y=" << ele_y << " ele_z=" << ele_z << " [cm]" <<
@@ -388,23 +408,33 @@ void R3BGTPCLangevin::Exec(Option_t*)
             // Avoid first moving out of the virtual pad plane limits
             // ZOffset- z of the first pad row in the laboratory frame
             double ZOffset = 272.7; ////TODO!!! WHY ARE THOSE OFFSETS NEEDED HERE? WHY NOT PARAMETERS!!!!???????????
-            // XOffset-y of the first pad column in the laboratory frame
+            // XOffset-x of the first pad column in the laboratory frame
             double XOffset = 5.8; ////TODO!!! WHY ARE THOSE OFFSETS NEEDED HERE? WHY NOT PARAMETERS!!!!???????????
             if (projZ < ZOffset)
-                projZ = ZOffset;
+                projZ = ZOffset + 0.001;
             if (projZ > ZOffset + 2 * fHalfSizeTPC_Z)
-                projZ = ZOffset + 2 * fHalfSizeTPC_Z;
+                projZ = ZOffset + 2 * fHalfSizeTPC_Z - 0.001;
             if (projX < XOffset)
-                projX = XOffset;
+                projX = XOffset + 0.001;
             if (projX > XOffset + 2 * fHalfSizeTPC_X)
-                projX = XOffset + 2 * fHalfSizeTPC_X;
-            Int_t padID;
+                projX = XOffset + 2 * fHalfSizeTPC_X - 0.001;
+
+            Int_t padID = fPadPlane->Fill((projZ - ZOffset) * 10.0, (projX - XOffset) * 10.0); // in mm
+            //If returns negative padID means its filling overflow/underflow bins
+            //Maybe error in the conditionals projX and projZ above
+            if (padID < 0)
+            {
+              std::cout << "\033[1;31m Negative PadID\033[0m" << '\n';
+              std::cout << padID << '\n';
+              std::cout << "Printing ProjX, ProjZ: " << projX - XOffset << ", " << projZ - ZOffset << '\n';
+            }
+            /*Int_t padID;
             if (fDetectorType == 1)
                 padID = (44) * (Int_t)((projZ - ZOffset) / 0.2) + (Int_t)((projX - XOffset) / 0.2); // 2mm
             else
                 padID = (2 * fHalfSizeTPC_X * fSizeOfVirtualPad) * (Int_t)((projZ - ZOffset) * fSizeOfVirtualPad) +
                         (Int_t)((projX - XOffset) * fSizeOfVirtualPad); // FULL HYDRA padplane has not been decided yet
-
+            */
             if (outputMode == 0)
             { // Output: TClonesArray of R3BGTPCCalData
                 Int_t nCalData = fGTPCCalDataCA->GetEntriesFast();
@@ -422,6 +452,7 @@ void R3BGTPCLangevin::Exec(Option_t*)
                         padFound = kTRUE;
                         break;
                     }
+
                 }
                 if (!padFound)
                 {

@@ -26,6 +26,7 @@
 #include "R3BGTPCProjPoint.h"
 #include "TClonesArray.h"
 #include "TVirtualMC.h"
+#include "R3BGTPCMap.h"
 
 /**
  * GTPC drift calculation using Langevin equation task
@@ -97,6 +98,9 @@ class R3BGTPCLangevin : public FairTask
     TClonesArray* fMCTrackCA;
 
     // R3BGTPCCalData* AddCalData();
+
+    std::shared_ptr<R3BGTPCMap> fTPCMap; //!< Map container
+    TH2Poly* fPadPlane;                  //!< Pad Plane object
 
     ClassDef(R3BGTPCLangevin, 2)
 };

@@ -1,4 +1,4 @@
-void run_reconstruction(TString fileName = "proj.root")
+void run_reconstruction(TString fileName = "lang.root")
 {
     TStopwatch timer;
     timer.Start();
@@ -10,12 +10,17 @@ void run_reconstruction(TString fileName = "proj.root")
     // Output file
     TString outFile;
 
-    TString GTPCHitParamsFile;
+    // Input and outup file according to the GEOTAG
+    //TString GTPCHitParamsFile;
+    TString GTPCGeoParamsFile;
     TString workDir = gSystem->Getenv("VMCWORKDIR");
 
+    cout << "\033[1;31m Warning\033[0m: The detector is: Prototype" << endl;
     inFile = workDir + "/glad-tpc/macros/proj/Prototype/" + fileName;
     outFile = workDir + "/glad-tpc/macros/reco/output_reco.root";
-    GTPCHitParamsFile = workDir + "/glad-tpc/params/Hit_FileSetup.par";
+    //GTPCHitParamsFile = workDir + "/glad-tpc/params/Hit_FileSetup.par";
+    parFile = "../sim/Prototype/par.root";
+    GTPCGeoParamsFile = workDir + "/glad-tpc/params/HYDRAprototype_FileSetup.par";
 
     // -----   Create analysis run   ----------------------------------------
     FairRunAna* fRun = new FairRunAna();
@@ -26,13 +31,15 @@ void run_reconstruction(TString fileName = "proj.root")
     FairRuntimeDb* rtdb = fRun->GetRuntimeDb();
     FairParRootFileIo* parIn = new FairParRootFileIo(kTRUE);
     FairParAsciiFileIo* parIo1 = new FairParAsciiFileIo(); // Ascii file
-    // parIn->open(parFile.Data());
-    parIo1->open(GTPCHitParamsFile, "in");
-    // rtdb->setFirstInput(parIn);
+    parIn->open(parFile.Data());
+    parIo1->open(GTPCGeoParamsFile, "in");
+    rtdb->setFirstInput(parIn);
     rtdb->setSecondInput(parIo1);
     rtdb->print();
 
     R3BGTPCCal2Hit* cal2hit = new R3BGTPCCal2Hit();
+    //(David)
+    if (fileName == "proj.root"){cal2hit->SetRecoFlag(kFALSE);}
 
     fRun->AddTask(cal2hit);
 

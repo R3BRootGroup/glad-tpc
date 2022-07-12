@@ -29,7 +29,7 @@ void Analysis(TString GEOTAG = "Prototype")
 
     // SETTINGS
     Bool_t graphicalOutput = kTRUE;
-    Bool_t textOutput = kFALSE;
+    Bool_t textOutput = kTRUE;
     Bool_t checkMCTracks = kTRUE; // Defines Histogram for MCTracks
     Bool_t checkPoints = kTRUE;   // Defines Histogram for Points
 
@@ -187,7 +187,7 @@ void Analysis(TString GEOTAG = "Prototype")
             track = new R3BMCTrack*[MCtracksPerEvent];
             for (Int_t j = 0; j < MCtracksPerEvent; j++)
             {
-                track[j] = new R3BMCTrack;
+                //track[j] = new R3BMCTrack; //Memory error -> malloc(): invalid size (unsorted)
                 track[j] = (R3BMCTrack*)MCTrackCA->At(j);
             }
         }

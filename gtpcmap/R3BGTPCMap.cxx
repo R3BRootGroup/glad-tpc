@@ -65,7 +65,7 @@ std::vector<Float_t> R3BGTPCMap::CalcPadCenter(Int_t PadRef)
     if (fPadPlane == 0)
     {
 
-        std::cout << " R3BGTPCMap::CalcPadCenter Error : Pad plane has not been generated or parsed " << std::endl;
+        //std::cout << " R3BGTPCMap::CalcPadCenter Error : Pad plane not found" << std::endl;
         return PadCenter;
     }
 
