@@ -24,12 +24,14 @@ void Residues(TString simFilename = "sim.root", TString recoFilename = "output_r
     cout<<"[ERROR] Files not opened!"<<endl;
     exit(1);
   }
+
   gROOT->SetStyle("Default");
   gStyle->SetOptStat(1111);
   gStyle->SetOptFit(1);
-  TCanvas *c1 = new TCanvas("Reconstruction", "Reconstruction", 0, 0, 500, 700);
+  TCanvas *c1 = new TCanvas("Event Reconstruction", "Event Reconstruction", 0, 0, 700, 700);
   c1->SetFillColor(0);
   c1->SetFrameFillColor(0);
+
   //Extract info of the tree 'evt' in simFile
   //POINTS info
   TTree* simTree;
@@ -108,21 +110,38 @@ void Residues(TString simFilename = "sim.root", TString recoFilename = "output_r
     //to the tracks a minimum distance to be considereded reconstruction of this track
 
     //Starting studying only one event
-    if (i == 970 || i == 980 || i==990){
-      Double_t x[eventPoints];
-      Double_t y[eventPoints];
-      Double_t z[eventPoints];
-      Double_t trackID[eventPoints];
+    if (i==990){
+      Double_t x;
+      Double_t y;
+      Double_t z;
+      Double_t trackID;
+      //Create the graphs
+      TGraph2D *hitgr  = new TGraph2D(eventHits);
+      TGraph2D *pointgr = new TGraph2D(eventPoints);
+
+      for (Int_t j=0; j<eventHits; j++){
+        x = hits[j]->GetX();
+        y = hits[j]->GetY();
+        z = hits[j]->GetZ();
+        hitgr->SetPoint(j,x,y,z);
+      }
+      //Drawing the 3D graphs
+      hitgr->SetMarkerStyle(4);
+      hitgr->SetMarkerColor(2);
+      hitgr->Draw("PO");
 
       for (Int_t j=0; j<eventPoints;j++){
-        x[j] = points[j]->GetX();
-        y[j] = points[j]->GetY();
-        z[j] = points[j]->GetZ();
-        trackID[j] = points[j]->GetParentTrackID();
-
-        cout<<"Point: "<<j<<"\tTrackID: "<<trackID[j]<<"\tPosition: ("<<x[j]<<" "<<y[j]<<" "<<z[j]<<")"<<endl;
+        x = points[j]->GetX();
+        y = points[j]->GetY();
+        z = points[j]->GetZ();
+        pointgr->SetPoint(j,x,y,z);
+        trackID = points[j]->GetTrackID();
+        cout<<"Point: "<<j<<"\tTrackID: "<<trackID<<"\tPosition: ("<<x<<" "<<y<<" "<<z<<")"<<endl;
       }
-
+      pointgr->SetMarkerStyle(4);
+      pointgr->SetMarkerColor(4);
+      pointgr->Draw("same LINE");
+      pointgr->Draw("same P");
 
     }
 
