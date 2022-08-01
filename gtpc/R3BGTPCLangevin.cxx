@@ -124,7 +124,7 @@ void R3BGTPCLangevin::SetParameter()
     fSizeOfVirtualPad = fGTPCGeoPar->GetPadSize(); // 1 means pads of 1cm^2, 10 means pads of 1mm^2, ...
     fDetectorType = fGTPCGeoPar->GetDetectorType();
     // From electronic properties
-    fDriftEField = fGTPCElecPar->GetDriftEField();     // drift E field in V/m
+    fDriftEField = fGTPCElecPar->GetDriftEField();     // drift E field in V/cm
     fDriftTimeStep = fGTPCElecPar->GetDriftTimeStep(); // time step for drift params calculation
     fTimeBinSize = fGTPCElecPar->GetTimeBinSize();     // time step for drift params calculation
 }
@@ -172,11 +172,9 @@ InitStatus R3BGTPCLangevin::Init()
 
     if (fPadPlane == NULL)
     {
-        std::cout << " R3BGTPCProjector::Init() error! - Could not retrieve pad plane. Exiting..."
-                  << "\n";
+        std::cout << " R3BGTPCProjector::Init() error! - Could not retrieve pad plane. Exiting..."<<endl;
         return kERROR;
     }
-
 
     return kSUCCESS;
 }
@@ -227,7 +225,7 @@ void R3BGTPCLangevin::Exec(Option_t*)
     {
         aPoint = (R3BGTPCPoint*)fGTPCPointsCA->At(i);
         evtID = aPoint->GetEventID();
-        if (aPoint->GetTrackStatus() == 11000 || aPoint->GetTrackStatus() == 10010010 || 			//Secuencias de condiciones booleanas
+        if (aPoint->GetTrackStatus() == 11000 || aPoint->GetTrackStatus() == 10010010 ||
             aPoint->GetTrackStatus() == 10010000 || aPoint->GetTrackStatus() == 10011000)
         {
             // entering the gas volume or new track inside the gas (is 10010010 or 10010000??)
@@ -376,17 +374,12 @@ void R3BGTPCLangevin::Exec(Option_t*)
                 ele_z = gRandom->Gaus(ele_z + vDrift_z * fDriftTimeStep, sigmaTransvStep); // [cm]
                 accDriftTime = accDriftTime + fDriftTimeStep;                              //[ns]
 
-                //if (ele_x > 15) { std::cout << "\033[1;31m Debugging x\033[0m"  << '\n';}
-
                 // TODO!!! CHECK THE NEGATIVE sign in the y directions three lines above...
                 // Could it be symmetric with the others (+) in case the electric field is negative in Y?
                 // Does it change other cross terms? Which one is correct?
-                //if (ele_x > 15){std::cout << ele_x << '\n';}
+
                 LOG(DEBUG) << "R3BGTPCLangevin::Exec, NEW VALUES: accDriftTime=" << accDriftTime << " [ns]"
                            << " ele_x=" << ele_x << " ele_y=" << ele_y << " ele_z=" << ele_z << " [cm]";
-                //  cout << "R3BGTPCLangevin::Exec, accDriftTime=" << accDriftTime << " [ns]"
-                //                  << " ele_x=" << ele_x << " ele_y=" << ele_y << " ele_z=" << ele_z << " [cm]" <<
-                //                  endl;
             }
             if (recoverDriftTimeStep)
             {
@@ -407,17 +400,18 @@ void R3BGTPCLangevin::Exec(Option_t*)
             // from 20*fHalfSizeTPC_X to 40*fHalfSizeTPC_X  (Z~200.0), ...
             // Avoid first moving out of the virtual pad plane limits
             // ZOffset- z of the first pad row in the laboratory frame
+
             double ZOffset = 272.7; ////TODO!!! WHY ARE THOSE OFFSETS NEEDED HERE? WHY NOT PARAMETERS!!!!???????????
             // XOffset-x of the first pad column in the laboratory frame
             double XOffset = 5.8; ////TODO!!! WHY ARE THOSE OFFSETS NEEDED HERE? WHY NOT PARAMETERS!!!!???????????
             if (projZ < ZOffset)
-                projZ = ZOffset + 0.001;
+                projZ = ZOffset + 0.01; //ToDo!! Need to modify these offset to avoid negative padIDs (Debug needed)
             if (projZ > ZOffset + 2 * fHalfSizeTPC_Z)
-                projZ = ZOffset + 2 * fHalfSizeTPC_Z - 0.001;
+                projZ = ZOffset + 2 * fHalfSizeTPC_Z - 0.01;
             if (projX < XOffset)
-                projX = XOffset + 0.001;
+                projX = XOffset + 0.01;
             if (projX > XOffset + 2 * fHalfSizeTPC_X)
-                projX = XOffset + 2 * fHalfSizeTPC_X - 0.001;
+                projX = XOffset + 2 * fHalfSizeTPC_X - 0.01;
 
             Int_t padID = fPadPlane->Fill((projZ - ZOffset) * 10.0, (projX - XOffset) * 10.0); // in mm
             //If returns negative padID means its filling overflow/underflow bins
