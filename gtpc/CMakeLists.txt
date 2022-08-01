@@ -52,7 +52,7 @@ R3BGTPCContFact.cxx
 R3BGTPCGeoPar.cxx
 R3BGTPCGasPar.cxx
 R3BGTPCElecPar.cxx
-R3BGTPCHitPar.cxx
+#R3BGTPCHitPar.cxx
 R3BGTPCCalPar.cxx
 #R3BGTPCMappedPar.cxx
 R3BGTPCCal2Hit.cxx

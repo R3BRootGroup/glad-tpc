@@ -20,11 +20,9 @@
 #include "R3BGTPCElecPar.h"
 #include "R3BGTPCGasPar.h"
 #include "R3BGTPCGeoPar.h"
-#include "R3BGTPCHitPar.h"
 #include "R3BGTPCMap.h"
 
 class TClonesArray;
-class R3BGTPCHitPar;
 
 class R3BGTPCCal2Hit : public FairTask
 {

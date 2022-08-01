@@ -30,7 +30,7 @@
 #pragma link C++ class R3BGTPCGasPar+;
 #pragma link C++ class R3BGTPCElecPar+;
 
-#pragma link C++ class R3BGTPCHitPar+;
+//#pragma link C++ class R3BGTPCHitPar+;
 #pragma link C++ class R3BGTPCCalPar+;
 //#pragma link C++ class R3BGTPCMappedPar+;
 
