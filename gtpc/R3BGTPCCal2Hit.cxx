@@ -198,7 +198,7 @@ void R3BGTPCCal2Hit::Exec(Option_t* opt)
 
             z = PadCenterCoord[0] / 10.0; //[cm] (PadCenterCoord on mm)
             x = PadCenterCoord[1] / 10.0;
-            y = -fHalfSizeTPC_Y + TMath::Sqrt(fDriftTimeStep * 2 * fLongDiff); // We can't start just at pad plane
+            y = -fHalfSizeTPC_Y; //Start at pad plane
 
             x = x + fOffsetX; //[cm]
             z = z + fOffsetZ; //[cm]
@@ -232,14 +232,15 @@ void R3BGTPCCal2Hit::Exec(Option_t* opt)
                 Double_t cteMod = 0;
                 Double_t productEB = 0;
 
-                Double_t sigmaLongStep;
-                Double_t sigmaTransvStep;
                 Double_t recoverDriftTimeStep = 0.;
                 Bool_t recoverStep = kTRUE;
 
-
-
                 Double_t mu = fDriftVelocity / E_y; // [cm^2 ns^-1 V^-1]
+
+                //Auxiliar values to obtain the velocities after the first callback to make the second and definitive callback
+                Double_t auxx;
+                Double_t auxy;
+                Double_t auxz;
 
                 sigmaLong = sqrt(time * 2 * fLongDiff);
                 sigmaTransv = sqrt(time * 2 * fTransDiff);
@@ -252,23 +253,6 @@ void R3BGTPCCal2Hit::Exec(Option_t* opt)
                 // Calculation Loop till accDriftTime = 0
                 while (accDriftTime > 0.)
                 {
-                    B_x = 1e-14 * gladField->GetBx(x, y, z); // Field components return in [kG], moved to [V ns cm^-2]
-                    B_y = 1e-14 * gladField->GetBy(x, y, z);
-                    B_z = 1e-14 * gladField->GetBz(x, y, z);
-
-                    moduleB = TMath::Sqrt(B_x * B_x + B_y * B_y + B_z * B_z); // [V ns cm^-2]
-                    cteMod = 1 / (1 + mu * mu * moduleB * moduleB);           // dimensionless
-                    cteMult = mu * cteMod;                                    // [cm^2 V^-1 ns^-1]
-
-                    productEB = E_y * B_y; // E_x*B_x + E_y*B_y + E_z*B_z; [V^2 ns cm^-3]
-
-                    // Drift velocities
-                    vDrift_x = cteMult * (mu * (E_y * B_z) + mu * mu * productEB * B_x);  //[cm/ns]
-                    vDrift_y = cteMult * (E_y + mu * mu * productEB * B_y);               //[cm/ns]
-                    vDrift_z = cteMult * (mu * (-E_y * B_x) + mu * mu * productEB * B_z); //[cm/ns]
-                    LOG(DEBUG) << "R3BGTPCCal2Hit::Exec, DRIFT VELOCITIES: vDrift_x=" << vDrift_x
-                               << " vDrift_y=" << vDrift_y << " vDrift_z=" << vDrift_z << " [cm/ns]";
-
                     // We adjust the time for the last step before reaching time=0
                     if (accDriftTime - fDriftTimeStep < 0.0)
                     {
@@ -280,20 +264,50 @@ void R3BGTPCCal2Hit::Exec(Option_t* opt)
                         fDriftTimeStep = accDriftTime;
                     }
 
-                    sigmaTransvStep = TMath::Sqrt(fDriftTimeStep * 2 * fTransDiff * cteMod); // [cm]
-                    sigmaLongStep = TMath::Sqrt(fDriftTimeStep * 2 * fLongDiff);             // [cm]
+                    B_x = 1e-14 * gladField->GetBx(x, y, z); // Field components return in [kG], moved to [V ns cm^-2]
+                    B_y = 1e-14 * gladField->GetBy(x, y, z);
+                    B_z = 1e-14 * gladField->GetBz(x, y, z);
 
-                    // We reverse the sign of velocity * time to move backward
-                    // x = gRandom->Gaus(x - vDrift_x * fDriftTimeStep, sigmaTransvStep); // [cm]
-                    // y = gRandom->Gaus(y + vDrift_y * fDriftTimeStep, sigmaLongStep);   // [cm]
-                    // z = gRandom->Gaus(z - vDrift_z * fDriftTimeStep, sigmaTransvStep); // [cm]
+                    moduleB = TMath::Sqrt(B_x * B_x + B_y * B_y + B_z * B_z); // [V ns cm^-2]
+                    cteMod = 1 / (1 + mu * mu * moduleB * moduleB);           // dimensionless
+                    cteMult = mu * cteMod;                                    // [cm^2 V^-1 ns^-1]
+                    productEB = E_y * B_y; // E_x*B_x + E_y*B_y + E_z*B_z; [V^2 ns cm^-3]
+
+                    // Drift velocities for auxiliar point finding
+                    vDrift_x = cteMult * (mu * (E_y * B_z) + mu * mu * productEB * B_x);  //[cm/ns]
+                    vDrift_y = cteMult * (E_y + mu * mu * productEB * B_y);               //[cm/ns]
+                    vDrift_z = cteMult * (mu * (-E_y * B_x) + mu * mu * productEB * B_z); //[cm/ns]
+
+                    // Point where we calculate the velocity vector for reversion
+                    auxx = x - vDrift_x * fDriftTimeStep;
+                    auxy = y + vDrift_y * fDriftTimeStep;
+                    auxz = z - vDrift_z * fDriftTimeStep;
+
+                    // Field in the auxiliar point
+                    B_x = 1e-14 * gladField->GetBx(auxx, auxy, auxz);
+                    B_y = 1e-14 * gladField->GetBy(auxx, auxy, auxz);
+                    B_z = 1e-14 * gladField->GetBz(auxx, auxy, auxz);
+
+                    moduleB = TMath::Sqrt(B_x * B_x + B_y * B_y + B_z * B_z); // [V ns cm^-2]
+                    cteMod = 1 / (1 + mu * mu * moduleB * moduleB);           // dimensionless
+                    cteMult = mu * cteMod;                                    // [cm^2 V^-1 ns^-1]
+                    productEB = E_y * B_y; // E_x*B_x + E_y*B_y + E_z*B_z; [V^2 ns cm^-3]
+
+                    // Drift velocities
+                    vDrift_x = cteMult * (mu * (E_y * B_z) + mu * mu * productEB * B_x);  //[cm/ns]
+                    vDrift_y = cteMult * (E_y + mu * mu * productEB * B_y);               //[cm/ns]
+                    vDrift_z = cteMult * (mu * (-E_y * B_x) + mu * mu * productEB * B_z); //[cm/ns]
+
+                    //Use vector velocity (reversed) in the initial point to move backwards
                     x = x - vDrift_x * fDriftTimeStep;
                     y = y + vDrift_y * fDriftTimeStep;
                     z = z - vDrift_z * fDriftTimeStep;
-                    // Taking account of clouds widths
-                    cloudLong += sigmaLongStep;
-                    cloudTransv += sigmaTransvStep;
 
+                    // Taking account of clouds widths
+                    cloudLong += fDriftTimeStep * 2 * fLongDiff;
+                    cloudTransv += fDriftTimeStep * 2 * fTransDiff * cteMod;
+
+                    //Resting time update
                     accDriftTime = accDriftTime - fDriftTimeStep;
                     LOG(DEBUG) << "R3BGTPCCal2Hit::Exec, NEW VALUES: accDriftTime=" << accDriftTime << " [ns]"
                                << " x=" << x << " y=" << y << " z=" << z << " [cm]";
@@ -306,10 +320,10 @@ void R3BGTPCCal2Hit::Exec(Option_t* opt)
                     recoverStep = kTRUE;
                 }
                 //Comparing sigmas obtained in both ways
-                LOG(DEBUG)<<"Comparing sigmas... Approx: "<<sigmaLong<<" "<<sigmaTransv<<";  Step by step: "<<cloudLong<<" "<<cloudTransv;
+                LOG(DEBUG)<<"Comparing sigmas... Approx: "<<sigmaLong<<" "<<sigmaTransv<<";  Step by step: "<<TMath::Sqrt(cloudLong)<<" "<<TMath::Sqrt(cloudTransv);
             }
             // Adding the hit relevant info
-            AddHitData(x, y, z, cloudLong, counts);
+            AddHitData(x, y, z, sigmaLong, counts);
         }
     }
 
