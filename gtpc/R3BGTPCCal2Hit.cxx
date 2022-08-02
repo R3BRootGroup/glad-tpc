@@ -87,6 +87,8 @@ void R3BGTPCCal2Hit::SetParameter()
     fHalfSizeTPC_Z = fGTPCGeoPar->GetActiveRegionz() / 2.; //[cm]
     fSizeOfVirtualPad = fGTPCGeoPar->GetPadSize();         // 1 means pads of 1cm^2, 10 means pads of 1mm^2, ...
     fDetectorType = fGTPCGeoPar->GetDetectorType();
+    fOffsetX = fGTPCGeoPar->GetGladOffsetX();           //X offset [cm]
+    fOffsetZ = fGTPCGeoPar->GetGladOffsetZ();           //Z offset [cm]
     // From electronic properties
     fDriftEField = fGTPCElecPar->GetDriftEField();     // [V/cm]
     fDriftTimeStep = fGTPCElecPar->GetDriftTimeStep(); // [ns]
@@ -102,13 +104,13 @@ InitStatus R3BGTPCCal2Hit::Init()
     FairRootManager* ioManager = FairRootManager::Instance();
     if (!ioManager)
     {
-        LOG(fatal) << "Init: No FairRootManager";
+        LOG(FATAL) << "Init: No FairRootManager";
     }
 
     fCalCA = (TClonesArray*)ioManager->GetObject("GTPCCalData");
     if (!fCalCA)
     {
-        LOG(fatal) << "Init: No R3BGTPCCalData";
+        LOG(FATAL) << "Init: No R3BGTPCCalData";
     }
 
     // Register output - Hit
@@ -148,14 +150,14 @@ void R3BGTPCCal2Hit::Exec(Option_t* opt)
 
     if (!nCals)
     {
-        cout << "[WARN] No CalPads" << endl;
+        LOG(WARNING) << "No CalPads";
     }
 
     Double_t x = 0, y = 0, z = 0, lW = 0, ene = 0;
     R3BGladFieldMap* gladField = (R3BGladFieldMap*)FairRunAna::Instance()->GetField(); // B Field
     if (!gladField)
     {
-        cout << "[WARN] No GladField" << endl;
+        LOG(WARNING) << "No GladField";
     }
 
     R3BGTPCCalData** calData;
@@ -169,8 +171,11 @@ void R3BGTPCCal2Hit::Exec(Option_t* opt)
 
         Double_t counts = 0;
         Double_t time = 0;
-        Double_t cloudLong = 0;
+        Double_t cloudLong = 0; //step by step
         Double_t cloudTransv = 0;
+        Double_t sigmaLong; //aprox for the whole time of reconstruction
+        Double_t sigmaTransv;
+
 
         for (auto iadc = 0; iadc < adc_cal.size(); iadc++)
         {
@@ -187,7 +192,7 @@ void R3BGTPCCal2Hit::Exec(Option_t* opt)
             // Invalid ID condition PadCenterCoord[0]=-9999 (Should be solved in R3BGTPCLangevin)
             if (PadCenterCoord[0] < -9000)
             {
-                cout << "[WARN] R3BGTPCCal2Hit::Exec Invalid padID" << endl;
+                LOG(WARNING)<<"R3BGTPCCal2Hit::Exec Invalid padID";
                 continue;
             }
 
@@ -195,11 +200,8 @@ void R3BGTPCCal2Hit::Exec(Option_t* opt)
             x = PadCenterCoord[1] / 10.0;
             y = -fHalfSizeTPC_Y + TMath::Sqrt(fDriftTimeStep * 2 * fLongDiff); // We can't start just at pad plane
 
-            // TODO: To parameter container
-            double ZOffset = 272.7;                          // [cm]
-            double XOffset = 5.8;                            // [cm]
-            x = x + XOffset;                                 //[cm]
-            z = z + ZOffset;                                 //[cm]
+            x = x + fOffsetX; //[cm]
+            z = z + fOffsetZ; //[cm]
             time = time * fTimeBinSize + 0.5 * fTimeBinSize; //[ns] moving from TimeBuckets to ns; adding the half of
                                                              //the size of the bin to take the center of the bin
 
@@ -235,7 +237,14 @@ void R3BGTPCCal2Hit::Exec(Option_t* opt)
                 Double_t recoverDriftTimeStep = 0.;
                 Bool_t recoverStep = kTRUE;
 
+
+
                 Double_t mu = fDriftVelocity / E_y; // [cm^2 ns^-1 V^-1]
+
+                sigmaLong = sqrt(time * 2 * fLongDiff);
+                sigmaTransv = sqrt(time * 2 * fTransDiff);
+                cloudLong = 0;
+                cloudTransv = 0;
 
                 LOG(DEBUG) << "R3BGTPCCal2Hit::Exec, INITIAL VALUES: \tTimeToRun=" << accDriftTime << " [ns]"
                            << " \tx=" << x << "  \ty=" << y << " \tz=" << z << " [cm]";
@@ -296,8 +305,10 @@ void R3BGTPCCal2Hit::Exec(Option_t* opt)
                     recoverDriftTimeStep = 0.;
                     recoverStep = kTRUE;
                 }
+                //Comparing sigmas obtained in both ways
+                LOG(DEBUG)<<"Comparing sigmas... Approx: "<<sigmaLong<<" "<<sigmaTransv<<";  Step by step: "<<cloudLong<<" "<<cloudTransv;
             }
-            // NB: Translation into GLAD frame for physics.
+            // Adding the hit relevant info
             AddHitData(x, y, z, cloudLong, counts);
         }
     }

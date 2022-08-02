@@ -74,6 +74,8 @@ class R3BGTPCCal2Hit : public FairTask
     Double_t fDriftEField;      //!< Drift electric field [V/cm]
     Double_t fDriftTimeStep;    //!< Time Step between drift parameters calculation [ns]
     Double_t fTimeBinSize;      //!< Time size of each bin in the time vector [ns]
+    Double_t fOffsetX;          //!< X offset for prototype [cm] --> Warn: Make sure run_reconstruction.C uses the correct .par
+    Double_t fOffsetZ;          //!< Z offset for prototype [cm] --> Warn: Make sure run_reconstruction.C uses the correct .par
 
     Int_t fDetectorType; //!< Detector type: 1 for prototype, 2 for FullBeamIn, 3 for FullBeamOut
 

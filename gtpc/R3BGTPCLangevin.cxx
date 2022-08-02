@@ -123,6 +123,8 @@ void R3BGTPCLangevin::SetParameter()
     fHalfSizeTPC_Z = fGTPCGeoPar->GetActiveRegionz() / 2.;
     fSizeOfVirtualPad = fGTPCGeoPar->GetPadSize(); // 1 means pads of 1cm^2, 10 means pads of 1mm^2, ...
     fDetectorType = fGTPCGeoPar->GetDetectorType();
+    fOffsetX = fGTPCGeoPar->GetGladOffsetX();           //X offset [cm]
+    fOffsetZ = fGTPCGeoPar->GetGladOffsetZ();           //Z offset [cm]
     // From electronic properties
     fDriftEField = fGTPCElecPar->GetDriftEField();     // drift E field in V/cm
     fDriftTimeStep = fGTPCElecPar->GetDriftTimeStep(); // time step for drift params calculation
@@ -401,34 +403,25 @@ void R3BGTPCLangevin::Exec(Option_t*)
             // Avoid first moving out of the virtual pad plane limits
             // ZOffset- z of the first pad row in the laboratory frame
 
-            double ZOffset = 272.7; ////TODO!!! WHY ARE THOSE OFFSETS NEEDED HERE? WHY NOT PARAMETERS!!!!???????????
-            // XOffset-x of the first pad column in the laboratory frame
-            double XOffset = 5.8; ////TODO!!! WHY ARE THOSE OFFSETS NEEDED HERE? WHY NOT PARAMETERS!!!!???????????
-            if (projZ < ZOffset)
-                projZ = ZOffset + 0.01; //ToDo!! Need to modify these offset to avoid negative padIDs (Debug needed)
-            if (projZ > ZOffset + 2 * fHalfSizeTPC_Z)
-                projZ = ZOffset + 2 * fHalfSizeTPC_Z - 0.01;
-            if (projX < XOffset)
-                projX = XOffset + 0.01;
-            if (projX > XOffset + 2 * fHalfSizeTPC_X)
-                projX = XOffset + 2 * fHalfSizeTPC_X - 0.01;
 
-            Int_t padID = fPadPlane->Fill((projZ - ZOffset) * 10.0, (projX - XOffset) * 10.0); // in mm
+            if (projZ < fOffsetZ)
+                projZ = fOffsetZ + 0.01; //ToDo!! Need to modify these offset to avoid negative padIDs (Debug needed)
+            if (projZ > fOffsetZ + 2 * fHalfSizeTPC_Z)
+                projZ = fOffsetZ + 2 * fHalfSizeTPC_Z - 0.01;
+            if (projX < fOffsetX)
+                projX = fOffsetX + 0.01;
+            if (projX > fOffsetX + 2 * fHalfSizeTPC_X)
+                projX = fOffsetX + 2 * fHalfSizeTPC_X - 0.01;
+
+            Int_t padID = fPadPlane->Fill((projZ - fOffsetZ) * 10.0, (projX - fOffsetX) * 10.0); // in mm for the padID
             //If returns negative padID means its filling overflow/underflow bins
             //Maybe error in the conditionals projX and projZ above
             if (padID < 0)
             {
-              std::cout << "\033[1;31m Negative PadID\033[0m" << '\n';
-              std::cout << padID << '\n';
-              std::cout << "Printing ProjX, ProjZ: " << projX - XOffset << ", " << projZ - ZOffset << '\n';
+                LOG(WARNING)<<"R3BGTPCLangevin::Exec Negative padID" << endl;
+                continue;
             }
-            /*Int_t padID;
-            if (fDetectorType == 1)
-                padID = (44) * (Int_t)((projZ - ZOffset) / 0.2) + (Int_t)((projX - XOffset) / 0.2); // 2mm
-            else
-                padID = (2 * fHalfSizeTPC_X * fSizeOfVirtualPad) * (Int_t)((projZ - ZOffset) * fSizeOfVirtualPad) +
-                        (Int_t)((projX - XOffset) * fSizeOfVirtualPad); // FULL HYDRA padplane has not been decided yet
-            */
+
             if (outputMode == 0)
             { // Output: TClonesArray of R3BGTPCCalData
                 Int_t nCalData = fGTPCCalDataCA->GetEntriesFast();

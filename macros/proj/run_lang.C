@@ -19,7 +19,7 @@ void run_lang(TString GEOTAG = "Prototype")
         inFile = "../sim/Prototype/sim.root";
         parFile = "../sim/Prototype/par.root";
         outFile = "./Prototype/lang.root";
-        GTPCGeoParamsFile = geoPath + "/glad-tpc/params/HYDRAprototype_FileSetup.par";
+        GTPCGeoParamsFile = geoPath + "/glad-tpc/params/HYDRAprototype_FileSetup_v2_02082022.par"; //New .par including the x and z offsets
     }
     if (GEOTAG.CompareTo("FullBeamOut") == 0)
     {

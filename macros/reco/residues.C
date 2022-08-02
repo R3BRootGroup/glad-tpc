@@ -143,7 +143,7 @@ void residues(TString simFilename = "sim.root", TString recoFilename = "output_r
         Double_t y;
         Double_t z;
         Int_t trackID;
-        Int_t tempID = 0;
+        Int_t primaryTrackID = 0;
         Int_t k = 0;
         TGraph* fitgr = new TGraph();             // Graph to plot take the primary track points to be fitted
         TF1* fit = new TF1("fit", "pol2", 5, 15); // x -> [5,15]cm
@@ -155,7 +155,7 @@ void residues(TString simFilename = "sim.root", TString recoFilename = "output_r
             y = points[j]->GetY();
             z = points[j]->GetZ();
             trackID = points[j]->GetTrackID();
-            if (trackID == tempID)
+            if (trackID == primaryTrackID)
             {
                 fitgr->SetPoint(k, x, z);
                 k++;

@@ -20,7 +20,7 @@ void run_reconstruction(TString fileName = "lang.root")
     outFile = workDir + "/glad-tpc/macros/reco/output_reco.root";
     //GTPCHitParamsFile = workDir + "/glad-tpc/params/Hit_FileSetup.par";
     parFile = "../sim/Prototype/par.root";
-    GTPCGeoParamsFile = workDir + "/glad-tpc/params/HYDRAprototype_FileSetup.par";
+    GTPCGeoParamsFile = workDir + "/glad-tpc/params/HYDRAprototype_FileSetup_v2_02082022.par";
 
     // -----   Create analysis run   ----------------------------------------
     FairRunAna* fRun = new FairRunAna();
