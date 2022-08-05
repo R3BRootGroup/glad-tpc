@@ -264,9 +264,9 @@ void R3BGTPCCal2Hit::Exec(Option_t* opt)
                         fDriftTimeStep = accDriftTime;
                     }
 
-                    B_x = 1e-14 * gladField->GetBx(x, y, z); // Field components return in [kG], moved to [V ns cm^-2]
-                    B_y = 1e-14 * gladField->GetBy(x, y, z);
-                    B_z = 1e-14 * gladField->GetBz(x, y, z);
+                    B_x = 1e4 * gladField->GetBx(x, y, z); // Field components return in [kG], moved to [V ns cm^-2]
+                    B_y = 1e4 * gladField->GetBy(x, y, z);
+                    B_z = 1e4 * gladField->GetBz(x, y, z);
 
                     moduleB = TMath::Sqrt(B_x * B_x + B_y * B_y + B_z * B_z); // [V ns cm^-2]
                     cteMod = 1 / (1 + mu * mu * moduleB * moduleB);           // dimensionless
@@ -284,9 +284,9 @@ void R3BGTPCCal2Hit::Exec(Option_t* opt)
                     auxz = z - vDrift_z * fDriftTimeStep;
 
                     // Field in the auxiliar point
-                    B_x = 1e-14 * gladField->GetBx(auxx, auxy, auxz);
-                    B_y = 1e-14 * gladField->GetBy(auxx, auxy, auxz);
-                    B_z = 1e-14 * gladField->GetBz(auxx, auxy, auxz);
+                    B_x = 1e4 * gladField->GetBx(auxx, auxy, auxz);
+                    B_y = 1e4 * gladField->GetBy(auxx, auxy, auxz);
+                    B_z = 1e4 * gladField->GetBz(auxx, auxy, auxz);
 
                     moduleB = TMath::Sqrt(B_x * B_x + B_y * B_y + B_z * B_z); // [V ns cm^-2]
                     cteMod = 1 / (1 + mu * mu * moduleB * moduleB);           // dimensionless

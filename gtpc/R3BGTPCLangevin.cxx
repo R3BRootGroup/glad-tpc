@@ -330,10 +330,10 @@ void R3BGTPCLangevin::Exec(Option_t*)
             //                  << " ele_x=" << ele_x << " ele_y=" << ele_y << " ele_z=" << ele_z << " [cm]";
             while (ele_y > -fHalfSizeTPC_Y)
             { // while not reaching the pad plane [cm]
-                B_x = 1e-14 *
+                B_x = 1e4 *
                       gladField->GetBx(ele_x, ele_y, ele_z); // Field components return in [kG], moved to [V ns cm^-2]
-                B_y = 1e-14 * gladField->GetBy(ele_x, ele_y, ele_z);
-                B_z = 1e-14 * gladField->GetBz(ele_x, ele_y, ele_z);
+                B_y = 1e4 * gladField->GetBy(ele_x, ele_y, ele_z);
+                B_z = 1e4 * gladField->GetBz(ele_x, ele_y, ele_z);
                 //std::cout << "MAGNETIC FIELD || Bx: "<<B_x<< " By: "<<B_y<<" Bz: "<<B_z<< '\n';
 
                 moduleB = TMath::Sqrt(B_x * B_x + B_y * B_y + B_z * B_z); // in [V ns cm^-2]
