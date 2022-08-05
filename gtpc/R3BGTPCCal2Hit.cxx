@@ -310,7 +310,7 @@ void R3BGTPCCal2Hit::Exec(Option_t* opt)
                     //Resting time update
                     accDriftTime = accDriftTime - fDriftTimeStep;
                     LOG(DEBUG) << "R3BGTPCCal2Hit::Exec, NEW VALUES: accDriftTime=" << accDriftTime << " [ns]"
-                               << " x=" << x << " y=" << y << " z=" << z << " [cm]";
+                               << " x=" << x << " y=" << y << " z=" << z << " [cm]" << " Drift_v "<<vDrift_x<<" fDriftTimeStep "<<fDriftTimeStep;
                 }
                 // Once the last step adjust is done, reset the variables.
                 if (recoverDriftTimeStep)

@@ -403,7 +403,10 @@ void R3BGTPCLangevin::Exec(Option_t*)
             // Avoid first moving out of the virtual pad plane limits
             // ZOffset- z of the first pad row in the laboratory frame
 
-
+            //Removing electrons out of pad plane limits
+            if (projZ < fOffsetZ || projZ > fOffsetZ + 2 * fHalfSizeTPC_Z || projX < fOffsetX || projX > fOffsetX + 2 * fHalfSizeTPC_X)
+                continue;
+            /* Deprecated
             if (projZ < fOffsetZ)
                 projZ = fOffsetZ + 0.01; //ToDo!! Need to modify these offset to avoid negative padIDs (Debug needed)
             if (projZ > fOffsetZ + 2 * fHalfSizeTPC_Z)
@@ -411,14 +414,16 @@ void R3BGTPCLangevin::Exec(Option_t*)
             if (projX < fOffsetX)
                 projX = fOffsetX + 0.01;
             if (projX > fOffsetX + 2 * fHalfSizeTPC_X)
-                projX = fOffsetX + 2 * fHalfSizeTPC_X - 0.01;
+                projX = fOffsetX + 2 * fHalfSizeTPC_X - 0.01;*/
 
-            Int_t padID = fPadPlane->Fill((projZ - fOffsetZ) * 10.0, (projX - fOffsetX) * 10.0); // in mm for the padID
+            //Adding -1 to get padID between 0 - 5631
+            Int_t padID = fPadPlane->Fill((projZ - fOffsetZ) * 10.0, (projX - fOffsetX) * 10.0) - 1; // in mm for the padID
+
             //If returns negative padID means its filling overflow/underflow bins
             //Maybe error in the conditionals projX and projZ above
-            if (padID < 0)
+            if (padID < 0 || padID > 5631)
             {
-                LOG(WARNING)<<"R3BGTPCLangevin::Exec Negative padID" << endl;
+                LOG(WARNING)<<"R3BGTPCLangevin::Exec No-valid padID" << endl;
                 continue;
             }
 
