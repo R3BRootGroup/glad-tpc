@@ -173,8 +173,15 @@ void R3BGTPCCal2Hit::Exec(Option_t* opt)
         Double_t time = 0;
         Double_t cloudLong = 0; //step by step
         Double_t cloudTransv = 0;
-        Double_t sigmaLong; //aprox for the whole time of reconstruction
-        Double_t sigmaTransv;
+        Double_t sigmaLong = 0; //aprox for the whole time of reconstruction
+        Double_t sigmaTransv = 0;
+
+        //To store all the hit weighted mean variables
+        Double_t pad_counts = 0;
+        Double_t hitx = 0;
+        Double_t hity = 0;
+        Double_t hitz = 0;
+        Double_t hitlW = 0;
 
 
         for (auto iadc = 0; iadc < adc_cal.size(); iadc++)
@@ -322,9 +329,19 @@ void R3BGTPCCal2Hit::Exec(Option_t* opt)
                 //Comparing sigmas obtained in both ways
                 LOG(DEBUG)<<"Comparing sigmas... Approx: "<<sigmaLong<<" "<<sigmaTransv<<";  Step by step: "<<TMath::Sqrt(cloudLong)<<" "<<TMath::Sqrt(cloudTransv);
             }
-            // Adding the hit relevant info
-            AddHitData(x, y, z, sigmaLong, counts);
+            // Adding the hit relevant info for the mean
+            hitx += x * counts;
+            hity += y * counts;
+            hitz += z * counts;
+            hitlW += sigmaLong * counts;
+            pad_counts += counts;
         }
+        //Final Hit values calculated by weighted mean
+        hitx = hitx / pad_counts;
+        hity = hity / pad_counts;
+        hitz = hitz / pad_counts;
+        hitlW = hitlW / pad_counts;
+        AddHitData(hitx, hity, hitz, hitlW, pad_counts);
     }
 
     if (calData)
