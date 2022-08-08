@@ -72,9 +72,9 @@ std::vector<Float_t> R3BGTPCMap::CalcPadCenter(Int_t PadRef)
     if (PadRef >= 0 && PadRef < fPadCoord.shape()[0])
     { // Boost multi_array crashes with a negative index
 
-        Float_t x = (fPadCoord[PadRef][0][0] + fPadCoord[PadRef][1][0]) / 2.0;
+        Float_t x = (fPadCoord[PadRef][0][0] + fPadCoord[PadRef][3][0]) / 2.0;
         PadCenter[0] = x;
-        Float_t y = (fPadCoord[PadRef][1][1] + fPadCoord[PadRef][2][1]) / 2.0;
+        Float_t y = (fPadCoord[PadRef][0][1] + fPadCoord[PadRef][1][1]) / 2.0;
         PadCenter[1] = y;
         return PadCenter;
     }
