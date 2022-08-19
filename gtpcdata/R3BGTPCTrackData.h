@@ -30,7 +30,7 @@ class R3BGTPCTrackData : public TObject
     /** Standard Constructor
 
     **/
-    R3BGTPCTrackData(std::size_t trackId, std::vector<R3BGTPCHitData> hitArray);
+  R3BGTPCTrackData(std::size_t trackId, std::vector<R3BGTPCHitData> hitArray, std::vector<R3BGTPCHitClusterData> hitClusterArray);
 
     // Destructor
     virtual ~R3BGTPCTrackData() {}

@@ -1,5 +1,5 @@
 /******************************************************************************
- *   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
+0;136;0c *   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
  *   Copyright (C) 2019 Members of R3B Collaboration                          *
  *                                                                            *
  *             This software is distributed under the terms of the            *
@@ -65,7 +65,7 @@ class R3BGTPCHit2Track : public FairTask
 
     /** Private method AddTrackData**/
     //** Adds a Track to the TrackCollection
-    R3BGTPCTrackData* AddTrackData(std::size_t trackId, std::vector<R3BGTPCHitData>& hitArray);
+    //R3BGTPCTrackData* AddTrackData(std::size_t trackId, std::vector<R3BGTPCHitData>& hitArray,std::vector<R3BGTPCHitData>* hitClusterArray);
 
     R3BGTPCTrackFinder *fTrackFinder{};
 

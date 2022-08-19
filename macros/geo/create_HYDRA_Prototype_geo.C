@@ -67,7 +67,7 @@ void create_tpc_geo(string geoTag = "Prototype")
 
     // -------   Geometry file name (output)   ----------------------------------
     TString geoFileName = geoPath + "/glad-tpc/geometry/HYDRA_";
-    geoFileName = geoFileName + geoTag + ".geo.root";
+    geoFileName = geoFileName + geoTag.c_str() + ".geo.root";
     // --------------------------------------------------------------------------
 
     // -----------------   Get and create the required media    -----------------

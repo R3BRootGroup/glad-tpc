@@ -5,6 +5,7 @@ class R3BGTPCEventManager;
 
 // GLAD-TPC classes
 #include "R3BGTPCHitData.h"
+#include "R3BGTPCTrackData.h"
 #include "R3BGTPCMap.h"
 
 // FairRoot classes
@@ -56,18 +57,25 @@ class R3BGTPCEventDrawTask : public FairTask
 
     // Data containers
     TClonesArray* fHitCA;
-
+    TClonesArray* fTrackCA;
+  
     // Points
     TEveBoxSet* fHitBoxSet;
     TEvePointSet* fHitSet;
-
+    std::vector<TEvePointSet *> fTrackHitSet;
+    std::vector<TEveBoxSet *> fHitClusterSet;
+  
     // Drawing functions
     void DrawHitPoints();
     void DrawPadPlane();
-
+    void DrawTracks();
+  
     // Updating
     void UpdateCvsPadPlane();
 
+    //Colors
+    EColor GetTrackColor(int i);
+  
     ClassDef(R3BGTPCEventDrawTask, 1);
 };
 

@@ -110,28 +110,31 @@ std::unique_ptr<R3BGTPCTrackData> R3BGTPCTrackFinder::clustersToTrack(PointCloud
         } // Point indices
 
         track.SetTrackId(cluster_index);
-	Clusterize(track, 15.0, 30.5);
+	Clusterize(track, 0.50, 1.05);
 
+	std::cout << cRED << " Hit Cluster Size "<<track.GetHitClusterArray()->size();
 	tracks.push_back(track);
 
     } // Clusters loop
     
     std::cout << cRED << " Tracks found " << tracks.size() << cNORMAL << "\n";
     
+    
+    //TODO
     // Dump noise into pattern event
     //auto retEvent = std::make_unique<AtPatternEvent>();
     //for (const auto &point : points)
     //retEvent->AddNoise(event.GetHit(point.intensity));
 
-    /*for (auto &track : tracks) {
+    for (auto &track : tracks) {
       //if (track.GetHitArray().size() > 0)
 	//SetTrackInitialParameters(track);
       
       TClonesArray& clref = *trackCA;
       Int_t size = clref.GetEntriesFast();
-      new (clref[size]) R3BGTPCTrackData(track.GetTrackId(), std::move(track.GetHitArray()));
+      new (clref[size]) R3BGTPCTrackData(track.GetTrackId(), std::move(track.GetHitArray()),std::move(*track.GetHitClusterArray()));
 
-      }*/
+    }
     
 
     return NULL;
@@ -144,14 +147,19 @@ void R3BGTPCTrackFinder::Clusterize(R3BGTPCTrackData& track, Float_t distance, F
     std::vector<R3BGTPCHitData> hitTBArray;
     int clusterID = 0;
 
+    std::cout<<" Number of hits per track : "<<hitArray.size()<<"\n";
+    
     if (hitArray.size() > 0)
     {
+      
 
         ROOT::Math::XYZVector refPos{ hitArray.at(0).GetX(), hitArray.at(0).GetY(), hitArray.at(0).GetZ() };
 
         for (auto iHit = 0; iHit < hitArray.size(); ++iHit)
         {
 
+	  
+	  
             auto hit = hitArray.at(iHit);
             ROOT::Math::XYZVector hitPos{ hit.GetX(), hit.GetY(), hit.GetZ() };
 
@@ -220,7 +228,8 @@ void R3BGTPCTrackFinder::Clusterize(R3BGTPCTrackData& track, Float_t distance, F
 
                     if (checkDistance)
                     {
-                        hitCluster->SetEnergy(hitQ);
+		      
+		        hitCluster->SetEnergy(hitQ);
                         hitCluster->SetX(x);
                         hitCluster->SetY(y);
                         hitCluster->SetZ(z);

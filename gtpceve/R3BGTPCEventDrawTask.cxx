@@ -39,6 +39,7 @@ R3BGTPCEventDrawTask::R3BGTPCEventDrawTask()
     , fCvsPadWave(0)
     , fPadWave(0)
     , fHitCA(0)
+    , fTrackCA(0) 
 {
 }
 
@@ -60,6 +61,11 @@ InitStatus R3BGTPCEventDrawTask::Init()
     if (fHitCA)
         LOG(INFO) << cGREEN << "Hit Array Found in branch GTPCHitData." << cNORMAL << std::endl;
 
+    fTrackCA = (TClonesArray*)ioMan->GetObject("GTPCTrackData");
+    if (fTrackCA)
+        LOG(INFO) << cGREEN << "Track Array Found in branch GTPCTrackData." << cNORMAL << std::endl;
+
+    
     // Canvas
     fCvsPadPlane = fEventManager->GetCvsPadPlane();
 
@@ -81,6 +87,11 @@ void R3BGTPCEventDrawTask::Exec(Option_t* option)
         DrawHitPoints();
     }
 
+    if(fTrackCA)
+      {
+	DrawTracks();
+      }
+    
     UpdateCvsPadPlane();
 
     gEve->Redraw3D(kTRUE);
@@ -88,16 +99,105 @@ void R3BGTPCEventDrawTask::Exec(Option_t* option)
 
 void R3BGTPCEventDrawTask::Reset()
 {
-    // TODO!
+    
     if (fHitSet)
     {
         fHitSet->Reset();
         gEve->RemoveElement(fHitSet, fEventManager);
     }
 
-    // if (fPadPlane != NULL)
-    // fPadPlane->Reset(0);
+    if(fTrackCA){
+      for (auto elem : fTrackHitSet){
+	gEve->RemoveElement(elem, fEventManager);
+      }
+
+     fTrackHitSet.clear();
+
+     for (auto elem : fHitClusterSet)
+            gEve->RemoveElement(elem, fEventManager);
+
+     fHitClusterSet.clear();
+
+     
+     
+     }
+
+     
+     
+    if (fPadPlane != NULL)
+       fPadPlane->Reset(0);
 }
+
+
+void R3BGTPCEventDrawTask::DrawTracks()
+{
+  auto nTracks = fTrackCA->GetEntries();
+  std::cout << " Found " << nTracks << " tracks."
+              << "\n";
+
+   R3BGTPCTrackData** trackData;
+   trackData = new R3BGTPCTrackData*[nTracks];
+
+  
+  for(auto i = 0;i<nTracks;++i)
+    {
+       trackData[i] = (R3BGTPCTrackData*)(fTrackCA->At(i));
+       Color_t trackColor = GetTrackColor(i) + 1;
+       fTrackHitSet.push_back(new TEvePointSet(Form("TrackHit_%d", i), 0, TEvePointSelectorConsumer::kTVT_XYZ));
+       fTrackHitSet[i]->SetMarkerColor(trackColor);
+       fTrackHitSet[i]->SetMarkerSize(1);
+       fTrackHitSet[i]->SetMarkerStyle(kFullDotMedium);
+
+       fHitClusterSet.push_back(new TEveBoxSet(Form("HitCluster_%d", i)));
+       fHitClusterSet[i]->Reset(TEveBoxSet::kBT_AABox, kFALSE, 64);
+
+       
+       std::vector<R3BGTPCHitData> trackHits = trackData[i]->GetHitArray();
+       std::vector<R3BGTPCHitClusterData> *trackClusterHits = trackData[i]->GetHitClusterArray();
+       
+        for (auto &trackHit : trackHits) {
+         Double_t x = trackHit.GetX();
+         Double_t y = trackHit.GetY();
+         Double_t z = trackHit.GetZ();
+         Double_t E = trackHit.GetEnergy();
+
+         fTrackHitSet[i]->SetNextPoint(x / 10., y / 10., z / 10.);
+       }
+
+	std::cout<<trackClusterHits->size()<<"\n";
+	
+	if (trackClusterHits->size() > 0) {
+
+         for (auto trackHitCluster : *trackClusterHits) {
+	   Double_t xC = trackHitCluster.GetX();
+           Double_t yC = trackHitCluster.GetY();
+           Double_t zC = trackHitCluster.GetZ();
+           Double_t EC = trackHitCluster.GetEnergy();
+
+	   
+	   
+            double boxSize = 0.06;
+
+            fHitClusterSet[i]->AddBox(xC / 10. - boxSize / 2.0, yC / 10. - boxSize / 2.0,
+                                      zC / 10. - boxSize / 2.0, boxSize, boxSize, boxSize);
+         }
+
+	 fHitClusterSet[i]->UseSingleColor();
+         fHitClusterSet[i]->SetMainColor(trackColor);
+         fHitClusterSet[i]->SetMainTransparency(50);
+
+         fHitClusterSet[i]->RefitPlex();
+         TEveTrans &tHitClusterBoxPos = fHitClusterSet[i]->RefMainTrans();
+         tHitClusterBoxPos.SetPos(0.0, 0.0, 0.0);
+      }
+       
+    }
+
+  for (auto &elem : fTrackHitSet)
+      gEve->AddElement(elem);
+  for (auto &elem : fHitClusterSet)
+      gEve->AddElement(elem);
+}  
 
 void R3BGTPCEventDrawTask::DrawHitPoints()
 {
@@ -126,15 +226,15 @@ void R3BGTPCEventDrawTask::DrawHitPoints()
         Double_t z = hitData[i]->GetZ();
         Double_t E = hitData[i]->GetEnergy();
 
-        // std::cout<<x<<" "<<y<<" "<<z<<" "<<"\n";
+        //std::cout<<x<<" "<<y<<" "<<z<<" "<<"\n";
 
         fHitSet->SetNextPoint(x / 10.0, y / 10.0, z / 10.0); // cm
         fHitSet->SetPointId(new TNamed(Form("Hit %d", i), ""));
         // NB: X and Z are swapped in the pad plane
         //    PadPlane frame for visualization
-        double ZOffset = 272.7 * 10.0;
-        double XOffset = 5.8 * 10.0;
-        fPadPlane->Fill(z - ZOffset, x - XOffset, E);
+        double ZOffset = 272.7;
+        double XOffset = 5.8;
+        fPadPlane->Fill((z - ZOffset)*10.0, (x - XOffset)*10.0, E);
     }
 
     gEve->AddElement(fHitSet);
@@ -164,4 +264,13 @@ void R3BGTPCEventDrawTask::UpdateCvsPadPlane()
 {
     fCvsPadPlane->Modified();
     fCvsPadPlane->Update();
+}
+
+EColor R3BGTPCEventDrawTask::GetTrackColor(int i)
+{
+   std::vector<EColor> colors = {kAzure, kOrange, kViolet, kTeal, kMagenta, kBlue, kViolet, kYellow, kCyan, kAzure};
+   if (i < 10) {
+      return colors.at(i);
+   } else
+      return kAzure;
 }

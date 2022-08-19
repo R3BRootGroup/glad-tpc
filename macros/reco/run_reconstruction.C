@@ -41,6 +41,8 @@ void run_reconstruction(TString fileName = "lang.root")
     //(David)
     if (fileName == "proj.root"){cal2hit->SetRecoFlag(kFALSE);}
 
+    
+
     fRun->AddTask(cal2hit);
 
     fRun->Init();

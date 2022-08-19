@@ -1,6 +1,6 @@
-void run_eve(TString InputDataFile = "output_reco.root",
+void run_eve(TString InputDataFile = "output_tracking.root",
              TString OutputDataFile = "output.reco_display.root",
-             TString unpackDir = "/glad-tpc/macros/reco/")
+             TString unpackDir = "/glad-tpc/macros/tracking/")
 {
     FairLogger* fLogger = FairLogger::GetLogger();
     fLogger->SetLogToScreen(kTRUE);
@@ -12,11 +12,18 @@ void run_eve(TString InputDataFile = "output_reco.root",
     TString OutputDataPath = dir + unpackDir + OutputDataFile;
     TString GeoDataPath = dir + "/glad-tpc/geometry/" + geoFile;
 
-    FairRunAna* fRun = new FairRunAna();
-    fRun->SetInputFile(InputDataPath);
-    fRun->SetOutputFile(OutputDataPath);
-    fRun->SetGeomFile(GeoDataPath);
+    //FairRunAna* fRun = new FairRunAna();
+    //fRun->SetInputFile(InputDataPath);
+    //fRun->SetOutputFile(OutputDataPath);
+    //fRun->SetGeomFile(GeoDataPath);
 
+    FairRunAna *fRun = new FairRunAna();
+    FairRootFileSink *sink = new FairRootFileSink(OutputDataPath);
+    FairFileSource *source = new FairFileSource(InputDataPath);
+    fRun->SetSource(source);
+    fRun->SetSink(sink);
+    fRun->SetGeomFile(GeoDataPath);
+    
     FairRuntimeDb* rtdb = fRun->GetRuntimeDb();
     FairParRootFileIo* parIo1 = new FairParRootFileIo();
     // parIo1->open("param.dummy.root");
