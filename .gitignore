@@ -4,6 +4,7 @@
 gphysi.dat
 core_dump*
 build
+fitter/build
 !*/build
 data
 .vscode

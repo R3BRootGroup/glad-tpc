@@ -1,6 +1,8 @@
 
 Set(R3BGTPC_SOURCE_DIR ${R3BROOT_SOURCE_DIR}/glad-tpc)
 
+find_package(GENFIT2)
+
 #glad-tpc specific
 add_subdirectory (gtpcdata)
 #if (WITH_UCESB)

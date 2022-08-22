@@ -194,9 +194,10 @@ void R3BGTPCHit2Track::Reset()
 }
 
 //[[deprecated]]
-//R3BGTPCTrackData* R3BGTPCHit2Track::AddTrackData(std::size_t trackId, std::vector<R3BGTPCHitData>& hitArray,std::vector<R3BGTPCHitData> hitClusterArray)
+// R3BGTPCTrackData* R3BGTPCHit2Track::AddTrackData(std::size_t trackId, std::vector<R3BGTPCHitData>&
+// hitArray,std::vector<R3BGTPCHitData> hitClusterArray)
 //{
-    // It fills the R3BGTPCTrackData
+// It fills the R3BGTPCTrackData
 //  TClonesArray& clref = *fTrackCA;
 //   Int_t size = clref.GetEntriesFast();
 //  return new (clref[size]) R3BGTPCTrackData(trackId, std::move(hitArray),std::move(*hitClusterArray));

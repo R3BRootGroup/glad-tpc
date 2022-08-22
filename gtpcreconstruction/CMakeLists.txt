@@ -30,6 +30,7 @@ ${R3BGTPC_SOURCE_DIR}/gtpcreconstruction
 ${R3BGTPC_SOURCE_DIR}/gtpcreconstruction/triplclust/src
 ${R3BGTPC_SOURCE_DIR}/gtpcreconstruction/triplclust/src/hclust
 ${R3BGTPC_SOURCE_DIR}/gtpcreconstruction/triplclust/src/kdtree
+${GENFIT2_INCLUDE_DIR}
 )
 
 include_directories( ${INCLUDE_DIRECTORIES})
@@ -38,6 +39,7 @@ include_directories(SYSTEM ${SYSTEM_INCLUDE_DIRECTORIES})
 set(LINK_DIRECTORIES
 ${ROOT_LIBRARY_DIR}
 ${FAIRROOT_LIBRARY_DIR}
+${GENFIT2_LIBRARY_DIR}
 )
 
 link_directories( ${LINK_DIRECTORIES})
@@ -55,6 +57,8 @@ triplclust/src/option.cxx
 triplclust/src/util.cxx 
 #triplclust/src/graph.cxx
 R3BGTPCTrackFinder.cxx
+R3BGTPCFitter.cxx
+R3BGTPCSpacePointMeasurement.cxx
 )
 
 # fill list of header files from list of source files
@@ -64,6 +68,6 @@ CHANGE_FILE_EXTENSION(*.cxx *.h HEADERS "${SRCS}")
 set(LINKDEF R3BGTPCReconstructionLinkDef.h)
 set(LIBRARY_NAME R3BGTPCReconstruction)
 set(DEPENDENCIES
-    R3BBase R3BGTPCData)
+    R3BBase R3BGTPCData ${GENFIT2_LIBRARY_DIR}/libgenfit2.so)
 
 GENERATE_LIBRARY()

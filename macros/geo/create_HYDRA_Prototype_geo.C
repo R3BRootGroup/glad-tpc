@@ -67,7 +67,9 @@ void create_tpc_geo(string geoTag = "Prototype")
 
     // -------   Geometry file name (output)   ----------------------------------
     TString geoFileName = geoPath + "/glad-tpc/geometry/HYDRA_";
+    TString geoFileManName = geoFileName + geoTag.c_str() + ".geoMan.root";
     geoFileName = geoFileName + geoTag.c_str() + ".geo.root";
+    
     // --------------------------------------------------------------------------
 
     // -----------------   Get and create the required media    -----------------
@@ -197,8 +199,11 @@ void create_tpc_geo(string geoTag = "Prototype")
     TFile* geoFile = new TFile(geoFileName, "RECREATE");
     top->Draw("ogl");
     top->Write();
-    //gGeoMan->Write();
     geoFile->Close();
+
+    TFile *geoFileMan = new TFile(geoFileManName, "RECREATE");
+    gGeoMan->Write();
+    geoFileMan->Close();
 }
 //________________________________________________________________
 void ConstructTPC(TGeoVolume* pWorld)

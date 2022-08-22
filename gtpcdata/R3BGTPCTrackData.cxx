@@ -19,10 +19,12 @@ R3BGTPCTrackData::R3BGTPCTrackData()
 {
 }
 
-R3BGTPCTrackData::R3BGTPCTrackData(std::size_t trackId, std::vector<R3BGTPCHitData> hitArray, std::vector<R3BGTPCHitClusterData> hitClusterArray)
+R3BGTPCTrackData::R3BGTPCTrackData(std::size_t trackId,
+                                   std::vector<R3BGTPCHitData> hitArray,
+                                   std::vector<R3BGTPCHitClusterData> hitClusterArray)
     : fTrackId(trackId)
     , fHitArray(hitArray)
-    , fHitClusterArray(hitClusterArray) 
+    , fHitClusterArray(hitClusterArray)
 {
 }
 

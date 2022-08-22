@@ -65,7 +65,8 @@ class R3BGTPCHit2Track : public FairTask
 
     /** Private method AddTrackData**/
     //** Adds a Track to the TrackCollection
-    //R3BGTPCTrackData* AddTrackData(std::size_t trackId, std::vector<R3BGTPCHitData>& hitArray,std::vector<R3BGTPCHitData>* hitClusterArray);
+    // R3BGTPCTrackData* AddTrackData(std::size_t trackId, std::vector<R3BGTPCHitData>&
+    // hitArray,std::vector<R3BGTPCHitData>* hitClusterArray);
 
     R3BGTPCTrackFinder *fTrackFinder{};
 
