@@ -16,13 +16,13 @@ set(CMAKE_TARGET_DEFINITIONS_CXX
 
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
-  "/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/include/root"
+  "/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/include"
   "../INCLUDE_DIRECTORIES"
   "/mnt/simulations/attpcroot/fair_install_2020/R3BRoot/glad-tpc/gtpcdata"
   "/mnt/simulations/attpcroot/fair_install_2020/R3BRoot/glad-tpc/gtpcreconstruction"
   "/mnt/simulations/attpcroot/fair_install_18.6/FairRoot/include"
   "../"
-  "/mnt/simulations/attpcroot/fair_install_2020/GenFit_Inst/include"
+  "/mnt/simulations/attpcroot/fair_install_2020/GenFitInst/include"
   "/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/include"
   )
 

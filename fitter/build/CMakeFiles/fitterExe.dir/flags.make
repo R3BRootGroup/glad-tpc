@@ -4,7 +4,7 @@
 # compile CXX with /mnt/misc/sw/x86_64/all/gnu/gcc/9.3.0/bin/g++-9.3
 CXX_DEFINES = -DBOOST_ALL_NO_LIB -DBOOST_SYSTEM_DYN_LINK
 
-CXX_INCLUDES = -I/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/include/root -I/mnt/simulations/attpcroot/fair_install_2020/R3BRoot/glad-tpc/fitter/INCLUDE_DIRECTORIES -I/mnt/simulations/attpcroot/fair_install_2020/R3BRoot/glad-tpc/gtpcdata -I/mnt/simulations/attpcroot/fair_install_2020/R3BRoot/glad-tpc/gtpcreconstruction -I/mnt/simulations/attpcroot/fair_install_18.6/FairRoot/include -I/mnt/simulations/attpcroot/fair_install_2020/R3BRoot/glad-tpc/fitter -I/mnt/simulations/attpcroot/fair_install_2020/GenFit_Inst/include -isystem /mnt/simulations/attpcroot/fair_install_18.6/FairSoft/include
+CXX_INCLUDES = -I/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/include -I/mnt/simulations/attpcroot/fair_install_2020/R3BRoot/glad-tpc/fitter/INCLUDE_DIRECTORIES -I/mnt/simulations/attpcroot/fair_install_2020/R3BRoot/glad-tpc/gtpcdata -I/mnt/simulations/attpcroot/fair_install_2020/R3BRoot/glad-tpc/gtpcreconstruction -I/mnt/simulations/attpcroot/fair_install_18.6/FairRoot/include -I/mnt/simulations/attpcroot/fair_install_2020/R3BRoot/glad-tpc/fitter -I/mnt/simulations/attpcroot/fair_install_2020/GenFitInst/include -isystem /mnt/simulations/attpcroot/fair_install_18.6/FairSoft/include
 
-CXX_FLAGS =   -std=c++17 -pipe -fsigned-char -pthread
+CXX_FLAGS =   -std=c++11 -pipe -fsigned-char -pthread
 

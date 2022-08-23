@@ -106,7 +106,7 @@ CMAKE_EXE_LINKER_FLAGS_RELEASE:STRING=
 CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 
 //Enable/Disable output of compile commands during generation.
-CMAKE_EXPORT_COMPILE_COMMANDS:BOOL=OFF
+CMAKE_EXPORT_COMPILE_COMMANDS:BOOL=
 
 //Install path prefix, prepended onto install directories.
 CMAKE_INSTALL_PREFIX:PATH=/usr/local
@@ -217,107 +217,104 @@ CMAKE_STRIP:FILEPATH=/usr/bin/strip
 // Studio IDE projects all commands are done without /nologo.
 CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 
-//The directory containing a CMake configuration file for GENFIT2.
-GENFIT2_DIR:PATH=GENFIT2_DIR-NOTFOUND
+//Path to a library.
+GENFIT2_LIBRARY:FILEPATH=/mnt/simulations/attpcroot/fair_install_2020/GenFitInst/lib/libgenfit2.so
 
 //Path to a library.
-GENFIT2_LIBRARY:FILEPATH=/mnt/simulations/attpcroot/fair_install_2020/GenFit_Inst/lib/libgenfit2.so
-
-//Path to a library.
-ROOT_Core_LIBRARY:FILEPATH=/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/lib/libCore.so
+ROOT_Core_LIBRARY:FILEPATH=/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/lib/libCore.so
 
 //The directory containing a CMake configuration file for ROOT.
-ROOT_DIR:PATH=/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/share/root/cmake
+ROOT_DIR:PATH=/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/cmake
 
 //Path to a library.
-ROOT_Gpad_LIBRARY:FILEPATH=/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/lib/libGpad.so
+ROOT_Gpad_LIBRARY:FILEPATH=/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/lib/libGpad.so
 
 //Path to a library.
-ROOT_Graf3d_LIBRARY:FILEPATH=/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/lib/libGraf3d.so
+ROOT_Graf3d_LIBRARY:FILEPATH=/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/lib/libGraf3d.so
 
 //Path to a library.
-ROOT_Graf_LIBRARY:FILEPATH=/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/lib/libGraf.so
+ROOT_Graf_LIBRARY:FILEPATH=/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/lib/libGraf.so
 
 //Path to a library.
-ROOT_Hist_LIBRARY:FILEPATH=/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/lib/libHist.so
+ROOT_Hist_LIBRARY:FILEPATH=/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/lib/libHist.so
 
 //Path to a library.
-ROOT_Imt_LIBRARY:FILEPATH=/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/lib/libImt.so
+ROOT_Imt_LIBRARY:FILEPATH=/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/lib/libImt.so
 
 //Path to a library.
-ROOT_MathCore_LIBRARY:FILEPATH=/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/lib/libMathCore.so
+ROOT_MathCore_LIBRARY:FILEPATH=/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/lib/libMathCore.so
 
 //Path to a library.
-ROOT_Matrix_LIBRARY:FILEPATH=/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/lib/libMatrix.so
+ROOT_Matrix_LIBRARY:FILEPATH=/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/lib/libMatrix.so
 
 //Path to a library.
-ROOT_MultiProc_LIBRARY:FILEPATH=/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/lib/libMultiProc.so
+ROOT_MultiProc_LIBRARY:FILEPATH=/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/lib/libMultiProc.so
 
 //Path to a library.
-ROOT_Net_LIBRARY:FILEPATH=/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/lib/libNet.so
+ROOT_Net_LIBRARY:FILEPATH=/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/lib/libNet.so
 
 //Path to a library.
-ROOT_Physics_LIBRARY:FILEPATH=/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/lib/libPhysics.so
+ROOT_Physics_LIBRARY:FILEPATH=/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/lib/libPhysics.so
 
 //Path to a library.
-ROOT_Postscript_LIBRARY:FILEPATH=/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/lib/libPostscript.so
+ROOT_Postscript_LIBRARY:FILEPATH=/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/lib/libPostscript.so
 
 //Path to a library.
-ROOT_RIO_LIBRARY:FILEPATH=/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/lib/libRIO.so
+ROOT_RIO_LIBRARY:FILEPATH=/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/lib/libRIO.so
 
 //Path to a library.
-ROOT_ROOTDataFrame_LIBRARY:FILEPATH=/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/lib/libROOTDataFrame.so
+ROOT_ROOTDataFrame_LIBRARY:FILEPATH=/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/lib/libROOTDataFrame.so
 
 //Path to a library.
-ROOT_Rint_LIBRARY:FILEPATH=/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/lib/libRint.so
+ROOT_Rint_LIBRARY:FILEPATH=/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/lib/libRint.so
 
 //Path to a library.
-ROOT_Thread_LIBRARY:FILEPATH=/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/lib/libThread.so
+ROOT_Thread_LIBRARY:FILEPATH=/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/lib/libThread.so
 
 //Path to a library.
-ROOT_TreePlayer_LIBRARY:FILEPATH=/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/lib/libTreePlayer.so
+ROOT_TreePlayer_LIBRARY:FILEPATH=/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/lib/libTreePlayer.so
 
 //Path to a library.
-ROOT_Tree_LIBRARY:FILEPATH=/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/lib/libTree.so
+ROOT_Tree_LIBRARY:FILEPATH=/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/lib/libTree.so
 
 //Path to a program.
 ROOT_genmap_CMD:FILEPATH=ROOT_genmap_CMD-NOTFOUND
 
 //Path to a program.
-ROOT_genreflex_CMD:FILEPATH=/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/bin/genreflex
+ROOT_genreflex_CMD:FILEPATH=/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/bin/genreflex
 
 //Path to a program.
-ROOT_hadd_CMD:FILEPATH=/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/bin/hadd
+ROOT_hadd_CMD:FILEPATH=/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/bin/hadd
 
 //Path to a program.
-ROOT_root_CMD:FILEPATH=/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/bin/root
+ROOT_root_CMD:FILEPATH=/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/bin/root
 
 //Path to a program.
-ROOT_rootbrowse_CMD:FILEPATH=/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/bin/rootbrowse
+ROOT_rootbrowse_CMD:FILEPATH=/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/bin/rootbrowse
 
 //Path to a program.
-ROOT_rootcint_CMD:FILEPATH=/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/bin/rootcint
+ROOT_rootcint_CMD:FILEPATH=/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/bin/rootcint
 
 //Path to a program.
-ROOT_rootcling_CMD:FILEPATH=/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/bin/rootcling
+ROOT_rootcling_CMD:FILEPATH=/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/bin/rootcling
 
 //Path to a program.
-ROOT_rootcp_CMD:FILEPATH=/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/bin/rootcp
+ROOT_rootcp_CMD:FILEPATH=/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/bin/rootcp
 
 //Path to a program.
 ROOT_rootdraw_CMD:FILEPATH=ROOT_rootdraw_CMD-NOTFOUND
 
 //Path to a program.
-ROOT_rootls_CMD:FILEPATH=/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/bin/rootls
+ROOT_rootls_CMD:FILEPATH=/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/bin/rootls
 
 //Path to a program.
-ROOT_rootmkdir_CMD:FILEPATH=/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/bin/rootmkdir
+ROOT_rootmkdir_CMD:FILEPATH=/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/bin/rootmkdir
 
 //Path to a program.
-ROOT_rootmv_CMD:FILEPATH=/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/bin/rootmv
+ROOT_rootmv_CMD:FILEPATH=/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/bin/rootmv
 
 //Path to a program.
-ROOT_rootrm_CMD:FILEPATH=/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/bin/rootrm
+ROOT_rootrm_CMD:FILEPATH=/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/bin/rootrm
 
 //The directory containing a CMake configuration file for boost_headers.
 boost_headers_DIR:PATH=/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/lib/cmake/boost_headers-1.75.0
@@ -326,7 +323,7 @@ boost_headers_DIR:PATH=/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/lib
 boost_system_DIR:PATH=/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/lib/cmake/boost_system-1.75.0
 
 //Dependencies for the target
-fitter_LIB_DEPENDS:STATIC=general;/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/lib/libCore.so;general;/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/lib/libImt.so;general;/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/lib/libRIO.so;general;/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/lib/libNet.so;general;/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/lib/libHist.so;general;/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/lib/libGraf.so;general;/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/lib/libGraf3d.so;general;/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/lib/libGpad.so;general;/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/lib/libROOTDataFrame.so;general;/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/lib/libTree.so;general;/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/lib/libTreePlayer.so;general;/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/lib/libRint.so;general;/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/lib/libPostscript.so;general;/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/lib/libMatrix.so;general;/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/lib/libPhysics.so;general;/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/lib/libMathCore.so;general;/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/lib/libThread.so;general;/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/lib/libMultiProc.so;general;R3BGTPCReconstruction;general;/mnt/simulations/attpcroot/fair_install_2020/GenFit_Inst//lib/libgenfit2.so;
+fitter_LIB_DEPENDS:STATIC=general;/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/lib/libCore.so;general;/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/lib/libImt.so;general;/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/lib/libRIO.so;general;/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/lib/libNet.so;general;/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/lib/libHist.so;general;/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/lib/libGraf.so;general;/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/lib/libGraf3d.so;general;/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/lib/libGpad.so;general;/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/lib/libROOTDataFrame.so;general;/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/lib/libTree.so;general;/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/lib/libTreePlayer.so;general;/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/lib/libRint.so;general;/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/lib/libPostscript.so;general;/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/lib/libMatrix.so;general;/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/lib/libPhysics.so;general;/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/lib/libMathCore.so;general;/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/lib/libThread.so;general;/mnt/misc/sw/x86_64/Debian/10/root/gnu/6.22.08/lib/libMultiProc.so;general;R3BGTPCReconstruction;general;/mnt/simulations/attpcroot/fair_install_2020/GenFitInst//lib/libgenfit2.so;
 
 //Value Computed by CMake
 r3bgtpcfitter_BINARY_DIR:STATIC=/mnt/simulations/attpcroot/fair_install_2020/R3BRoot/glad-tpc/fitter/build
