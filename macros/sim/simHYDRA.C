@@ -9,11 +9,11 @@ HOW TO USE:
 ALTERNATIVE:
     use the macro run_simHYDRA.C: root -l run_simHYDRA.C
 */
-void simHYDRA(Int_t nEvents = 1000, TString GEOTAG = "Prototype", TString generator = "good_evt")
+void simHYDRA(Int_t nEvents = 10000, TString GEOTAG = "Prototype", TString generator = "good_evt")
 {
     Bool_t storeTrajectories = kTRUE; //  To store particle trajectories
     Bool_t magnet = kTRUE;            //	Switch on/off the B field
-    Bool_t constBfield = kFALSE;       //	Constant magnetic field
+    Bool_t constBfield = kTRUE;       //	Constant magnetic field
     Bool_t printGLAD = kFALSE;        //	print the inner glad vessel and the HYDRA detector
     Float_t fieldScale = -1.;
 
@@ -30,8 +30,9 @@ void simHYDRA(Int_t nEvents = 1000, TString GEOTAG = "Prototype", TString genera
         parFile = "./Prototype/par.root";
         if (generator.CompareTo("good_evt") == 0)
         {
-            inputFile = "../../gtpcgen/ASCII/input" + GEOTAG + "_3LH.dat";
-        }
+	  //inputFile = "../../gtpcgen/ASCII/input" + GEOTAG + "_3LH.dat";
+	  inputFile = "../../gtpcgen/ASCII/input" + GEOTAG + "_He3pi_paper.dat";
+	}
         if (generator.CompareTo("bkg_evt") == 0)
         {
             inputFile = "../../gtpcgen/ASCII/input" + GEOTAG + "_bkg.dat";
@@ -108,8 +109,9 @@ void simHYDRA(Int_t nEvents = 1000, TString GEOTAG = "Prototype", TString genera
     // --- GLAD-TPC detectors
     if (GEOTAG.CompareTo("Prototype") == 0)
     {
-        run->AddModule(new R3BTarget("C12 target", "passive/Target.geo.root", { -2.46, 0., 222.7 })); //-0.7,0.,192.
-        run->AddModule(new R3BGTPC("HYDRA_Prototype.geo.root"));
+      //run->AddModule(new R3BTarget("C12 target", "passive/Target.geo.root", { -2.46, 0., 222.7 })); //-0.7,0.,192.
+      run->AddModule(new R3BTarget("C12 target", "passive/Target.geo.root", { -2.7, 0, 227 }, { "", -90., +4., 90. }));
+      run->AddModule(new R3BGTPC("HYDRA_Prototype.geo.root"));
     }
     else if (GEOTAG.CompareTo("FullBeamOut") == 0)
     {

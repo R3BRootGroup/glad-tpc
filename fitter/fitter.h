@@ -16,6 +16,9 @@
 #include "MeasurementOnPlane.h"
 #include "TrackPoint.h"
 #include "Exception.h"
+#include "HelixTrackModel.h"
+#include "PlanarMeasurement.h"
+#include "TrackPoint.h"
 
 #include <ios>
 #include <iostream>
@@ -38,6 +41,7 @@
 #include "TStopwatch.h"
 #include "TGeoManager.h"
 
+
 #include "TGraph.h"
 #include "TCanvas.h"
 #include "TApplication.h"
@@ -54,6 +58,7 @@
 #include "TArrayD.h"
 #include "TVectorD.h"
 
+
 #include "Math/GenVector/Rotation3D.h"
 #include "Math/GenVector/EulerAngles.h"
 #include "Math/GenVector/AxisAngle.h"
@@ -64,3 +69,33 @@
 #include "Math/GenVector/RotationZYX.h"
 
 #include "R3BGTPCHitData.h"
+
+class HelixTrackModel{
+
+ public:
+
+  // Constructors/Destructors ---------
+  HelixTrackModel(const TVector3& pos, const TVector3& mom, double charge);
+
+  TVector3 getPos(double tracklength) const;
+  void getPosMom(double tracklength, TVector3& pos, TVector3& mom) const;
+  void getPosDir(double tracklength, TVector3& pos, TVector3& dir) const {
+    getPosMom(tracklength, pos, dir);
+    dir.SetMag(1);
+  }
+
+
+ private:
+
+  double sgn_;
+  double mom_;
+  double R_; // radius
+  TVector3 center_;
+  double alpha0_;
+  double theta_;
+
+
+ public:
+  
+
+};

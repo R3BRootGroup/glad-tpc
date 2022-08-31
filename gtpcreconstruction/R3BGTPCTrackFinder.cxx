@@ -110,9 +110,8 @@ std::unique_ptr<R3BGTPCTrackData> R3BGTPCTrackFinder::clustersToTrack(PointCloud
         } // Point indices
 
         track.SetTrackId(cluster_index);
-        Clusterize(track, 1.00, 2.05);
+        Clusterize(track, 0.70, 1.5);
 
-        std::cout << cRED << " Hit Cluster Size " << track.GetHitClusterArray()->size();
         tracks.push_back(track);
 
     } // Clusters loop

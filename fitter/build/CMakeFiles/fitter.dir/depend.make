@@ -379,6 +379,7 @@ CMakeFiles/fitter.dir/fitter.cxx.o: /mnt/simulations/attpcroot/fair_install_2020
 CMakeFiles/fitter.dir/fitter.cxx.o: /mnt/simulations/attpcroot/fair_install_2020/GenFitInst/include/Exception.h
 CMakeFiles/fitter.dir/fitter.cxx.o: /mnt/simulations/attpcroot/fair_install_2020/GenFitInst/include/FieldManager.h
 CMakeFiles/fitter.dir/fitter.cxx.o: /mnt/simulations/attpcroot/fair_install_2020/GenFitInst/include/FitStatus.h
+CMakeFiles/fitter.dir/fitter.cxx.o: /mnt/simulations/attpcroot/fair_install_2020/GenFitInst/include/HelixTrackModel.h
 CMakeFiles/fitter.dir/fitter.cxx.o: /mnt/simulations/attpcroot/fair_install_2020/GenFitInst/include/IO.h
 CMakeFiles/fitter.dir/fitter.cxx.o: /mnt/simulations/attpcroot/fair_install_2020/GenFitInst/include/KalmanFitStatus.h
 CMakeFiles/fitter.dir/fitter.cxx.o: /mnt/simulations/attpcroot/fair_install_2020/GenFitInst/include/KalmanFittedStateOnPlane.h
@@ -390,6 +391,7 @@ CMakeFiles/fitter.dir/fitter.cxx.o: /mnt/simulations/attpcroot/fair_install_2020
 CMakeFiles/fitter.dir/fitter.cxx.o: /mnt/simulations/attpcroot/fair_install_2020/GenFitInst/include/MeasurementFactory.h
 CMakeFiles/fitter.dir/fitter.cxx.o: /mnt/simulations/attpcroot/fair_install_2020/GenFitInst/include/MeasurementOnPlane.h
 CMakeFiles/fitter.dir/fitter.cxx.o: /mnt/simulations/attpcroot/fair_install_2020/GenFitInst/include/MeasurementProducer.h
+CMakeFiles/fitter.dir/fitter.cxx.o: /mnt/simulations/attpcroot/fair_install_2020/GenFitInst/include/PlanarMeasurement.h
 CMakeFiles/fitter.dir/fitter.cxx.o: /mnt/simulations/attpcroot/fair_install_2020/GenFitInst/include/RKTools.h
 CMakeFiles/fitter.dir/fitter.cxx.o: /mnt/simulations/attpcroot/fair_install_2020/GenFitInst/include/RKTrackRep.h
 CMakeFiles/fitter.dir/fitter.cxx.o: /mnt/simulations/attpcroot/fair_install_2020/GenFitInst/include/ReferenceStateOnPlane.h

@@ -47,9 +47,9 @@ namespace genfit
       cov(2, 0) = 0.0;
 
       // Forced covariance matrix to be constant. Need to study later.
-      cov(0, 0) = 0.001;
-	cov(1, 1) = 0.004;
-	cov(2, 2) = 0.001;
+      cov(0, 0) = 0.1;
+      cov(1, 1) = 0.4;
+      cov(2, 2) = 0.1;
 
       rawHitCov_ = cov;
       detId_ = hit->getDetId();

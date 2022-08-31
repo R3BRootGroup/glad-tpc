@@ -3130,6 +3130,12 @@ Rtypes.h
 Math/ProbFuncMathCore.h
 -
 
+/mnt/simulations/attpcroot/fair_install_2020/GenFitInst/include/HelixTrackModel.h
+TObject.h
+-
+TVector3.h
+-
+
 /mnt/simulations/attpcroot/fair_install_2020/GenFitInst/include/IO.h
 ostream
 -
@@ -3223,6 +3229,14 @@ assert.h
 -
 TClonesArray.h
 -
+
+/mnt/simulations/attpcroot/fair_install_2020/GenFitInst/include/PlanarMeasurement.h
+AbsMeasurement.h
+/mnt/simulations/attpcroot/fair_install_2020/GenFitInst/include/AbsMeasurement.h
+AbsHMatrix.h
+/mnt/simulations/attpcroot/fair_install_2020/GenFitInst/include/AbsHMatrix.h
+MeasurementOnPlane.h
+/mnt/simulations/attpcroot/fair_install_2020/GenFitInst/include/MeasurementOnPlane.h
 
 /mnt/simulations/attpcroot/fair_install_2020/GenFitInst/include/RKTools.h
 stddef.h
@@ -3391,6 +3405,12 @@ TrackPoint.h
 /mnt/simulations/attpcroot/fair_install_2020/R3BRoot/glad-tpc/fitter/TrackPoint.h
 Exception.h
 /mnt/simulations/attpcroot/fair_install_2020/R3BRoot/glad-tpc/fitter/Exception.h
+HelixTrackModel.h
+/mnt/simulations/attpcroot/fair_install_2020/R3BRoot/glad-tpc/fitter/HelixTrackModel.h
+PlanarMeasurement.h
+/mnt/simulations/attpcroot/fair_install_2020/R3BRoot/glad-tpc/fitter/PlanarMeasurement.h
+TrackPoint.h
+/mnt/simulations/attpcroot/fair_install_2020/R3BRoot/glad-tpc/fitter/TrackPoint.h
 ios
 -
 iostream
