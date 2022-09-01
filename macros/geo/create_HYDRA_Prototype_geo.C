@@ -158,21 +158,11 @@ void create_tpc_geo(string geoTag = "Prototype")
     Windowy = geoPar->GetWindowy() / 2.; // cm
     Windowz = geoPar->GetWindowz() / 2.; // cm
 
-    /*
-    TPCLx                  = 19.7;													//cm
-    TPCLy                  = 31.4;													//cm
-    TPCLz                  = 47.8;													//cm
-    ActiveRegionx 				 = 8.8 		 												//cm
-    ActiveRegiony 				 = 30.4														//cm
-    ActiveRegionz 				 = 25.6
-    FrameThickness	 			 = 1 														 	//cm
-       */
-
     // World definition
 
-    WorldSizeX = 2 * TPCLx;
-    WorldSizeY = 2 * TPCLy;
-    WorldSizeZ = 2 * TPCLz;
+    WorldSizeX = 3 * TPCLx;
+    WorldSizeY = 3 * TPCLy;
+    WorldSizeZ = 3 * TPCLz;
 
     // GTPC main area->World definition
     TGeoVolume* pAWorld = gGeoManager->GetTopVolume();
@@ -182,11 +172,7 @@ void create_tpc_geo(string geoTag = "Prototype")
     pWorld->SetInvisible();
     ConstructTPC(pWorld);
 
-    // Globle definition of TPC position in cm
-    TVector3 gTrans(10.2, 0, 284.); // offset before rotation
-    fGlobalTrans->SetTranslation(gTrans.X(), gTrans.Y(), gTrans.Z());
-    TGeoCombiTrans* pGlobal = new TGeoCombiTrans(*fGlobalTrans, *fGlobalRot);
-    top->AddNode(pWorld, 0, pGlobal);
+    top->AddNode(pWorld, 0, zeroRotTrans);
 
     //____________________________________
     gGeoMan->CloseGeometry();
@@ -228,11 +214,11 @@ void ConstructTPC(TGeoVolume* pWorld)
     // Aluminium frame----------------------------------------------------------
 
     TGeoShape* frame_box = new TGeoBBox("frame_box", TPCLx, TPCLy, TPCLz);
-    TGeoShape* frame_window = new TGeoBBox("frame_window", FrameThickness, Windowy, Windowz);
+    TGeoShape* frame_window = new TGeoBBox("frame_window", 2*FrameThickness, Windowy, Windowz);
 
-    TGeoTranslation* tc1 = new TGeoTranslation("tc1", TPCLx - FrameThickness, 0, 0);
+    TGeoTranslation* tc1 = new TGeoTranslation("tc1", TPCLx, 0, 0);
     tc1->RegisterYourself();
-    TGeoTranslation* tc2 = new TGeoTranslation("tc2", -(TPCLx - FrameThickness), 0, 0);
+    TGeoTranslation* tc2 = new TGeoTranslation("tc2", -(TPCLx), 0, 0);
     tc2->RegisterYourself();
 
     solidFrame = new TGeoCompositeShape("Frame", "frame_box -frame_window:tc1 -frame_window:tc2");
@@ -247,7 +233,7 @@ void ConstructTPC(TGeoVolume* pWorld)
     solidActiveRegion = new TGeoBBox("Active_region", ActiveRegionx, ActiveRegiony, ActiveRegionz);
     logicActiveRegion = new TGeoVolume("Active_region", solidActiveRegion, GasMaterial);
 
-    TGeoTranslation* tc3 = new TGeoTranslation("tc3", 0, 0, 1.5);
+    TGeoTranslation* tc3 = new TGeoTranslation("tc3", 0, 0, 2);
     tc3->RegisterYourself();
 
     // Mylar windows------------------------------------------------------------

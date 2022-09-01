@@ -8,11 +8,18 @@ void eventDisplay()
     rtdb->setFirstInput(parIo1);
     rtdb->print();
 
-    fRun->SetInputFile("sim.root");
-    fRun->SetOutputFile("test.root");
+    //fRun->SetInputFile("sim.root");
+    //fRun->SetOutputFile("test.root");
 
+    
+    FairRootFileSink* sink = new FairRootFileSink("test.root");
+    FairFileSource* source = new FairFileSource("sim.root");
+    fRun->SetSource(source);
+    fRun->SetSink(sink);
+    //fRun->SetGeomFile(GeoDataPath);
+    
     FairEventManager* fMan = new FairEventManager();
-    FairMCTracks* Track = new FairMCTracks("Monte-Carlo Tracks");
+    FairMCTracksDraw *Track = new FairMCTracksDraw();
     FairMCPointDraw* GTPCPoints = new FairMCPointDraw("GTPCPoints", kOrange, kFullSquare);
 
     fMan->AddTask(Track);

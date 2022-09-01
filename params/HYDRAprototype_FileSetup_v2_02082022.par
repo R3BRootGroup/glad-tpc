@@ -7,20 +7,26 @@
 ##############################################################################
 [GTPCGeoPar]
 //----------------------------------------------------------------------------
+GTPCTPCCenterX:	Double_t 8.6
+GTPCTPCCenterY:	Double_t 0.
+GTPCTPCCenterZ:	Double_t 271.
 GTPCActiveRegionx:   Double_t  8.8
 GTPCActiveRegiony:   Double_t  29.4
 GTPCActiveRegionz:   Double_t  25.6
 GTPCTPCLx:   Double_t  19.7
-GTPCTPCLy:   Double_t  31.4
-GTPCTPCLz:   Double_t  47.8
+GTPCTPCLy:   Double_t  35.8
+GTPCTPCLz:   Double_t  53.78
 GTPCFrameThickness:   Double_t  1.
 GTPCWindowx:   Double_t  0.005
 GTPCWindowy:   Double_t  21.9
-GTPCWindowz:   Double_t  39.8
+GTPCWindowz:   Double_t  43.28
 GTPCPadSize:   Int_t  5
 GTPCTargetRadius:   Double_t  0.25
 GTPCTargetLength:   Double_t  5.
 GTPCTargetAngle:   Double_t  0.
+GTPCTargetX:   Double_t  -2.7
+GTPCTargetY:   Double_t  0.
+GTPCTargetZ:   Double_t  227
 GTPCTargetOffsetX:   Double_t  -10.825
 GTPCTargetOffsetY:   Double_t  0.
 GTPCTargetOffsetZ:   Double_t  -91.85

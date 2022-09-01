@@ -1,23 +1,22 @@
-#include "AbsKalmanFitter.h"
-#include "KalmanFitterRefTrack.h"
-#include "DAF.h"
-#include "ConstField.h"
-#include "FieldManager.h"
-#include "MaterialEffects.h"
-#include "TGeoMaterialInterface.h"
-#include "MeasurementFactory.h"
-#include "MeasurementProducer.h"
-#include "EventDisplay.h"
-#include "KalmanFitStatus.h"
-#include "FitStatus.h"
 #include "AbsFitterInfo.h"
-#include "KalmanFitterInfo.h"
-#include "MeasuredStateOnPlane.h"
-#include "MeasurementOnPlane.h"
-#include "TrackPoint.h"
+#include "AbsKalmanFitter.h"
+#include "ConstField.h"
+#include "DAF.h"
+#include "EventDisplay.h"
 #include "Exception.h"
+#include "FieldManager.h"
+#include "FitStatus.h"
 #include "HelixTrackModel.h"
+#include "KalmanFitStatus.h"
+#include "KalmanFitterInfo.h"
+#include "KalmanFitterRefTrack.h"
+#include "MaterialEffects.h"
+#include "MeasuredStateOnPlane.h"
+#include "MeasurementFactory.h"
+#include "MeasurementOnPlane.h"
+#include "MeasurementProducer.h"
 #include "PlanarMeasurement.h"
+#include "TGeoMaterialInterface.h"
 #include "TrackPoint.h"
 
 #include <ios>
@@ -41,7 +40,6 @@
 #include "TStopwatch.h"
 #include "TGeoManager.h"
 
-
 #include "TGraph.h"
 #include "TCanvas.h"
 #include "TApplication.h"
@@ -58,7 +56,6 @@
 #include "TArrayD.h"
 #include "TVectorD.h"
 
-
 #include "Math/GenVector/Rotation3D.h"
 #include "Math/GenVector/EulerAngles.h"
 #include "Math/GenVector/AxisAngle.h"
@@ -70,32 +67,28 @@
 
 #include "R3BGTPCHitData.h"
 
-class HelixTrackModel{
+class HelixTrackModel
+{
 
- public:
+  public:
+    // Constructors/Destructors ---------
+    HelixTrackModel(const TVector3& pos, const TVector3& mom, double charge);
 
-  // Constructors/Destructors ---------
-  HelixTrackModel(const TVector3& pos, const TVector3& mom, double charge);
+    TVector3 getPos(double tracklength) const;
+    void getPosMom(double tracklength, TVector3& pos, TVector3& mom) const;
+    void getPosDir(double tracklength, TVector3& pos, TVector3& dir) const
+    {
+        getPosMom(tracklength, pos, dir);
+        dir.SetMag(1);
+    }
 
-  TVector3 getPos(double tracklength) const;
-  void getPosMom(double tracklength, TVector3& pos, TVector3& mom) const;
-  void getPosDir(double tracklength, TVector3& pos, TVector3& dir) const {
-    getPosMom(tracklength, pos, dir);
-    dir.SetMag(1);
-  }
+  private:
+    double sgn_;
+    double mom_;
+    double R_; // radius
+    TVector3 center_;
+    double alpha0_;
+    double theta_;
 
-
- private:
-
-  double sgn_;
-  double mom_;
-  double R_; // radius
-  TVector3 center_;
-  double alpha0_;
-  double theta_;
-
-
- public:
-  
-
+  public:
 };

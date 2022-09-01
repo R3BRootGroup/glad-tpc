@@ -125,9 +125,7 @@ void R3BGTPCHit2Track::Exec(Option_t* opt)
     //   LOG(WARNING) << "R3BGTPCHit2Track::NO Container Parameter!!";
     // }
 
-    
-  
-	Opt opt_params;
+    Opt opt_params;
 	int opt_verbose = opt_params.get_verbosity(); 
 	PointCloud cloud_xyz;
 	fTrackFinder->eventToClusters(fHitCA,cloud_xyz); 
@@ -151,28 +149,22 @@ void R3BGTPCHit2Track::Exec(Option_t* opt)
 	  }
 	}
 
-	
-
         // Step 1) smoothing by position averaging of neighboring points
 	PointCloud cloud_xyz_smooth;
 	smoothen_cloud(cloud_xyz, cloud_xyz_smooth, opt_params.get_r());
 
-	
-	
-	// Step 2) finding triplets of approximately collinear points
+    // Step 2) finding triplets of approximately collinear points
 	std::vector<triplet> triplets;
 	generate_triplets(cloud_xyz_smooth, triplets, opt_params.get_k(), opt_params.get_n(), opt_params.get_a());
 
-	
-	
-	// Step 3) single link hierarchical clustering of the triplets
-	cluster_group cl_group;	
-	if(cloud_xyz_smooth.size()<10) return;
-	compute_hc(cloud_xyz_smooth, cl_group, triplets, opt_params.get_s(), opt_params.get_t(), opt_params.is_tauto(),
+    // Step 3) single link hierarchical clustering of the triplets
+    cluster_group cl_group;
+    if (cloud_xyz_smooth.size() < 10)
+        return;
+    compute_hc(cloud_xyz_smooth, cl_group, triplets, opt_params.get_s(), opt_params.get_t(), opt_params.is_tauto(),
 		   opt_params.get_dmax(), opt_params.is_dmax(), opt_params.get_linkage(), opt_verbose);
 
-	
-	// Step 4) pruning by removal of small clusters ...
+    // Step 4) pruning by removal of small clusters ...
 	cleanup_cluster_group(cl_group, opt_params.get_m(), opt_verbose);
 	cluster_triplets_to_points(triplets, cl_group);
 	// .. and (optionally) by splitting up clusters at gaps > dmax
@@ -189,8 +181,8 @@ void R3BGTPCHit2Track::Exec(Option_t* opt)
 	add_clusters(cloud_xyz, cl_group, opt_params.is_gnuplot());
     
 	// Adapt clusters to AtTrack
-	fTrackFinder->clustersToTrack(cloud_xyz, cl_group,fTrackCA,fHitCA);	
-	return;
+    fTrackFinder->clustersToTrack(cloud_xyz, cl_group, fTrackCA, fHitCA);
+    return;
 }
 
 void R3BGTPCHit2Track::Finish() {}

@@ -5,7 +5,7 @@
  Choose the right detector for GEOTAG
  root [0] .L Generator_paper_Hypertriton.cc+
  root [1] GenerateInputTree_PhaseSpaceDecay()
- 
+
 To create the ASCII file for R3BROOT everything must be in [ns], [cm] and [GeV]
 */
 //#include "../gtpc/R3BGTPCSetup.h"
@@ -58,11 +58,11 @@ void GenerateInputTree_PhaseSpaceDecay()
     GEOTAG = std::string(geoTag);
 
     // Setup information
-    //R3BGTPCSetup* setup = new R3BGTPCSetup(GEOTAG, 0);
+    // R3BGTPCSetup* setup = new R3BGTPCSetup(GEOTAG, 0);
     double TargetX = -2.7;
     double TargetY = 0.;
     double TargetZ = 227.;
-    //delete setup;
+    // delete setup;
 
     // Number of total decays
     const int neve = 10000; // select the total number of events that you need
@@ -76,7 +76,6 @@ void GenerateInputTree_PhaseSpaceDecay()
     const Int_t Z[Ndecay] = { Zfrag, -1 };
     const Int_t A[Ndecay] = { Afrag, 0 };
     const Double_t Masses[Ndecay] = { 2.80839, 0.13957 }; // 3He,pi
-
 
     // Init Phase Space Decay
     double Mbeam = 2.99214; // 3LH -> D.H.Davis Nucl. Phys. A 754 (2006) 3
@@ -100,7 +99,7 @@ void GenerateInputTree_PhaseSpaceDecay()
         double percentage = i / (double)(neve * 1.0);
         loadfunction(percentage);
 
-//Hypertriton Ekinetic
+        // Hypertriton Ekinetic
         double sig_E = 0.1344, mean_E = 1.555; //[GeV]
         double E_in = E.Gaus(mean_E, sig_E);
 
@@ -132,7 +131,7 @@ void GenerateInputTree_PhaseSpaceDecay()
         double beta = Pbeam_abs / Ebeam;
         double Gamma = 1 / sqrt(1 - (beta * beta));
 
-        TF1* f1 = new TF1("f1", "exp(-x/[0])", 0, 12 *tau); 
+        TF1* f1 = new TF1("f1", "exp(-x/[0])", 0, 12 * tau);
         f1->SetParameter(0, Gamma * tau);
         Double_t t = f1->GetRandom();
 
@@ -146,7 +145,8 @@ void GenerateInputTree_PhaseSpaceDecay()
 
         if (asciifile.is_open())
         {
-            asciifile << eventNumber << "  " << multiplicity << "  0.  0."<< "\n";
+            asciifile << eventNumber << "  " << multiplicity << "  0.  0."
+                      << "\n";
         }
         TLorentzVector P[Ndecay];
         for (int j = 0; j < Ndecay; ++j)

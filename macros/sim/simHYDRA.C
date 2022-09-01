@@ -9,7 +9,7 @@ HOW TO USE:
 ALTERNATIVE:
     use the macro run_simHYDRA.C: root -l run_simHYDRA.C
 */
-void simHYDRA(Int_t nEvents = 10000, TString GEOTAG = "Prototype", TString generator = "good_evt")
+void simHYDRA(Int_t nEvents = 1000, TString GEOTAG = "Prototype", TString generator = "good_evt")
 {
     Bool_t storeTrajectories = kTRUE; //  To store particle trajectories
     Bool_t magnet = kTRUE;            //	Switch on/off the B field
@@ -20,56 +20,15 @@ void simHYDRA(Int_t nEvents = 10000, TString GEOTAG = "Prototype", TString gener
     TString transport = "TGeant4";
     cout << "The generator used is:\033[1;32m" << generator << endl;
     TString inputFile;
-    TString outFile;
-    TString parFile;
+    TString outFile = "./" + GEOTAG + "/sim.root";
+    TString parFile = "./" + GEOTAG + "/par.root";
+    cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
 
-    if (GEOTAG.CompareTo("Prototype") == 0)
-    {
-        cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
-        outFile = "./Prototype/sim.root";
-        parFile = "./Prototype/par.root";
-        if (generator.CompareTo("good_evt") == 0)
-        {
-	  //inputFile = "../../gtpcgen/ASCII/input" + GEOTAG + "_3LH.dat";
-	  inputFile = "../../gtpcgen/ASCII/input" + GEOTAG + "_He3pi_paper.dat";
-	}
-        if (generator.CompareTo("bkg_evt") == 0)
-        {
-            inputFile = "../../gtpcgen/ASCII/input" + GEOTAG + "_bkg.dat";
-        }
-    }
-
-    if (GEOTAG.CompareTo("FullBeamOut") == 0)
-    {
-        cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
-        parFile = "./FullBeamOut/par.root";
-        outFile = "./FullBeamOut/sim.root";
-        if (generator.CompareTo("good_evt") == 0)
-        {
-            inputFile = "../../gtpcgen/ASCII/input" + GEOTAG + "_3LH.dat";
-        }
-        if (generator.CompareTo("bkg_evt") == 0)
-        {
-            inputFile = "../../gtpcgen/ASCII/input" + GEOTAG + "_bkg.dat";
-        }
-    }
-
-    if (GEOTAG.CompareTo("FullBeamIn") == 0)
-    {
-        cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
-        parFile = "./FullBeamIn/par.root";
-        outFile = "./FullBeamIn/sim.root";
-        if (generator.CompareTo("good_evt") == 0)
-        {
-            inputFile = "../../gtpcgen/ASCII/input" + GEOTAG + "_3LH.dat";
-        }
-        if (generator.CompareTo("bkg_evt") == 0)
-        {
-            inputFile = "../../gtpcgen/ASCII/input" + GEOTAG + "_bkg.dat";
-        }
-    }
-    // ifstream check(inputFile);								//TODO check if the ASCII file exists
-
+    if (generator.CompareTo("good_evt") == 0)
+    	inputFile = "../../gtpcgen/ASCII/input" + GEOTAG + "_He3pi_paper.dat";
+    if (generator.CompareTo("bkg_evt") == 0)
+    	inputFile = "../../gtpcgen/ASCII/input" + GEOTAG + "_bkg.dat";
+	 cout<<"File generator:"<<inputFile<<endl;
     Int_t randomSeed = 335566; // 0 for time-dependent random numbers
 
     // ------------------------------------------------------------------------
@@ -109,19 +68,13 @@ void simHYDRA(Int_t nEvents = 10000, TString GEOTAG = "Prototype", TString gener
     // --- GLAD-TPC detectors
     if (GEOTAG.CompareTo("Prototype") == 0)
     {
-      //run->AddModule(new R3BTarget("C12 target", "passive/Target.geo.root", { -2.46, 0., 222.7 })); //-0.7,0.,192.
-      run->AddModule(new R3BTarget("C12 target", "passive/Target.geo.root", { -2.7, 0, 227 }, { "", -90., +4., 90. }));
-      run->AddModule(new R3BGTPC("HYDRA_Prototype.geo.root"));
-    }
-    else if (GEOTAG.CompareTo("FullBeamOut") == 0)
-    {
-        run->AddModule(new R3BTarget("C12 target", "passive/Target.geo.root", { 0., 0., 147.5 }));
-        run->AddModule(new R3BGTPC("HYDRA_FullBeamOut.geo.root"));
+        run->AddModule(new R3BTarget("C12 target", "passive/Target.geo.root", { -2.7, 0., 227. }));
+         run->AddModule(new R3BGTPC("HYDRA_Prototype.geo.root",{ 8.6, 0., 271 }));
     }
     else if (GEOTAG.CompareTo("FullBeamIn") == 0)
     {
-        run->AddModule(new R3BTarget("C12target", "passive/Target.geo.root", { 0., 0., 170 }));
-        run->AddModule(new R3BGTPC("HYDRA_FullBeamIn.geo.root"));
+      run->AddModule(new R3BTarget("C12target", "passive/Target.geo.root", { 0., 0., 170 }));
+        run->AddModule(new R3BGTPC("HYDRA_FullBeamIn.geo.root"));//position TBD 
     }
 
     // -----   Create R3B  magnetic field ----------------------------------------
@@ -178,7 +131,7 @@ void simHYDRA(Int_t nEvents = 10000, TString GEOTAG = "Prototype", TString gener
     run->SetStoreTraj(storeTrajectories);
 
     FairLogger::GetLogger()->SetLogVerbosityLevel("LOW");
-    FairLogger::GetLogger()->SetLogScreenLevel("INFO");
+    FairLogger::GetLogger()->SetLogScreenLevel("nolog");//INFO to show the n. of hits
 
     // -----   Initialize simulation run   ------------------------------------
     run->Init();

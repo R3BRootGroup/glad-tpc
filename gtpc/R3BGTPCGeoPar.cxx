@@ -51,6 +51,9 @@ void R3BGTPCGeoPar::putParams(FairParamList* list)
     list->add("GTPCTPCLx", TPCLx);
     list->add("GTPCTPCLy", TPCLy);
     list->add("GTPCTPCLz", TPCLz);
+    list->add("GTPCTPCCenterX", TPCCenterX);
+    list->add("GTPCTPCCenterY", TPCCenterY);
+    list->add("GTPCTPCCenterZ", TPCCenterZ);
     list->add("GTPCFrameThickness", FrameThickness);
     list->add("GTPCWindowx", Windowx);
     list->add("GTPCWindowy", Windowy);
@@ -59,6 +62,9 @@ void R3BGTPCGeoPar::putParams(FairParamList* list)
     list->add("GTPCTargetRadius", TargetRadius);
     list->add("GTPCTargetLength", TargetLength);
     list->add("GTPCTargetAngle", TargetAngle);
+    list->add("GTPCTargetX", TargetX);
+    list->add("GTPCTargetY", TargetY);
+    list->add("GTPCTargetZ", TargetZ);
     list->add("GTPCTargetOffsetX", TargetOffsetX);
     list->add("GTPCTargetOffsetY", TargetOffsetY);
     list->add("GTPCTargetOffsetZ", TargetOffsetZ);
@@ -110,6 +116,36 @@ Bool_t R3BGTPCGeoPar::getParams(FairParamList* list)
         LOG(INFO) << "---Could not initialize GTPCTPCLz";
         return kFALSE;
     }
+    if (!(list->fill("GTPCTPCCenterX", &TPCCenterX)))
+    {
+        LOG(INFO) << "---Could not initialize GTPCTPCCenterX";
+        return kFALSE;
+    }    
+    if (!(list->fill("GTPCTPCCenterY", &TPCCenterY)))
+    {
+        LOG(INFO) << "---Could not initialize GTPCTPCCenterY";
+        return kFALSE;
+    }    
+    if (!(list->fill("GTPCTPCCenterZ", &TPCCenterZ)))
+    {
+        LOG(INFO) << "---Could not initialize GTPCTPCCenterZ";
+        return kFALSE;
+    }
+    if (!(list->fill("GTPCTargetOffsetX", &TargetOffsetX)))
+    {
+        LOG(INFO) << "---Could not initialize GTPCTargetOffsetX";
+        return kFALSE;
+    }
+    if (!(list->fill("GTPCTargetOffsetY", &TargetOffsetY)))
+    {
+        LOG(INFO) << "---Could not initialize GTPCTargetOffsetY";
+        return kFALSE;
+    }
+    if (!(list->fill("GTPCTargetOffsetZ", &TargetOffsetZ)))
+    {
+        LOG(INFO) << "---Could not initialize GTPCTargetOffsetZ";
+        return kFALSE;
+    }
     if (!(list->fill("GTPCFrameThickness", &FrameThickness)))
     {
         LOG(INFO) << "---Could not initialize GTPCFrameThickness";
@@ -150,19 +186,19 @@ Bool_t R3BGTPCGeoPar::getParams(FairParamList* list)
         LOG(INFO) << "---Could not initialize GTPCTargetAngle";
         return kFALSE;
     }
-    if (!(list->fill("GTPCTargetOffsetX", &TargetOffsetX)))
+    if (!(list->fill("GTPCTargetX", &TargetX)))
     {
-        LOG(INFO) << "---Could not initialize GTPCTargetOffsetX";
+        LOG(INFO) << "---Could not initialize GTPCTargetX";
         return kFALSE;
     }
-    if (!(list->fill("GTPCTargetOffsetY", &TargetOffsetY)))
+    if (!(list->fill("GTPCTargetY", &TargetY)))
     {
-        LOG(INFO) << "---Could not initialize GTPCTargetOffsetY";
+        LOG(INFO) << "---Could not initialize GTPCTargetY";
         return kFALSE;
     }
-    if (!(list->fill("GTPCTargetOffsetZ", &TargetOffsetZ)))
+    if (!(list->fill("GTPCTargetZ", &TargetZ)))
     {
-        LOG(INFO) << "---Could not initialize GTPCTargetOffsetZ";
+        LOG(INFO) << "---Could not initialize GTPCTargetZ";
         return kFALSE;
     }
     if (!(list->fill("GTPCGladAngle", &GladAngle)))
@@ -223,6 +259,12 @@ void R3BGTPCGeoPar::printParams()
     LOG(INFO) << "GTPCTPCLx " << TPCLx << " cm,  "
               << "GTPCTPCLy " << TPCLy << " cm,  "
               << "GTPCTPCLz " << TPCLz << " cm,  "
+              << "GTPCTargetOffsetX " << TargetOffsetX << " cm,  "
+              << "GTPCTargetOffsetY " << TargetOffsetY << " cm,  "
+              << "GTPCTargetOffsetZ " << TargetOffsetZ << " cm,	 " 
+              << "GTPCTPCCenterX " << TPCCenterX << " cm,  "
+              << "GTPCTPCCenterY " << TPCCenterY << " cm,  "
+              << "GTPCTPCCenterZ " << TPCCenterZ << " cm,  "
               << "GTPCFrameThickness " << FrameThickness << " cm" << endl;
     LOG(INFO) << "GTPCWindowx " << Windowx << " cm,  "
               << "GTPCWindowy " << Windowy << " cm,  "
@@ -231,9 +273,9 @@ void R3BGTPCGeoPar::printParams()
     LOG(INFO) << "GTPCTargetRadius " << TargetRadius << " cm,  "
               << "GTPCTargetLength " << TargetLength << " cm,  "
               << "GTPCTargetAngle " << TargetAngle << " deg,  "
-              << "GTPCTargetOffsetX " << TargetOffsetX << " cm,  "
-              << "GTPCTargetOffsetY " << TargetOffsetY << " cm,  "
-              << "GTPCTargetOffsetZ " << TargetOffsetZ << " cm" << endl;
+              << "GTPCTargetX " << TargetX << " cm,  "
+              << "GTPCTargetY " << TargetY << " cm,  "
+              << "GTPCTargetZ " << TargetZ << " cm" << endl;
     LOG(INFO) << "GTPCGladAngle " << GladAngle << " deg,  "
               << "GTPCGladOffsetX " << GladOffsetX << " cm,  "
               << "GTPCGladOffsetY " << GladOffsetY << " cm,  "
