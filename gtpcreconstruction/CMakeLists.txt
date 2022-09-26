@@ -55,7 +55,7 @@ triplclust/src/pointcloud.cxx
 triplclust/src/output.cxx 
 triplclust/src/option.cxx 
 triplclust/src/util.cxx 
-#triplclust/src/graph.cxx
+triplclust/src/graph.cxx
 R3BGTPCTrackFinder.cxx
 R3BGTPCFitter.cxx
 R3BGTPCSpacePointMeasurement.cxx

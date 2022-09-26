@@ -41,6 +41,6 @@ CHANGE_FILE_EXTENSION(*.cxx *.h HEADERS "${SRCS}")
 set(LINKDEF  R3BGTPCDataLinkDef.h)
 set(LIBRARY_NAME R3BGTPCData)
 set(DEPENDENCIES
-    Core m)
+    R3BTracking Core m)
 
 GENERATE_LIBRARY()
