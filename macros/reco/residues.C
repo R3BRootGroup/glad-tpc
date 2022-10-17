@@ -101,6 +101,17 @@ void residues(TString simFilename = "sim.root", TString recoFilename = "output_r
     // Canvas and histo for visualizing residues
     TCanvas* c = new TCanvas("c", "XZ Residues", 0, 500, 500, 500);
     TH1D* reshist = new TH1D("reshist", "Residues Histogram", 501, 0, 10);
+
+    TH3D* testt1 = new TH3D("testt1", "points Histogram", 300, -10, 40, 300, -25, 25, 300, 250, 300);
+    TH3D* testt2 = new TH3D("testt2", "  hits Histogram", 300, -10, 40, 300, -25, 25, 300, 250, 300);
+
+    TH2D* testt1xz= new TH2D("testt1xz", "points Histogram", 1000, 4, 13.2, 1000, 260, 286);
+    TH2D* testt2xz = new TH2D("testt2xz", "  hits Histogram", 1000, 4, 13.2, 1000, 260, 286);
+    TH2D* testt1yz= new TH2D("testt1yz", "points Histogram", 1000, -15.2, 15.2, 1000, 260, 286);
+    TH2D* testt2yz = new TH2D("testt2yz", "  hits Histogram", 1000, -15.2, 15.2, 1000, 260, 286);
+    Int_t eventForplot1 = 10;
+    Int_t eventForplot2 = 20;
+
     // Integers variables to store the number of different data in each event
     Int_t eventPoints;
     Int_t eventHits;
@@ -154,6 +165,8 @@ void residues(TString simFilename = "sim.root", TString recoFilename = "output_r
             x = points[j]->GetX();
             y = points[j]->GetY();
             z = points[j]->GetZ();
+            //cout << "point: X, Y, Z: " << x << " " << y << " "<< z << endl;
+            if(i>eventForplot1 && i<eventForplot2) {testt1->Fill(x,y,z); testt1xz->Fill(x,z);testt1yz->Fill(y,z);}
             trackID = points[j]->GetTrackID();
             if (trackID == primaryTrackID)
             {
@@ -185,6 +198,9 @@ void residues(TString simFilename = "sim.root", TString recoFilename = "output_r
             x = hits[j]->GetX();
             y = hits[j]->GetY();
             z = hits[j]->GetZ();
+            //cout << "hits: X, Y, Z: " << x << " " << y << " "<< z << endl;
+            if(i>eventForplot1 && i<eventForplot2) {testt2->Fill(x,y,z); testt2xz->Fill(x,z);testt2yz->Fill(y,z);}
+
             energy = hits[j]->GetEnergy();
             distance = GetMinDistance(x, z, fit_x, fit_z);
             reshist->Fill(distance, energy);
@@ -201,6 +217,7 @@ void residues(TString simFilename = "sim.root", TString recoFilename = "output_r
             TCanvas* c1 = new TCanvas("c1", "Event 2D", 0, 0, 500, 500);
             TCanvas* c2 = new TCanvas("c2", "Event 3D", 500, 0, 500, 500);
             TCanvas* c3 = new TCanvas("c3", "Event Residues", 1000, 0, 500, 500);
+            TCanvas* c4 = new TCanvas("c4", "others", 1000, 0, 500, 500);
 
             // Create variables
             Double_t x;
@@ -303,6 +320,42 @@ void residues(TString simFilename = "sim.root", TString recoFilename = "output_r
 
             c3->cd();
             res->Draw("HIST");
+
+            c4->cd(2);
+            c4->Divide(2);
+            c4->cd(1);
+            /*
+            move to another canvas to inspect
+            testt1->SetMarkerStyle(2);
+            testt1->SetMarkerSize(2);
+            testt1->SetMarkerColor(1);
+            testt1->Draw();
+
+            testt2->SetMarkerStyle(4);
+            testt2->SetMarkerSize(2);
+            testt2->SetMarkerColor(4);
+            testt2->Draw("SAME");
+
+            */
+            testt1yz->SetMarkerStyle(2);
+            testt1yz->SetMarkerSize(2);
+            testt1yz->SetMarkerColor(1);
+            testt1yz->Draw();
+            testt2yz->SetMarkerStyle(4);
+            testt2yz->SetMarkerSize(2);
+            testt2yz->SetMarkerColor(4);
+            testt2yz->Draw("SAME");
+
+            c4->cd(2);
+            testt1xz->SetMarkerStyle(2);
+            testt1xz->SetMarkerSize(2);
+            testt1xz->SetMarkerColor(1);
+            testt1xz->Draw();
+            testt2xz->SetMarkerStyle(4);
+            testt2xz->SetMarkerSize(2);
+            testt2xz->SetMarkerColor(4);
+            testt2xz->Draw("SAME");
+
         }
 
         //####################################################################################

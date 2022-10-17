@@ -1,9 +1,6 @@
 ##############################################################################
 # Class:   GTPCGeoPar
 # Context: GTPCGeoParContext
-#
-# NOTE: Same params as non modified .par except GladOffsetX and GladOffsetZ
-# (used in run_lang.C and run_reconstruction.C) use it where offsets are needed
 ##############################################################################
 [GTPCGeoPar]
 //----------------------------------------------------------------------------
@@ -31,9 +28,9 @@ GTPCTargetOffsetX:   Double_t  -10.825
 GTPCTargetOffsetY:   Double_t  0.
 GTPCTargetOffsetZ:   Double_t  -91.85
 GTPCGladAngle:   Double_t  0.
-GTPCGladOffsetX:   Double_t  5.8
+GTPCGladOffsetX:   Double_t  4.2
 GTPCGladOffsetY:   Double_t  0.
-GTPCGladOffsetZ:   Double_t  272.7
+GTPCGladOffsetZ:   Double_t  260.2
 GTPCFieldAngle:   Double_t  0.
 GTPCFieldOffsetX:   Double_t  0.
 GTPCFieldOffsetY:   Double_t  0.

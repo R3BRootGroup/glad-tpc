@@ -393,28 +393,10 @@ void R3BGTPCLangevin::Exec(Option_t*)
             projX = ele_x;
             projZ = ele_z;
             projTime = accDriftTime;
-            // obtain padID for projX, projZ (simple algorithm)
-            // the algorithm assigns a pad number which depends on the XZ size of the chamber,
-            // according to the fSizeOfVirtualPad parameter: if it is 1, the pad size is cm^2
-            // and padID goes from 0 to 2*fHalfSizeTPC_X in the first row (ZOffset),
-            // from 2*fHalfSizeTPC_X to 4*fHalfSizeTPC_X in the second row (ZOffset+1), ...
-            // if fSizeOfVirtualPad=0.1, then padID goes from 0 to 20*fHalfSizeTPC_X for (Z~200.0),
-            // from 20*fHalfSizeTPC_X to 40*fHalfSizeTPC_X  (Z~200.0), ...
-            // Avoid first moving out of the virtual pad plane limits
-            // ZOffset- z of the first pad row in the laboratory frame
 
             //Removing electrons out of pad plane limits
             if (projZ < fOffsetZ || projZ > fOffsetZ + 2 * fHalfSizeTPC_Z || projX < fOffsetX || projX > fOffsetX + 2 * fHalfSizeTPC_X)
                 continue;
-            /* Deprecated
-            if (projZ < fOffsetZ)
-                projZ = fOffsetZ + 0.01; //ToDo!! Need to modify these offset to avoid negative padIDs (Debug needed)
-            if (projZ > fOffsetZ + 2 * fHalfSizeTPC_Z)
-                projZ = fOffsetZ + 2 * fHalfSizeTPC_Z - 0.01;
-            if (projX < fOffsetX)
-                projX = fOffsetX + 0.01;
-            if (projX > fOffsetX + 2 * fHalfSizeTPC_X)
-                projX = fOffsetX + 2 * fHalfSizeTPC_X - 0.01;*/
 
             //Adding -1 to get padID between 0 - 5631
             Int_t padID = fPadPlane->Fill((projZ - fOffsetZ) * 10.0, (projX - fOffsetX) * 10.0) - 1; // in mm for the padID

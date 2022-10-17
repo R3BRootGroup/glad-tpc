@@ -26,8 +26,8 @@ ${R3BROOT_SOURCE_DIR}/r3bdata
 ${R3BGTPC_SOURCE_DIR}/gtpc
 ${R3BGTPC_SOURCE_DIR}/gtpcmap
 ${R3BGTPC_SOURCE_DIR}/gtpcdata
-${R3BGTPC_SOURCE_DIR}/gtpcreconstruction/triplclust/src
-${R3BGTPC_SOURCE_DIR}/gtpcreconstruction/
+#${R3BGTPC_SOURCE_DIR}/gtpcreconstruction/triplclust/src
+#${R3BGTPC_SOURCE_DIR}/gtpcreconstruction/
 ${R3BROOT_SOURCE_DIR}/field
 ${Boost_INCLUDE_DIRS}
 )
@@ -57,7 +57,7 @@ R3BGTPCCalPar.cxx
 #R3BGTPCMappedPar.cxx
 R3BGTPCCal2Hit.cxx
 R3BGTPCMapped2Cal.cxx
-R3BGTPCHit2Track.cxx
+#R3BGTPCHit2Track.cxx
 #R3BGTPCCal2HitPar.cxx
 #R3BGTPCMapped2CalPar.cxx
 )
@@ -69,6 +69,7 @@ CHANGE_FILE_EXTENSION(*.cxx *.h HEADERS "${SRCS}")
 set(LINKDEF GTPCLinkDef.h)
 set(LIBRARY_NAME R3BGTPC)
 set(DEPENDENCIES
-    R3BBase R3BGTPCData R3BGTPCMap R3BGTPCReconstruction)
+    R3BBase R3BGTPCData R3BGTPCMap)
+    #R3BGTPCReconstruction)
 
 GENERATE_LIBRARY()

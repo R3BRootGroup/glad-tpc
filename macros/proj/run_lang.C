@@ -13,30 +13,11 @@ void run_lang(TString GEOTAG = "Prototype")
     // Input and outup file according to the GEOTAG
     TString GTPCGeoParamsFile;
     TString geoPath = gSystem->Getenv("VMCWORKDIR");
-    if (GEOTAG.CompareTo("Prototype") == 0)
-    {
-        cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
-        inFile = "../sim/Prototype/sim.root";
-        parFile = "../sim/Prototype/par.root";
-        outFile = "./Prototype/lang.root";
-        GTPCGeoParamsFile = geoPath + "/glad-tpc/params/HYDRAprototype_FileSetup_v2_02082022.par"; //New .par including the x and z offsets
-    }
-    if (GEOTAG.CompareTo("FullBeamOut") == 0)
-    {
-        cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
-        inFile = "../sim/FullBeamOut/sim.root";
-        parFile = "../sim/FullBeamOut/par.root";
-        outFile = "./FullBeamOut/lang.root";
-        GTPCGeoParamsFile = geoPath + "/glad-tpc/params/HYDRAFullBeamOut_FileSetup.par";
-    }
-    if (GEOTAG.CompareTo("FullBeamIn") == 0)
-    {
-        cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
-        inFile = "../sim/FullBeamIn/sim.root";
-        parFile = "../sim/FullBeamIn/par.root";
-        outFile = "./FullBeamIn/lang.root";
-        GTPCGeoParamsFile = geoPath + "/glad-tpc/params/HYDRAFullBeamIn_FileSetup.par";
-    }
+    cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
+    inFile = "../sim/"+GEOTAG+"/sim.root";
+    parFile = "../sim/"+GEOTAG+"/par.root";
+    outFile = "./"+GEOTAG+"/lang.root";
+    GTPCGeoParamsFile = geoPath + "/glad-tpc/params/HYDRAprototype_FileSetup_v2_02082022.par"; //New .par including the x and z offsets
     GTPCGeoParamsFile.ReplaceAll("//", "/");
 
     // -----   Create analysis run   ----------------------------------------
@@ -78,7 +59,7 @@ void run_lang(TString GEOTAG = "Prototype")
     timer.Stop();
 
     cout << "Macro finished succesfully!" << endl;
-    cout << "Output file writen: " << outFile << endl;
-    cout << "Parameter file writen: " << parFile << endl;
+    cout << "Output file written: " << outFile << endl;
+    cout << "Parameter file written: " << parFile << endl;
     cout << "Real time: " << timer.RealTime() << "s, CPU time: " << timer.CpuTime() << "s" << endl;
 }

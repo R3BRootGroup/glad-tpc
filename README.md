@@ -19,8 +19,10 @@ git checkout dev
 
 ### Required software
 
-First, you will need to install FairSoft and FairRoot and R3BRoot. For more details: [instructions](https://www.r3broot.gsi.de/installation).
-
+First, you will need to install FairSoft and FairRoot and R3BRoot. For more details: [instructions](https://www.r3broot.gsi.de/installation). 
+FaiSoft version: jun19p2 
+FairROOT version: v18.2.1
+Newer versions will not work properly with the simulation.
 
 ### Configure and compile
 

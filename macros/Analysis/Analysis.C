@@ -29,7 +29,7 @@ void Analysis(TString GEOTAG = "Prototype")
 
     // SETTINGS
     Bool_t graphicalOutput = kTRUE;
-    Bool_t textOutput = kTRUE;
+    Bool_t textOutput = kFALSE;
     Bool_t checkMCTracks = kTRUE; // Defines Histogram for MCTracks
     Bool_t checkPoints = kTRUE;   // Defines Histogram for Points
 
