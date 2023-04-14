@@ -36,7 +36,7 @@ R3BGTPCMapped2Cal::R3BGTPCMapped2Cal()
 
 R3BGTPCMapped2Cal::~R3BGTPCMapped2Cal()
 {
-    LOG(INFO) << "R3BGTPCMapped2Cal: Delete instance";
+    LOG(info) << "R3BGTPCMapped2Cal: Delete instance";
     if (fGTPCMappedDataCA)
         delete fGTPCMappedDataCA;
     if (fGTPCCalDataCA)
@@ -49,17 +49,17 @@ void R3BGTPCMapped2Cal::SetParContainers()
     FairRuntimeDb* rtdb = FairRuntimeDb::instance();
     if (!rtdb)
     {
-        LOG(ERROR) << "R3BGTPCMapped2Cal:: FairRuntimeDb not opened!";
+        LOG(error) << "R3BGTPCMapped2Cal:: FairRuntimeDb not opened!";
     }
 
     fCal_Par = (R3BGTPCCalPar*)rtdb->getContainer("GTPCCalPar");
     if (!fCal_Par)
     {
-        LOG(ERROR) << "R3BGTPCMapped2Cal::Init() Couldn't get handle on GTPCCalPar container";
+        LOG(error) << "R3BGTPCMapped2Cal::Init() Couldn't get handle on GTPCCalPar container";
     }
     else
     {
-        LOG(INFO) << "R3BGTPCMapped2Cal:: GTPCCalPar container open";
+        LOG(info) << "R3BGTPCMapped2Cal:: GTPCCalPar container open";
     }
 }
 
@@ -74,7 +74,7 @@ void R3BGTPCMapped2Cal::SetParameter()
 
 InitStatus R3BGTPCMapped2Cal::Init()
 {
-    LOG(INFO) << "R3BGTPCMapped2Cal::Init()";
+    LOG(info) << "R3BGTPCMapped2Cal::Init()";
     assert(!fGTPCCalDataCA); // in case someone calls Init() twice.
 
     // INPUT DATA - Mapped
@@ -114,7 +114,7 @@ void R3BGTPCMapped2Cal::Exec(Option_t* option)
 
     if (!fCal_Par)
     {
-        LOG(WARNING) << "R3BGTPCMapped2Cal::NO Container Parameter!!";
+        LOG(warn) << "R3BGTPCMapped2Cal::NO Container Parameter!!";
     }
 
     // Reading the Input -- Mapped Data --
@@ -146,7 +146,7 @@ void R3BGTPCMapped2Cal::Finish() {}
 
 void R3BGTPCMapped2Cal::Reset()
 {
-    LOG(DEBUG) << "Clearing CalData Structure";
+    LOG(debug) << "Clearing CalData Structure";
     if (fGTPCCalDataCA)
         fGTPCCalDataCA->Clear();
 }

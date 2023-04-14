@@ -40,7 +40,7 @@ void R3BGTPCGeoPar::clear()
 // ----  Method putParams ------------------------------------------------------
 void R3BGTPCGeoPar::putParams(FairParamList* list)
 {
-    LOG(INFO) << "R3BGTPCGeoPar::putParams() called";
+    LOG(info) << "R3BGTPCGeoPar::putParams() called";
     if (!list)
     {
         return;
@@ -81,164 +81,164 @@ void R3BGTPCGeoPar::putParams(FairParamList* list)
 // ----  Method getParams ------------------------------------------------------
 Bool_t R3BGTPCGeoPar::getParams(FairParamList* list)
 {
-    LOG(INFO) << "R3BCalifR3BGTPCGeoParaMappingPar::getParams() called";
+    LOG(info) << "R3BCalifR3BGTPCGeoParaMappingPar::getParams() called";
     if (!list)
     {
         return kFALSE;
     }
     if (!(list->fill("GTPCActiveRegionx", &ActiveRegionx)))
     {
-        LOG(INFO) << "---Could not initialize GTPCActiveRegionx";
+        LOG(info) << "---Could not initialize GTPCActiveRegionx";
         return kFALSE;
     }
     if (!(list->fill("GTPCActiveRegiony", &ActiveRegiony)))
     {
-        LOG(INFO) << "---Could not initialize GTPCActiveRegiony";
+        LOG(info) << "---Could not initialize GTPCActiveRegiony";
         return kFALSE;
     }
     if (!(list->fill("GTPCActiveRegionz", &ActiveRegionz)))
     {
-        LOG(INFO) << "---Could not initialize GTPCActiveRegionz";
+        LOG(info) << "---Could not initialize GTPCActiveRegionz";
         return kFALSE;
     }
     if (!(list->fill("GTPCTPCLx", &TPCLx)))
     {
-        LOG(INFO) << "---Could not initialize GTPCTPCLx";
+        LOG(info) << "---Could not initialize GTPCTPCLx";
         return kFALSE;
     }
     if (!(list->fill("GTPCTPCLy", &TPCLy)))
     {
-        LOG(INFO) << "---Could not initialize GTPCTPCLy";
+        LOG(info) << "---Could not initialize GTPCTPCLy";
         return kFALSE;
     }
     if (!(list->fill("GTPCTPCLz", &TPCLz)))
     {
-        LOG(INFO) << "---Could not initialize GTPCTPCLz";
+        LOG(info) << "---Could not initialize GTPCTPCLz";
         return kFALSE;
     }
    /* if (!(list->fill("GTPCTPCCenterX", &TPCCenterX)))
     {
-        LOG(INFO) << "---Could not initialize GTPCTPCCenterX";
+        LOG(info) << "---Could not initialize GTPCTPCCenterX";
         return kFALSE;
     }    
     if (!(list->fill("GTPCTPCCenterY", &TPCCenterY)))
     {
-        LOG(INFO) << "---Could not initialize GTPCTPCCenterY";
+        LOG(info) << "---Could not initialize GTPCTPCCenterY";
         return kFALSE;
     }    
     if (!(list->fill("GTPCTPCCenterZ", &TPCCenterZ)))
     {
-        LOG(INFO) << "---Could not initialize GTPCTPCCenterZ";
+        LOG(info) << "---Could not initialize GTPCTPCCenterZ";
         return kFALSE;
     }*/
     if (!(list->fill("GTPCTargetOffsetX", &TargetOffsetX)))
     {
-        LOG(INFO) << "---Could not initialize GTPCTargetOffsetX";
+        LOG(info) << "---Could not initialize GTPCTargetOffsetX";
         return kFALSE;
     }
     if (!(list->fill("GTPCTargetOffsetY", &TargetOffsetY)))
     {
-        LOG(INFO) << "---Could not initialize GTPCTargetOffsetY";
+        LOG(info) << "---Could not initialize GTPCTargetOffsetY";
         return kFALSE;
     }
     if (!(list->fill("GTPCTargetOffsetZ", &TargetOffsetZ)))
     {
-        LOG(INFO) << "---Could not initialize GTPCTargetOffsetZ";
+        LOG(info) << "---Could not initialize GTPCTargetOffsetZ";
         return kFALSE;
     }
     if (!(list->fill("GTPCFrameThickness", &FrameThickness)))
     {
-        LOG(INFO) << "---Could not initialize GTPCFrameThickness";
+        LOG(info) << "---Could not initialize GTPCFrameThickness";
         return kFALSE;
     }
     if (!(list->fill("GTPCWindowx", &Windowx)))
     {
-        LOG(INFO) << "---Could not initialize GTPCWindowx";
+        LOG(info) << "---Could not initialize GTPCWindowx";
         return kFALSE;
     }
     if (!(list->fill("GTPCWindowy", &Windowy)))
     {
-        LOG(INFO) << "---Could not initialize GTPCWindowy";
+        LOG(info) << "---Could not initialize GTPCWindowy";
         return kFALSE;
     }
     if (!(list->fill("GTPCWindowz", &Windowz)))
     {
-        LOG(INFO) << "---Could not initialize GTPCWindowz";
+        LOG(info) << "---Could not initialize GTPCWindowz";
         return kFALSE;
     }
     if (!(list->fill("GTPCPadSize", &PadSize)))
     {
-        LOG(INFO) << "---Could not initialize GTPCPadSize";
+        LOG(info) << "---Could not initialize GTPCPadSize";
         return kFALSE;
     }
     if (!(list->fill("GTPCTargetRadius", &TargetRadius)))
     {
-        LOG(INFO) << "---Could not initialize GTPCTargetRadius";
+        LOG(info) << "---Could not initialize GTPCTargetRadius";
         return kFALSE;
     }
     if (!(list->fill("GTPCTargetLength", &TargetLength)))
     {
-        LOG(INFO) << "---Could not initialize GTPCTargetLength";
+        LOG(info) << "---Could not initialize GTPCTargetLength";
         return kFALSE;
     }
     if (!(list->fill("GTPCTargetAngle", &TargetAngle)))
     {
-        LOG(INFO) << "---Could not initialize GTPCTargetAngle";
+        LOG(info) << "---Could not initialize GTPCTargetAngle";
         return kFALSE;
     }
     /*if (!(list->fill("GTPCTargetX", &TargetX)))
     {
-        LOG(INFO) << "---Could not initialize GTPCTargetX";
+        LOG(info) << "---Could not initialize GTPCTargetX";
         return kFALSE;
     }
     if (!(list->fill("GTPCTargetY", &TargetY)))
     {
-        LOG(INFO) << "---Could not initialize GTPCTargetY";
+        LOG(info) << "---Could not initialize GTPCTargetY";
         return kFALSE;
     }
     if (!(list->fill("GTPCTargetZ", &TargetZ)))
     {
-        LOG(INFO) << "---Could not initialize GTPCTargetZ";
+        LOG(info) << "---Could not initialize GTPCTargetZ";
         return kFALSE;
     }*/
     if (!(list->fill("GTPCGladAngle", &GladAngle)))
     {
-        LOG(INFO) << "---Could not initialize GTPCGladAngle";
+        LOG(info) << "---Could not initialize GTPCGladAngle";
         return kFALSE;
     }
     if (!(list->fill("GTPCGladOffsetX", &GladOffsetX)))
     {
-        LOG(INFO) << "---Could not initialize GTPCGladOffsetX";
+        LOG(info) << "---Could not initialize GTPCGladOffsetX";
         return kFALSE;
     }
     if (!(list->fill("GTPCGladOffsetY", &GladOffsetY)))
     {
-        LOG(INFO) << "---Could not initialize GTPCGladOffsetY";
+        LOG(info) << "---Could not initialize GTPCGladOffsetY";
         return kFALSE;
     }
     if (!(list->fill("GTPCGladOffsetZ", &GladOffsetZ)))
     {
-        LOG(INFO) << "---Could not initialize GTPCGladOffsetZ";
+        LOG(info) << "---Could not initialize GTPCGladOffsetZ";
         return kFALSE;
     }
     if (!(list->fill("GTPCFieldAngle", &FieldAngle)))
     {
-        LOG(INFO) << "---Could not initialize GTPCFieldAngle";
+        LOG(info) << "---Could not initialize GTPCFieldAngle";
         return kFALSE;
     }
     if (!(list->fill("GTPCFieldOffsetX", &FieldOffsetX)))
     {
-        LOG(INFO) << "---Could not initialize GTPCFieldOffsetX";
+        LOG(info) << "---Could not initialize GTPCFieldOffsetX";
         return kFALSE;
     }
     if (!(list->fill("GTPCFieldOffsetY", &FieldOffsetY)))
     {
-        LOG(INFO) << "---Could not initialize GTPCFieldOffsetY";
+        LOG(info) << "---Could not initialize GTPCFieldOffsetY";
         return kFALSE;
     }
     if (!(list->fill("GTPCFieldOffsetZ", &FieldOffsetZ)))
     {
-        LOG(INFO) << "---Could not initialize GTPCFieldOffsetZ";
+        LOG(info) << "---Could not initialize GTPCFieldOffsetZ";
         return kFALSE;
     }
 
@@ -251,12 +251,12 @@ void R3BGTPCGeoPar::print() { printParams(); }
 // ----  Method printParams ----------------------------------------------------
 void R3BGTPCGeoPar::printParams()
 {
-    LOG(INFO) << "R3BGTPCGeoPar: GTPC Geo Parameters:";
+    LOG(info) << "R3BGTPCGeoPar: GTPC Geo Parameters:";
 
-    LOG(INFO) << "GTPCActiveRegionx " << ActiveRegionx << " cm,  "
+    LOG(info) << "GTPCActiveRegionx " << ActiveRegionx << " cm,  "
               << "GTPCActiveRegiony " << ActiveRegiony << " cm,  "
               << "GTPCActiveRegionz " << ActiveRegionz << " cm" << endl;
-    LOG(INFO) << "GTPCTPCLx " << TPCLx << " cm,  "
+    LOG(info) << "GTPCTPCLx " << TPCLx << " cm,  "
               << "GTPCTPCLy " << TPCLy << " cm,  "
               << "GTPCTPCLz " << TPCLz << " cm,  "
               << "GTPCTargetOffsetX " << TargetOffsetX << " cm,  "
@@ -266,22 +266,22 @@ void R3BGTPCGeoPar::printParams()
               << "GTPCTPCCenterY " << TPCCenterY << " cm,  "
               << "GTPCTPCCenterZ " << TPCCenterZ << " cm,  "*/
               << "GTPCFrameThickness " << FrameThickness << " cm" << endl;
-    LOG(INFO) << "GTPCWindowx " << Windowx << " cm,  "
+    LOG(info) << "GTPCWindowx " << Windowx << " cm,  "
               << "GTPCWindowy " << Windowy << " cm,  "
               << "GTPCWindowz " << Windowz << " cm,  "
               << "GTPCPadSize " << PadSize << " arbitrary units (virtual)" << endl;
-    LOG(INFO) << "GTPCTargetRadius " << TargetRadius << " cm,  "
+    LOG(info) << "GTPCTargetRadius " << TargetRadius << " cm,  "
               << "GTPCTargetLength " << TargetLength << " cm,  "
               << "GTPCTargetAngle " << TargetAngle << " deg,  "
              /* << "GTPCTargetX " << TargetX << " cm,  "
               << "GTPCTargetY " << TargetY << " cm,  "
               << "GTPCTargetZ " << TargetZ << " cm"*/
 	      << endl;
-    LOG(INFO) << "GTPCGladAngle " << GladAngle << " deg,  "
+    LOG(info) << "GTPCGladAngle " << GladAngle << " deg,  "
               << "GTPCGladOffsetX " << GladOffsetX << " cm,  "
               << "GTPCGladOffsetY " << GladOffsetY << " cm,  "
               << "GTPCGladOffsetZ " << GladOffsetZ << " cm" << endl;
-    LOG(INFO) << "GTPCFieldAngle " << FieldAngle << " deg,  "
+    LOG(info) << "GTPCFieldAngle " << FieldAngle << " deg,  "
               << "GTPCFieldOffsetX " << FieldOffsetX << " cm,  "
               << "GTPCFieldOffsetY " << FieldOffsetY << " cm,  "
               << "GTPCFieldOffsetZ " << FieldOffsetZ << " cm" << endl;

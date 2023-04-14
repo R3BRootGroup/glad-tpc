@@ -80,31 +80,31 @@ void R3BGTPCLangevin::SetParContainers()
     FairRunAna* run = FairRunAna::Instance();
     if (!run)
     {
-        LOG(FATAL) << "R3BGTPCLangevin::SetParContainers: No analysis run";
+        LOG(fatal) << "R3BGTPCLangevin::SetParContainers: No analysis run";
         return;
     }
     FairRuntimeDb* rtdb = run->GetRuntimeDb();
     if (!rtdb)
     {
-        LOG(FATAL) << "R3BGTPCLangevin::SetParContainers: No runtime database";
+        LOG(fatal) << "R3BGTPCLangevin::SetParContainers: No runtime database";
         return;
     }
     fGTPCGeoPar = (R3BGTPCGeoPar*)rtdb->getContainer("GTPCGeoPar");
     if (!fGTPCGeoPar)
     {
-        LOG(FATAL) << "R3BGTPCLangevin::SetParContainers: No R3BGTPCGeoPar";
+        LOG(fatal) << "R3BGTPCLangevin::SetParContainers: No R3BGTPCGeoPar";
         return;
     }
     fGTPCGasPar = (R3BGTPCGasPar*)rtdb->getContainer("GTPCGasPar");
     if (!fGTPCGasPar)
     {
-        LOG(FATAL) << "R3BGTPCLangevin::SetParContainers: No R3BGTPCGasPar";
+        LOG(fatal) << "R3BGTPCLangevin::SetParContainers: No R3BGTPCGasPar";
         return;
     }
     fGTPCElecPar = (R3BGTPCElecPar*)rtdb->getContainer("GTPCElecPar");
     if (!fGTPCElecPar)
     {
-        LOG(FATAL) << "R3BGTPCLangevin::SetParContainers: No R3BGTPCElecPar";
+        LOG(fatal) << "R3BGTPCLangevin::SetParContainers: No R3BGTPCElecPar";
         return;
     }
 }
@@ -136,20 +136,20 @@ InitStatus R3BGTPCLangevin::Init()
     FairRootManager* ioman = FairRootManager::Instance();
     if (!ioman)
     {
-        LOG(FATAL) << "R3BGTPCLangevin::Init: No FairRootManager";
+        LOG(fatal) << "R3BGTPCLangevin::Init: No FairRootManager";
         return kFATAL;
     }
     // Input: TClonesArray of R3BGTPCPoints
     if ((TClonesArray*)ioman->GetObject("GTPCPoint") == nullptr)
     {
-        LOG(FATAL) << "R3BGTPCLangevin::Init No GTPCPoint!";
+        LOG(fatal) << "R3BGTPCLangevin::Init No GTPCPoint!";
         return kFATAL;
     }
     fGTPCPointsCA = (TClonesArray*)ioman->GetObject("GTPCPoint");
     // Input: TClonesArray of R3BMCTrack
     if ((TClonesArray*)ioman->GetObject("MCTrack") == nullptr)
     {
-        LOG(FATAL) << "R3BMCTrack::Init No MCTrack!";
+        LOG(fatal) << "R3BMCTrack::Init No MCTrack!";
         return kFATAL;
     }
 
@@ -196,10 +196,10 @@ void R3BGTPCLangevin::Exec(Option_t*)
         fGTPCProjPointCA->Clear("C");
 
     Int_t nPoints = fGTPCPointsCA->GetEntries();
-    LOG(INFO) << "R3BGTPCLangevin: processing " << nPoints << " points";
+    LOG(info) << "R3BGTPCLangevin: processing " << nPoints << " points";
     if (nPoints < 2)
     {
-        LOG(INFO) << "Not enough hits for digitization! (<2)";
+        LOG(info) << "Not enough hits for digitization! (<2)";
         return;
     }
 
@@ -254,12 +254,12 @@ void R3BGTPCLangevin::Exec(Option_t*)
         { // any other case, that is, other than entering the volume
             if (presentTrackID != aPoint->GetTrackID())
             { // track was not entering the volume in a previous point, what somehow it is in! :‑O
-                LOG(FATAL) << "R3BGTPCLangevin::Exec: Problem 2 in point logic";
+                LOG(fatal) << "R3BGTPCLangevin::Exec: Problem 2 in point logic";
                 break;
             }
             if (readyToProject != kTRUE)
             { // track somehow exited the gas volume or dissappeared in a previous point :‑O
-                LOG(FATAL) << "R3BGTPCLangevin::Exec: Problem 3 in point logic";
+                LOG(fatal) << "R3BGTPCLangevin::Exec: Problem 3 in point logic";
                 break;
             }
             if (aPoint->GetTrackStatus() == 10100 || aPoint->GetTrackStatus() == 1000000)
@@ -324,7 +324,7 @@ void R3BGTPCLangevin::Exec(Option_t*)
             ele_z = zPre + stepZ * ele;
             accDriftTime = timeBeforeDrift;
 
-            LOG(DEBUG) << "R3BGTPCLangevin::Exec, INITIAL VALUES: timeBeforeDrift=" << accDriftTime << " [ns]"
+            LOG(debug) << "R3BGTPCLangevin::Exec, INITIAL VALUES: timeBeforeDrift=" << accDriftTime << " [ns]"
                        << " ele_x=" << ele_x << " ele_y=" << ele_y << " ele_z=" << ele_z << " [cm]";
             // cout   << "R3BGTPCLangevin::Exec, INITIAL VALUES: timeBeforeDrift=" << accDriftTime << " [ns]"
             //                  << " ele_x=" << ele_x << " ele_y=" << ele_y << " ele_z=" << ele_z << " [cm]";
@@ -353,7 +353,7 @@ void R3BGTPCLangevin::Exec(Option_t*)
                                       mu * mu * productEB *
                                           B_z); // cte * (Ez + mu*(E_x*B_y-E_y*B_x) + mu*mu*productEB*B_z); [cm/ns]
 
-                LOG(DEBUG) << "R3BGTPCLangevin::Exec, DRIFT VELOCITIES: vDrift_x=" << vDrift_x << " vDrift_y=" << vDrift_y
+                LOG(debug) << "R3BGTPCLangevin::Exec, DRIFT VELOCITIES: vDrift_x=" << vDrift_x << " vDrift_y=" << vDrift_y
                            << " vDrift_z=" << vDrift_z << " [cm/ns]";
                 // adjusting the last step before the pad plane
                 if (ele_y - vDrift_y * fDriftTimeStep < -fHalfSizeTPC_Y)
@@ -380,7 +380,7 @@ void R3BGTPCLangevin::Exec(Option_t*)
                 // Could it be symmetric with the others (+) in case the electric field is negative in Y?
                 // Does it change other cross terms? Which one is correct?
 
-                LOG(DEBUG) << "R3BGTPCLangevin::Exec, NEW VALUES: accDriftTime=" << accDriftTime << " [ns]"
+                LOG(debug) << "R3BGTPCLangevin::Exec, NEW VALUES: accDriftTime=" << accDriftTime << " [ns]"
                            << " ele_x=" << ele_x << " ele_y=" << ele_y << " ele_z=" << ele_z << " [cm]";
             }
             if (recoverDriftTimeStep)
@@ -405,7 +405,7 @@ void R3BGTPCLangevin::Exec(Option_t*)
             //Maybe error in the conditionals projX and projZ above
             if (padID < 0 || padID > 5631)
             {
-                LOG(WARNING)<<"R3BGTPCLangevin::Exec No-valid padID" << endl;
+                LOG(warn)<<"R3BGTPCLangevin::Exec No-valid padID" << endl;
                 continue;
             }
 
@@ -479,9 +479,9 @@ void R3BGTPCLangevin::Exec(Option_t*)
         zPre = zPost;
     }
     if (outputMode == 0)
-        LOG(INFO) << "R3BGTPCLangevin: produced " << fGTPCCalDataCA->GetEntries() << " R3BGTPCcalData(s)";
+        LOG(info) << "R3BGTPCLangevin: produced " << fGTPCCalDataCA->GetEntries() << " R3BGTPCcalData(s)";
     if (outputMode == 1)
-        LOG(INFO) << "R3BGTPCLangevin: produced " << fGTPCProjPointCA->GetEntries() << " R3BGTPCProjPoint(s)";
+        LOG(info) << "R3BGTPCLangevin: produced " << fGTPCProjPointCA->GetEntries() << " R3BGTPCProjPoint(s)";
 }
 
 void R3BGTPCLangevin::Finish() {}

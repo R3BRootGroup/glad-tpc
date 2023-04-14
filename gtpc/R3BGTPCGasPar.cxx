@@ -40,7 +40,7 @@ void R3BGTPCGasPar::clear()
 // ----  Method putParams ------------------------------------------------------
 void R3BGTPCGasPar::putParams(FairParamList* list)
 {
-    LOG(INFO) << "R3BGTPCGasPar::putParams() called";
+    LOG(info) << "R3BGTPCGasPar::putParams() called";
     if (!list)
     {
         return;
@@ -55,34 +55,34 @@ void R3BGTPCGasPar::putParams(FairParamList* list)
 // ----  Method getParams ------------------------------------------------------
 Bool_t R3BGTPCGasPar::getParams(FairParamList* list)
 {
-    LOG(INFO) << "R3BCalifR3BGTPCGasParaMappingPar::getParams() called";
+    LOG(info) << "R3BCalifR3BGTPCGasParaMappingPar::getParams() called";
     if (!list)
     {
         return kFALSE;
     }
     if (!(list->fill("GTPCLongDiff", &LongDiff)))
     {
-        LOG(INFO) << "---Could not initialize GTPCLongDiff";
+        LOG(info) << "---Could not initialize GTPCLongDiff";
         return kFALSE;
     }
     if (!(list->fill("GTPCTransDiff", &TransDiff)))
     {
-        LOG(INFO) << "---Could not initialize GTPCTransDiff";
+        LOG(info) << "---Could not initialize GTPCTransDiff";
         return kFALSE;
     }
     if (!(list->fill("GTPCFanoFactor", &FanoFactor)))
     {
-        LOG(INFO) << "---Could not initialize GTPCFanoFactor";
+        LOG(info) << "---Could not initialize GTPCFanoFactor";
         return kFALSE;
     }
     if (!(list->fill("GTPCEIonization", &EIonization)))
     {
-        LOG(INFO) << "---Could not initialize GTPCEIonization";
+        LOG(info) << "---Could not initialize GTPCEIonization";
         return kFALSE;
     }
     if (!(list->fill("GTPCDriftVelocity", &DriftVelocity)))
     {
-        LOG(INFO) << "---Could not initialize GTPCDriftVelocity";
+        LOG(info) << "---Could not initialize GTPCDriftVelocity";
         return kFALSE;
     }
     return kTRUE;
@@ -94,11 +94,11 @@ void R3BGTPCGasPar::print() { printParams(); }
 // ----  Method printParams ----------------------------------------------------
 void R3BGTPCGasPar::printParams()
 {
-    LOG(INFO) << "R3BGTPCGasPar: GTPC Gas Parameters:";
+    LOG(info) << "R3BGTPCGasPar: GTPC Gas Parameters:";
 
-    LOG(INFO) << "GTPCLongDiff " << LongDiff << " cm^2/ns,  "
+    LOG(info) << "GTPCLongDiff " << LongDiff << " cm^2/ns,  "
               << "GTPCTransDiff " << TransDiff << " cm^2/ns" << endl;
-    LOG(INFO) << "GTPCFanoFactor " << FanoFactor << ",  "
+    LOG(info) << "GTPCFanoFactor " << FanoFactor << ",  "
               << "GTPCEIonization " << EIonization << " GeV,  "
               << "GTPCDriftVelocity " << DriftVelocity << " cm/ns,  " << endl;
 }

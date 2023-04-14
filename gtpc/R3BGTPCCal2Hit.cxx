@@ -36,7 +36,7 @@ R3BGTPCCal2Hit::R3BGTPCCal2Hit()
 
 R3BGTPCCal2Hit::~R3BGTPCCal2Hit()
 {
-    LOG(INFO) << "R3BGTPCCal2Hit: Delete instance";
+    LOG(info) << "R3BGTPCCal2Hit: Delete instance";
     if (fHitCA)
         delete fHitCA;
     if (fCalCA)
@@ -49,26 +49,26 @@ void R3BGTPCCal2Hit::SetParContainers()
     FairRuntimeDb* rtdb = FairRuntimeDb::instance();
     if (!rtdb)
     {
-        LOG(ERROR) << "R3BGTPCCal2Hit:: FairRuntimeDb not opened!";
+        LOG(error) << "R3BGTPCCal2Hit:: FairRuntimeDb not opened!";
     }
 
     fGTPCGeoPar = (R3BGTPCGeoPar*)rtdb->getContainer("GTPCGeoPar");
     if (!fGTPCGeoPar)
     {
-        LOG(FATAL) << "R3BGTPCCal2Hit::SetParContainers: No R3BGTPCGeoPar";
+        LOG(fatal) << "R3BGTPCCal2Hit::SetParContainers: No R3BGTPCGeoPar";
         return;
     }
 
     fGTPCGasPar = (R3BGTPCGasPar*)rtdb->getContainer("GTPCGasPar");
     if (!fGTPCGasPar)
     {
-        LOG(FATAL) << "R3BGTPCCal2Hit::SetParContainers: No R3BGTPCGasPar";
+        LOG(fatal) << "R3BGTPCCal2Hit::SetParContainers: No R3BGTPCGasPar";
         return;
     }
     fGTPCElecPar = (R3BGTPCElecPar*)rtdb->getContainer("GTPCElecPar");
     if (!fGTPCElecPar)
     {
-        LOG(FATAL) << "R3BGTPCCal2Hit::SetParContainers: No R3BGTPCElecPar";
+        LOG(fatal) << "R3BGTPCCal2Hit::SetParContainers: No R3BGTPCElecPar";
         return;
     }
 }
@@ -97,20 +97,20 @@ void R3BGTPCCal2Hit::SetParameter()
 
 InitStatus R3BGTPCCal2Hit::Init()
 {
-    LOG(INFO) << "R3BGTPCCal2Hit::Init() ";
+    LOG(info) << "R3BGTPCCal2Hit::Init() ";
     assert(!fHitCA); // in case someone calls Init() twice.
 
     // INPUT DATA - Cal
     FairRootManager* ioManager = FairRootManager::Instance();
     if (!ioManager)
     {
-        LOG(FATAL) << "Init: No FairRootManager";
+        LOG(fatal) << "Init: No FairRootManager";
     }
 
     fCalCA = (TClonesArray*)ioManager->GetObject("GTPCCalData");
     if (!fCalCA)
     {
-        LOG(FATAL) << "Init: No R3BGTPCCalData";
+        LOG(fatal) << "Init: No R3BGTPCCalData";
     }
 
     // Register output - Hit
@@ -146,18 +146,18 @@ void R3BGTPCCal2Hit::Exec(Option_t* opt)
     // ALGORITHMS FOR HIT FINDING
     // Nb of CrystalHits in current event
     Int_t nCals = fCalCA->GetEntries();
-    LOG(INFO) << "R3BGTPCCal2Hit: processing " << nCals << " CalPads";
+    LOG(info) << "R3BGTPCCal2Hit: processing " << nCals << " CalPads";
 
     if (!nCals)
     {
-        LOG(WARNING) << "No CalPads";
+        LOG(warn) << "No CalPads";
     }
 
     Double_t x = 0, y = 0, z = 0, lW = 0, ene = 0;
     R3BGladFieldMap* gladField = (R3BGladFieldMap*)FairRunAna::Instance()->GetField(); // B Field
     if (!gladField)
     {
-        LOG(WARNING) << "No GladField";
+        LOG(warn) << "No GladField";
     }
 
     R3BGTPCCalData** calData;
@@ -199,7 +199,7 @@ void R3BGTPCCal2Hit::Exec(Option_t* opt)
             // Invalid ID condition PadCenterCoord[0]=-9999 (Should be solved in R3BGTPCLangevin)
             if (PadCenterCoord[0] < -9000)
             {
-                LOG(WARNING)<<"R3BGTPCCal2Hit::Exec Invalid padID";
+                LOG(warn)<<"R3BGTPCCal2Hit::Exec Invalid padID";
                 continue;
             }
 
@@ -254,7 +254,7 @@ void R3BGTPCCal2Hit::Exec(Option_t* opt)
                 cloudLong = 0;
                 cloudTransv = 0;
 
-                LOG(DEBUG) << "R3BGTPCCal2Hit::Exec, INITIAL VALUES: \tTimeToRun=" << accDriftTime << " [ns]"
+                LOG(debug) << "R3BGTPCCal2Hit::Exec, INITIAL VALUES: \tTimeToRun=" << accDriftTime << " [ns]"
                            << " \tx=" << x << "  \ty=" << y << " \tz=" << z << " [cm]";
 
                 // Calculation Loop till accDriftTime = 0
@@ -316,7 +316,7 @@ void R3BGTPCCal2Hit::Exec(Option_t* opt)
 
                     //Resting time update
                     accDriftTime = accDriftTime - fDriftTimeStep;
-                    LOG(DEBUG) << "R3BGTPCCal2Hit::Exec, NEW VALUES: accDriftTime=" << accDriftTime << " [ns]"
+                    LOG(debug) << "R3BGTPCCal2Hit::Exec, NEW VALUES: accDriftTime=" << accDriftTime << " [ns]"
                                << " x=" << x << " y=" << y << " z=" << z << " [cm]" << " Drift_v "<<vDrift_x<<" fDriftTimeStep "<<fDriftTimeStep;
                 }
                 // Once the last step adjust is done, reset the variables.
@@ -327,7 +327,7 @@ void R3BGTPCCal2Hit::Exec(Option_t* opt)
                     recoverStep = kTRUE;
                 }
                 //Comparing sigmas obtained in both ways
-                LOG(DEBUG)<<"Comparing sigmas... Approx: "<<sigmaLong<<" "<<sigmaTransv<<";  Step by step: "<<TMath::Sqrt(cloudLong)<<" "<<TMath::Sqrt(cloudTransv);
+                LOG(debug)<<"Comparing sigmas... Approx: "<<sigmaLong<<" "<<sigmaTransv<<";  Step by step: "<<TMath::Sqrt(cloudLong)<<" "<<TMath::Sqrt(cloudTransv);
             }
             // Adding the hit relevant info for the mean
             hitx += x * counts;
@@ -353,7 +353,7 @@ void R3BGTPCCal2Hit::Finish() {}
 
 void R3BGTPCCal2Hit::Reset()
 {
-    LOG(DEBUG) << "Clearing HitData Structure";
+    LOG(debug) << "Clearing HitData Structure";
     if (fHitCA)
         fHitCA->Clear();
 }

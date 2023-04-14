@@ -14,11 +14,11 @@
 #ifndef R3BGTPCTRACKDATA_H
 #define R3BGTPCTRACKDATA_H
 
-#include "R3BGTPCHitData.h"
 #include "R3BGTPCHitClusterData.h"
+#include "R3BGTPCHitData.h"
 #include "TObject.h"
+#include <memory>
 #include <stdint.h>
-#include <memory.h>
 
 class R3BGTPCTrackData : public TObject
 {
