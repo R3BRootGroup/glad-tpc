@@ -76,16 +76,16 @@ void R3BGTPC::FinishRun() { ; }
 void R3BGTPC::Initialize()
 {
     FairDetector::Initialize();
-    LOG(INFO) << "R3BGTPC: initialisation";
-    LOG(DEBUG) << "-I- R3BGTPC: Vol (McId) def";
-    LOG(INFO) << "R3BGTPC: GTPC_box Vol. (McId) " << gMC->VolId("GTPC_box");
-    LOG(INFO) << "R3BGTPC: Active_region Vol. (McId) " << gMC->VolId("Active_region");
+    LOG(info) << "R3BGTPC: initialisation";
+    LOG(debug) << "-I- R3BGTPC: Vol (McId) def";
+    LOG(info) << "R3BGTPC: GTPC_box Vol. (McId) " << gMC->VolId("GTPC_box");
+    LOG(info) << "R3BGTPC: Active_region Vol. (McId) " << gMC->VolId("Active_region");
 }
 
 //____________________________________________________________
 void R3BGTPC::SetSpecialPhysicsCuts()
 {
-    LOG(INFO) << "-I- R3BGTPC: Adding customized Physics cut ... ";
+    LOG(info) << "-I- R3BGTPC: Adding customized Physics cut ... ";
 
     if (gGeoManager)
     { // NOT SURE THIS IS USEFUL
@@ -109,7 +109,7 @@ void R3BGTPC::SetSpecialPhysicsCuts()
             // Setting Energy-CutOff for Gas Only->Ionization energy ~30eV
             Double_t cutE = 1e-6; // GeV-> 1keV
 
-            LOG(INFO) << "-I- R3BGTPC: Medium Id " << pmix->GetId() << " Energy Cut-Off : " << cutE << " GeV";
+            LOG(info) << "-I- R3BGTPC: Medium Id " << pmix->GetId() << " Energy Cut-Off : " << cutE << " GeV";
 
             gMC->Gstpar(pmix->GetId(), "CUTGAM", cutE); /** gammas (GeV)*/
             gMC->Gstpar(pmix->GetId(), "CUTELE", cutE); /** electrons (GeV)*/
@@ -211,7 +211,7 @@ TClonesArray* R3BGTPC::GetCollection(Int_t iColl) const
 void R3BGTPC::Print(Option_t* option) const
 {
     Int_t nhits = fGTPCPointCollection->GetEntriesFast();
-    LOG(INFO) << "R3BGTPC: " << nhits << " points registered in this event";
+    LOG(info) << "R3BGTPC: " << nhits << " points registered in this event";
 }
 // ----------------------------------------------------------------------------
 
@@ -221,11 +221,11 @@ void R3BGTPC::Reset() { fGTPCPointCollection->Clear(); }
 //_________________________________________________________
 Bool_t R3BGTPC::CheckIfSensitive(std::string name)
 {
-    LOG(INFO) << "R3BGTPC::CheckIfSensitive " << name;
+    LOG(info) << "R3BGTPC::CheckIfSensitive " << name;
 
     if (TString(name).Contains("Active_region"))
     {
-        LOG(INFO) << name << " is sensitive";
+        LOG(info) << name << " is sensitive";
         return kTRUE;
     }
     return kFALSE;

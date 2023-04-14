@@ -47,7 +47,7 @@ void R3BGTPCCalPar::clear()
 // ----  Method putParams ------------------------------------------------------
 void R3BGTPCCalPar::putParams(FairParamList* list)
 {
-    LOG(INFO) << "R3BGTPCCalPar::putParams() called";
+    LOG(info) << "R3BGTPCCalPar::putParams() called";
     if (!list)
     {
         return;
@@ -62,7 +62,7 @@ void R3BGTPCCalPar::putParams(FairParamList* list)
 // ----  Method getParams ------------------------------------------------------
 Bool_t R3BGTPCCalPar::getParams(FairParamList* list)
 {
-    LOG(INFO) << "R3BGTPCCalPar::getParams() called";
+    LOG(info) << "R3BGTPCCalPar::getParams() called";
     if (!list)
     {
         return kFALSE;
@@ -77,7 +77,7 @@ Bool_t R3BGTPCCalPar::getParams(FairParamList* list)
 
     if (!(list->fill("GTPCCalPar", fCalParams)))
     {
-        LOG(INFO) << "---Could not initialize GTPCCalPar";
+        LOG(info) << "---Could not initialize GTPCCalPar";
         return kFALSE;
     }
 
@@ -90,10 +90,10 @@ void R3BGTPCCalPar::print() { printParams(); }
 // ----  Method printParams ----------------------------------------------------
 void R3BGTPCCalPar::printParams()
 {
-    LOG(INFO) << "R3BGTPCCalPar::GTPC  Calibration Parameters: ";
+    LOG(info) << "R3BGTPCCalPar::GTPC  Calibration Parameters: ";
     for (Int_t i = 0; i < fNumParams; i++)
     {
-        LOG(INFO) << "calParam(" << i << ") = " << fCalParams->GetAt(i);
+        LOG(info) << "calParam(" << i << ") = " << fCalParams->GetAt(i);
     }
 }
 

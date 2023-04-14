@@ -40,7 +40,7 @@ void R3BGTPCElecPar::clear()
 // ----  Method putParams ------------------------------------------------------
 void R3BGTPCElecPar::putParams(FairParamList* list)
 {
-    LOG(INFO) << "R3BGTPCElecPar::putParams() called";
+    LOG(info) << "R3BGTPCElecPar::putParams() called";
     if (!list)
     {
         return;
@@ -58,49 +58,49 @@ void R3BGTPCElecPar::putParams(FairParamList* list)
 // ----  Method getParams ------------------------------------------------------
 Bool_t R3BGTPCElecPar::getParams(FairParamList* list)
 {
-    LOG(INFO) << "R3BCalifR3BGTPCElecParaMappingPar::getParams() called";
+    LOG(info) << "R3BCalifR3BGTPCElecParaMappingPar::getParams() called";
     if (!list)
     {
         return kFALSE;
     }
     if (!list->fill("GTPCGain", &Gain))
     {
-        LOG(INFO) << "---Could not initialize GTPCGain";
+        LOG(info) << "---Could not initialize GTPCGain";
         return kFALSE;
     }
     if (!(list->fill("GTPCTheta", &Theta)))
     {
-        LOG(INFO) << "---Could not initialize GTPCTheta";
+        LOG(info) << "---Could not initialize GTPCTheta";
         return kFALSE;
     }
     if (!(list->fill("GTPCNoiseRMS", &NoiseRMS)))
     {
-        LOG(INFO) << "---Could not initialize GTPCNoiseRMS";
+        LOG(info) << "---Could not initialize GTPCNoiseRMS";
         return kFALSE;
     }
     if (!(list->fill("GTPCTimeBinSize", &TimeBinSize)))
     {
-        LOG(INFO) << "---Could not initialize GTPCTimeBinSize";
+        LOG(info) << "---Could not initialize GTPCTimeBinSize";
         return kFALSE;
     }
     if (!(list->fill("GTPCShapingTime", &ShapingTime)))
     {
-        LOG(INFO) << "---Could not initialize GTPCShapingTime";
+        LOG(info) << "---Could not initialize GTPCShapingTime";
         return kFALSE;
     }
     if (!(list->fill("GTPCThreshold", &Threshold)))
     {
-        LOG(INFO) << "---Could not initialize GTPCThreshold";
+        LOG(info) << "---Could not initialize GTPCThreshold";
         return kFALSE;
     }
     if (!(list->fill("GTPCDriftEField", &DriftEField)))
     {
-        LOG(INFO) << "---Could not initialize GTPCDriftEField";
+        LOG(info) << "---Could not initialize GTPCDriftEField";
         return kFALSE;
     }
     if (!(list->fill("GTPCDriftTimeStep", &DriftTimeStep)))
     {
-        LOG(INFO) << "---Could not initialize GTPCDriftTimeStep";
+        LOG(info) << "---Could not initialize GTPCDriftTimeStep";
         return kFALSE;
     }
 
@@ -113,9 +113,9 @@ void R3BGTPCElecPar::print() { printParams(); }
 // ----  Method printParams ----------------------------------------------------
 void R3BGTPCElecPar::printParams()
 {
-    LOG(INFO) << "R3BGTPCElecPar: GTPC Elec Parameters:";
+    LOG(info) << "R3BGTPCElecPar: GTPC Elec Parameters:";
 
-    LOG(INFO) << "GTPCGain " << Gain << ",  "
+    LOG(info) << "GTPCGain " << Gain << ",  "
               << "GTPCTheta (Polya) " << Theta << ",  "
               << "GTPCNoiseRMS " << NoiseRMS << " e- RMS,  "
               << "GTPCTimeBinSize " << TimeBinSize << " ns,  "

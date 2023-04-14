@@ -59,11 +59,11 @@ InitStatus R3BGTPCEventDrawTask::Init()
     // Data
     fHitCA = (TClonesArray*)ioMan->GetObject("GTPCHitData");
     if (fHitCA)
-        LOG(INFO) << cGREEN << "Hit Array Found in branch GTPCHitData." << cNORMAL << std::endl;
+        LOG(info) << cGREEN << "Hit Array Found in branch GTPCHitData." << cNORMAL << std::endl;
 
     fTrackCA = (TClonesArray*)ioMan->GetObject("GTPCTrackData");
     if (fTrackCA)
-        LOG(INFO) << cGREEN << "Track Array Found in branch GTPCTrackData." << cNORMAL << std::endl;
+        LOG(info) << cGREEN << "Track Array Found in branch GTPCTrackData." << cNORMAL << std::endl;
 
     // Canvas
     fCvsPadPlane = fEventManager->GetCvsPadPlane();

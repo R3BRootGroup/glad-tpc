@@ -42,7 +42,7 @@ R3BGTPCHit2Track::R3BGTPCHit2Track()
 
 R3BGTPCHit2Track::~R3BGTPCHit2Track()
 {
-    LOG(INFO) << "R3BGTPCHit2Track: Delete instance";
+    LOG(info) << "R3BGTPCHit2Track: Delete instance";
     if (fHitCA)
         delete fHitCA;
     if (fTrackCA)
@@ -55,17 +55,17 @@ void R3BGTPCHit2Track::SetParContainers()
     // FairRuntimeDb* rtdb = FairRuntimeDb::instance();
     // if (!rtdb)
     // {
-    //  LOG(ERROR) << "R3BGTPCMapped2Cal:: FairRuntimeDb not opened!";
+    //  LOG(error) << "R3BGTPCMapped2Cal:: FairRuntimeDb not opened!";
     // }
 
     // fHit_Par = (R3BGTPCHitPar*)rtdb->getContainer("GTPCHitPar");
     // if (!fHit_Par)
     // {
-    //  LOG(ERROR) << "R3BGTPCCal2Hit::Init() Couldn't get handle on GTPCHitPar container";
+    //  LOG(error) << "R3BGTPCCal2Hit::Init() Couldn't get handle on GTPCHitPar container";
     // }
     // else
     // {
-    //   LOG(INFO) << "R3BGTPCCal2Hit:: GTPCHitPar container open";
+    //   LOG(info) << "R3BGTPCCal2Hit:: GTPCHitPar container open";
     // }
 
     fTrackFinder = new R3BGTPCTrackFinder();
@@ -83,7 +83,7 @@ void R3BGTPCHit2Track::SetParameter()
 
 InitStatus R3BGTPCHit2Track::Init()
 {
-    LOG(INFO) << "R3BGTPCHit2Track::Init() ";
+    LOG(info) << "R3BGTPCHit2Track::Init() ";
     assert(!fTrackCA); // in case someone calls Init() twice.
 
     // INPUT DATA - Cal
@@ -122,7 +122,7 @@ void R3BGTPCHit2Track::Exec(Option_t* opt)
 
     // if (!fTrack_Par)
     // {
-    //   LOG(WARNING) << "R3BGTPCHit2Track::NO Container Parameter!!";
+    //   LOG(warn) << "R3BGTPCHit2Track::NO Container Parameter!!";
     // }
 
     Opt opt_params;
@@ -189,7 +189,7 @@ void R3BGTPCHit2Track::Finish() {}
 
 void R3BGTPCHit2Track::Reset()
 {
-    LOG(DEBUG) << "Clearing TrackData Structure";
+    LOG(debug) << "Clearing TrackData Structure";
     if (fTrackCA)
         fTrackCA->Clear();
 }

@@ -77,32 +77,32 @@ void R3BGTPCProjector::SetParContainers()
     FairRunAna* run = FairRunAna::Instance();
     if (!run)
     {
-        LOG(FATAL) << "R3BGTPCProjector::SetParContainers: No analysis run";
+        LOG(fatal) << "R3BGTPCProjector::SetParContainers: No analysis run";
         return;
     }
     FairRuntimeDb* rtdb = run->GetRuntimeDb();
     if (!rtdb)
     {
-        LOG(FATAL) << "R3BGTPCProjector::SetParContainers: No runtime database";
+        LOG(fatal) << "R3BGTPCProjector::SetParContainers: No runtime database";
         return;
     }
 
     fGTPCGeoPar = (R3BGTPCGeoPar*)rtdb->getContainer("GTPCGeoPar");
     if (!fGTPCGeoPar)
     {
-        LOG(FATAL) << "R3BGTPCLangevin::SetParContainers: No R3BGTPCGeoPar";
+        LOG(fatal) << "R3BGTPCLangevin::SetParContainers: No R3BGTPCGeoPar";
         return;
     }
     fGTPCGasPar = (R3BGTPCGasPar*)rtdb->getContainer("GTPCGasPar");
     if (!fGTPCGasPar)
     {
-        LOG(FATAL) << "R3BGTPCLangevin::SetParContainers: No R3BGTPCGasPar";
+        LOG(fatal) << "R3BGTPCLangevin::SetParContainers: No R3BGTPCGasPar";
         return;
     }
     fGTPCElecPar = (R3BGTPCElecPar*)rtdb->getContainer("GTPCElecPar");
     if (!fGTPCElecPar)
     {
-        LOG(FATAL) << "R3BGTPCLangevin::SetParContainers: No R3BGTPCElecPar";
+        LOG(fatal) << "R3BGTPCLangevin::SetParContainers: No R3BGTPCElecPar";
         return;
     }
 }
@@ -132,20 +132,20 @@ InitStatus R3BGTPCProjector::Init()
     FairRootManager* ioman = FairRootManager::Instance();
     if (!ioman)
     {
-        LOG(FATAL) << "R3BGTPCProjector::Init: No FairRootManager";
+        LOG(fatal) << "R3BGTPCProjector::Init: No FairRootManager";
         return kFATAL;
     }
     // Input: TClonesArray of R3BGTPCPoints
     if ((TClonesArray*)ioman->GetObject("GTPCPoint") == nullptr)
     {
-        LOG(FATAL) << "R3BGTPCProjector::Init No GTPCPoint!";
+        LOG(fatal) << "R3BGTPCProjector::Init No GTPCPoint!";
         return kFATAL;
     }
     fGTPCPoints = (TClonesArray*)ioman->GetObject("GTPCPoint");
     // Input: TClonesArray of R3BMCTrack
     if ((TClonesArray*)ioman->GetObject("MCTrack") == nullptr)
     {
-        LOG(FATAL) << "R3BMCTrack::Init No MCTrack!";
+        LOG(fatal) << "R3BMCTrack::Init No MCTrack!";
         return kFATAL;
     }
     MCTrackCA = (TClonesArray*)ioman->GetObject("MCTrack");
@@ -215,10 +215,10 @@ void R3BGTPCProjector::Exec(Option_t*)
     }
 
     Int_t nPoints = fGTPCPoints->GetEntries();
-    LOG(INFO) << "R3BGTPCProjector: processing " << nPoints << " points";
+    LOG(info) << "R3BGTPCProjector: processing " << nPoints << " points";
     if (nPoints < 2)
     {
-        LOG(INFO) << "Not enough hits for digitization! (<2)";
+        LOG(info) << "Not enough hits for digitization! (<2)";
         return;
     }
 
@@ -271,12 +271,12 @@ void R3BGTPCProjector::Exec(Option_t*)
             if (presentTrackID != aPoint->GetTrackID())
             {
                 cout << aPoint->GetTrackStatus() << "  " << endl;
-                LOG(FATAL) << "R3BGTPCProjector::Exec: Problem 2 in point logic";
+                LOG(fatal) << "R3BGTPCProjector::Exec: Problem 2 in point logic";
                 break;
             }
             if (readyToProject != kTRUE)
             {
-                LOG(FATAL) << "R3BGTPCProjector::Exec: Problem 3 in point logic";
+                LOG(fatal) << "R3BGTPCProjector::Exec: Problem 3 in point logic";
                 break;
             }
             if (aPoint->GetTrackStatus() == 10100 || aPoint->GetTrackStatus() == 1000000)
@@ -422,7 +422,7 @@ void R3BGTPCProjector::Exec(Option_t*)
         zPre = zPost;
 
     } // Simulated points
-    LOG(INFO) << "R3BGTPCProjector: produced " << fGTPCProjPoint->GetEntries() << " projPoints";
+    LOG(info) << "R3BGTPCProjector: produced " << fGTPCProjPoint->GetEntries() << " projPoints";
 }
 
 void R3BGTPCProjector::Finish() {}
