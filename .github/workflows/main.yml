@@ -108,7 +108,7 @@ jobs:
 
       # A self-defined composite action for the cmake configuration and build
       # of r3broot (along with necessary dep repos).
-      - name: configure-build-sofia
+      - name: configure-build-glad-tpc
         run: |
           git clone https://github.com/R3BRootGroup/R3BRoot.git
           cd ..
