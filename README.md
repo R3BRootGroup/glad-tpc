@@ -9,10 +9,8 @@ For the software-related user support you can post a new topic on our [forum](ht
 ~~~bash
 git clone https://github.com/R3BRootGroup/R3BRoot.git
 cd R3BRoot
-git checkout dev
 git clone https://github.com/R3BRootGroup/glad-tpc.git
 cd glad-tpc
-git checkout dev
 ~~~
 
 # Install
@@ -20,8 +18,8 @@ git checkout dev
 ### Required software
 
 First, you will need to install FairSoft and FairRoot and R3BRoot. For more details: [instructions](https://www.r3broot.gsi.de/installation). 
-FaiSoft version: jun19p2 
-FairROOT version: v18.2.1
+FaiSoft version: nov22p1 
+FairROOT version: v18.8.0
 Newer versions will not work properly with the simulation.
 
 ### Configure and compile
