@@ -87,8 +87,8 @@ void R3BGTPCCal2Hit::SetParameter()
     fHalfSizeTPC_Z = fGTPCGeoPar->GetActiveRegionz() / 2.; //[cm]
     fSizeOfVirtualPad = fGTPCGeoPar->GetPadSize();         // 1 means pads of 1cm^2, 10 means pads of 1mm^2, ...
     fDetectorType = fGTPCGeoPar->GetDetectorType();
-    fOffsetX = fGTPCGeoPar->GetGladOffsetX();           //X offset [cm]
-    fOffsetZ = fGTPCGeoPar->GetGladOffsetZ();           //Z offset [cm]
+    fOffsetX = fGTPCGeoPar->GetGladOffsetX(); // X offset [cm]
+    fOffsetZ = fGTPCGeoPar->GetGladOffsetZ(); // Z offset [cm]
     // From electronic properties
     fDriftEField = fGTPCElecPar->GetDriftEField();     // [V/cm]
     fDriftTimeStep = fGTPCElecPar->GetDriftTimeStep(); // [ns]
@@ -171,18 +171,17 @@ void R3BGTPCCal2Hit::Exec(Option_t* opt)
 
         Double_t counts = 0;
         Double_t time = 0;
-        Double_t cloudLong = 0; //step by step
+        Double_t cloudLong = 0; // step by step
         Double_t cloudTransv = 0;
-        Double_t sigmaLong = 0; //aprox for the whole time of reconstruction
+        Double_t sigmaLong = 0; // aprox for the whole time of reconstruction
         Double_t sigmaTransv = 0;
 
-        //To store all the hit weighted mean variables
+        // To store all the hit weighted mean variables
         Double_t pad_counts = 0;
         Double_t hitx = 0;
         Double_t hity = 0;
         Double_t hitz = 0;
         Double_t hitlW = 0;
-
 
         for (auto iadc = 0; iadc < adc_cal.size(); iadc++)
         {
@@ -199,18 +198,18 @@ void R3BGTPCCal2Hit::Exec(Option_t* opt)
             // Invalid ID condition PadCenterCoord[0]=-9999 (Should be solved in R3BGTPCLangevin)
             if (PadCenterCoord[0] < -9000)
             {
-                LOG(warn)<<"R3BGTPCCal2Hit::Exec Invalid padID";
+                LOG(warn) << "R3BGTPCCal2Hit::Exec Invalid padID";
                 continue;
             }
 
             z = PadCenterCoord[0] / 10.0; //[cm] (PadCenterCoord on mm)
             x = PadCenterCoord[1] / 10.0;
-            y = -fHalfSizeTPC_Y; //Start at pad plane
+            y = -fHalfSizeTPC_Y; // Start at pad plane
 
-            x = x + fOffsetX; //[cm]
-            z = z + fOffsetZ; //[cm]
+            x = x + fOffsetX;                                //[cm]
+            z = z + fOffsetZ;                                //[cm]
             time = time * fTimeBinSize + 0.5 * fTimeBinSize; //[ns] moving from TimeBuckets to ns; adding the half of
-                                                             //the size of the bin to take the center of the bin
+                                                             // the size of the bin to take the center of the bin
 
             // Reconstruction without Langevin
             if (fLangevinBack == kFALSE)
@@ -244,7 +243,8 @@ void R3BGTPCCal2Hit::Exec(Option_t* opt)
 
                 Double_t mu = fDriftVelocity / E_y; // [cm^2 ns^-1 V^-1]
 
-                //Auxiliar values to obtain the velocities after the first callback to make the second and definitive callback
+                // Auxiliar values to obtain the velocities after the first callback to make the second and definitive
+                // callback
                 Double_t auxx;
                 Double_t auxy;
                 Double_t auxz;
@@ -305,7 +305,7 @@ void R3BGTPCCal2Hit::Exec(Option_t* opt)
                     vDrift_y = cteMult * (E_y + mu * mu * productEB * B_y);               //[cm/ns]
                     vDrift_z = cteMult * (mu * (-E_y * B_x) + mu * mu * productEB * B_z); //[cm/ns]
 
-                    //Use vector velocity (reversed) in the initial point to move backwards
+                    // Use vector velocity (reversed) in the initial point to move backwards
                     x = x - vDrift_x * fDriftTimeStep;
                     y = y + vDrift_y * fDriftTimeStep;
                     z = z - vDrift_z * fDriftTimeStep;
@@ -314,10 +314,11 @@ void R3BGTPCCal2Hit::Exec(Option_t* opt)
                     cloudLong += fDriftTimeStep * 2 * fLongDiff;
                     cloudTransv += fDriftTimeStep * 2 * fTransDiff * cteMod;
 
-                    //Resting time update
+                    // Resting time update
                     accDriftTime = accDriftTime - fDriftTimeStep;
                     LOG(debug) << "R3BGTPCCal2Hit::Exec, NEW VALUES: accDriftTime=" << accDriftTime << " [ns]"
-                               << " x=" << x << " y=" << y << " z=" << z << " [cm]" << " Drift_v "<<vDrift_x<<" fDriftTimeStep "<<fDriftTimeStep;
+                               << " x=" << x << " y=" << y << " z=" << z << " [cm]"
+                               << " Drift_v " << vDrift_x << " fDriftTimeStep " << fDriftTimeStep;
                 }
                 // Once the last step adjust is done, reset the variables.
                 if (recoverDriftTimeStep)
@@ -326,8 +327,9 @@ void R3BGTPCCal2Hit::Exec(Option_t* opt)
                     recoverDriftTimeStep = 0.;
                     recoverStep = kTRUE;
                 }
-                //Comparing sigmas obtained in both ways
-                LOG(debug)<<"Comparing sigmas... Approx: "<<sigmaLong<<" "<<sigmaTransv<<";  Step by step: "<<TMath::Sqrt(cloudLong)<<" "<<TMath::Sqrt(cloudTransv);
+                // Comparing sigmas obtained in both ways
+                LOG(debug) << "Comparing sigmas... Approx: " << sigmaLong << " " << sigmaTransv
+                           << ";  Step by step: " << TMath::Sqrt(cloudLong) << " " << TMath::Sqrt(cloudTransv);
             }
             // Adding the hit relevant info for the mean
             hitx += x * counts;
@@ -336,7 +338,7 @@ void R3BGTPCCal2Hit::Exec(Option_t* opt)
             hitlW += sigmaLong * counts;
             pad_counts += counts;
         }
-        //Final Hit values calculated by weighted mean
+        // Final Hit values calculated by weighted mean
         hitx = hitx / pad_counts;
         hity = hity / pad_counts;
         hitz = hitz / pad_counts;
