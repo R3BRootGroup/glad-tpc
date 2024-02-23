@@ -172,12 +172,8 @@ void R3BGTPCEventDrawTask::DrawTracks()
 
                 double boxSize = 0.6;
 
-                fHitClusterSet[i]->AddBox(xC  - boxSize / 2.0,
-                                          yC  - boxSize / 2.0,
-                                          zC  - boxSize / 2.0,
-                                          boxSize,
-                                          boxSize,
-                                          boxSize);
+                fHitClusterSet[i]->AddBox(
+                    xC - boxSize / 2.0, yC - boxSize / 2.0, zC - boxSize / 2.0, boxSize, boxSize, boxSize);
             }
 
             fHitClusterSet[i]->UseSingleColor();

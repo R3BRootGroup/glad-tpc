@@ -17,7 +17,7 @@
 #include "FairTask.h"
 #include "R3BGTPCHitData.h"
 #include "R3BGTPCTrackData.h"
-//#include "R3BGTPCHitPar.h" TrackPar?
+// #include "R3BGTPCHitPar.h" TrackPar?
 #include "R3BGTPCTrackFinder.h"
 
 class R3BGTPCHit2Track : public FairTask
@@ -68,7 +68,7 @@ class R3BGTPCHit2Track : public FairTask
     // R3BGTPCTrackData* AddTrackData(std::size_t trackId, std::vector<R3BGTPCHitData>&
     // hitArray,std::vector<R3BGTPCHitData>* hitClusterArray);
 
-    R3BGTPCTrackFinder *fTrackFinder{};
+    R3BGTPCTrackFinder* fTrackFinder{};
 
     ClassDef(R3BGTPCHit2Track, 1);
 };

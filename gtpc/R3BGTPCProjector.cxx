@@ -338,9 +338,8 @@ void R3BGTPCProjector::Exec(Option_t*)
             if (projX > XOffset + 2 * fHalfSizeTPC_X)
                 projX = XOffset + 2 * fHalfSizeTPC_X;
 
-	    //std::cout<<" proj Z "<<projZ<<" - proj Y "<<projY<<"\n";
+            // std::cout<<" proj Z "<<projZ<<" - proj Y "<<projY<<"\n";
             Int_t padID = fPadPlane->Fill((projZ - ZOffset) * 10.0, (projX - XOffset) * 10.0); // in mm
-	    
 
             // Deprecated code to remove
             /*(if (fDetectorType == 1)
@@ -414,7 +413,7 @@ void R3BGTPCProjector::Exec(Option_t*)
                                                                           Vertex_pz0);
                 }
                 padFound = kFALSE;
-        }
+            }
         }
 
         xPre = xPost;

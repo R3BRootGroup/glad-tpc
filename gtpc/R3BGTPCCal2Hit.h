@@ -16,10 +16,10 @@
 
 #include "FairTask.h"
 #include "R3BGTPCCalData.h"
-#include "R3BGTPCHitData.h"
 #include "R3BGTPCElecPar.h"
 #include "R3BGTPCGasPar.h"
 #include "R3BGTPCGeoPar.h"
+#include "R3BGTPCHitData.h"
 #include "R3BGTPCMap.h"
 
 class TClonesArray;
@@ -53,7 +53,7 @@ class R3BGTPCCal2Hit : public FairTask
 
     /** Accessor to select online mode **/
     void SetOnline(Bool_t option) { fOnline = option; }
-    void SetRecoFlag(Bool_t BooleanFlag){fLangevinBack = BooleanFlag;}
+    void SetRecoFlag(Bool_t BooleanFlag) { fLangevinBack = BooleanFlag; }
 
     typedef boost::multi_array<double, 3> multiarray;
     typedef multiarray::index index;
@@ -74,8 +74,8 @@ class R3BGTPCCal2Hit : public FairTask
     Double_t fDriftEField;      //!< Drift electric field [V/cm]
     Double_t fDriftTimeStep;    //!< Time Step between drift parameters calculation [ns]
     Double_t fTimeBinSize;      //!< Time size of each bin in the time vector [ns]
-    Double_t fOffsetX;          //!< X offset for prototype [cm] --> Warn: Make sure run_reconstruction.C uses the correct .par
-    Double_t fOffsetZ;          //!< Z offset for prototype [cm] --> Warn: Make sure run_reconstruction.C uses the correct .par
+    Double_t fOffsetX; //!< X offset for prototype [cm] --> Warn: Make sure run_reconstruction.C uses the correct .par
+    Double_t fOffsetZ; //!< Z offset for prototype [cm] --> Warn: Make sure run_reconstruction.C uses the correct .par
 
     Int_t fDetectorType; //!< Detector type: 1 for prototype, 2 for FullBeamIn, 3 for FullBeamOut
 
@@ -89,9 +89,9 @@ class R3BGTPCCal2Hit : public FairTask
 
     Bool_t fOnline; // Selector for online data storage
 
-    Bool_t fLangevinBack; //Flag for my reconstruction (David)
-    //True: Reconstruction with Langevin equations
-    //False: Reconstruction already done
+    Bool_t fLangevinBack; // Flag for my reconstruction (David)
+    // True: Reconstruction with Langevin equations
+    // False: Reconstruction already done
 
     /** Private method AddHitData**/
     //** Adds a Hit to the HitCollection

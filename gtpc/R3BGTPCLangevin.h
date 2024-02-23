@@ -22,11 +22,11 @@
 #include "R3BGTPCElecPar.h"
 #include "R3BGTPCGasPar.h"
 #include "R3BGTPCGeoPar.h"
+#include "R3BGTPCMap.h"
 #include "R3BGTPCPoint.h"
 #include "R3BGTPCProjPoint.h"
 #include "TClonesArray.h"
 #include "TVirtualMC.h"
-#include "R3BGTPCMap.h"
 
 /**
  * GTPC drift calculation using Langevin equation task

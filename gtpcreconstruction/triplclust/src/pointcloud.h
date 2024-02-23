@@ -23,7 +23,7 @@ class Point
     double x;
     double y;
     double z;
-    int    id{-1};
+    int id{ -1 };
     std::set<size_t> cluster_ids;
 
     Point(){};
@@ -32,8 +32,8 @@ class Point
     Point(double x, double y, double z);
     Point(double x, double y, double z, const std::set<size_t>& cluster_ids);
 
-    inline void SetID(int _id){ id = _id;}
-    inline int GetID() const {return id;}
+    inline void SetID(int _id) { id = _id; }
+    inline int GetID() const { return id; }
 
     // representation of 3D point as std::vector
     std::vector<double> as_vector() const;

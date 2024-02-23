@@ -123,8 +123,8 @@ void R3BGTPCLangevin::SetParameter()
     fHalfSizeTPC_Z = fGTPCGeoPar->GetActiveRegionz() / 2.;
     fSizeOfVirtualPad = fGTPCGeoPar->GetPadSize(); // 1 means pads of 1cm^2, 10 means pads of 1mm^2, ...
     fDetectorType = fGTPCGeoPar->GetDetectorType();
-    fOffsetX = fGTPCGeoPar->GetGladOffsetX();           //X offset [cm]
-    fOffsetZ = fGTPCGeoPar->GetGladOffsetZ();           //Z offset [cm]
+    fOffsetX = fGTPCGeoPar->GetGladOffsetX(); // X offset [cm]
+    fOffsetZ = fGTPCGeoPar->GetGladOffsetZ(); // Z offset [cm]
     // From electronic properties
     fDriftEField = fGTPCElecPar->GetDriftEField();     // drift E field in V/cm
     fDriftTimeStep = fGTPCElecPar->GetDriftTimeStep(); // time step for drift params calculation
@@ -174,7 +174,7 @@ InitStatus R3BGTPCLangevin::Init()
 
     if (fPadPlane == NULL)
     {
-        std::cout << " R3BGTPCProjector::Init() error! - Could not retrieve pad plane. Exiting..."<<endl;
+        std::cout << " R3BGTPCProjector::Init() error! - Could not retrieve pad plane. Exiting..." << endl;
         return kERROR;
     }
 
@@ -318,7 +318,7 @@ void R3BGTPCLangevin::Exec(Option_t*)
 
         for (Int_t ele = 1; ele <= generatedElectrons; ele++)
         {
-            //For a single electron
+            // For a single electron
             ele_x = xPre + stepX * ele; // homogeneous electron creation along the step [cm]
             ele_y = yPre + stepY * ele;
             ele_z = zPre + stepZ * ele;
@@ -334,7 +334,7 @@ void R3BGTPCLangevin::Exec(Option_t*)
                       gladField->GetBx(ele_x, ele_y, ele_z); // Field components return in [kG], moved to [V ns cm^-2]
                 B_y = 1e4 * gladField->GetBy(ele_x, ele_y, ele_z);
                 B_z = 1e4 * gladField->GetBz(ele_x, ele_y, ele_z);
-                //std::cout << "MAGNETIC FIELD || Bx: "<<B_x<< " By: "<<B_y<<" Bz: "<<B_z<< '\n';
+                // std::cout << "MAGNETIC FIELD || Bx: "<<B_x<< " By: "<<B_y<<" Bz: "<<B_z<< '\n';
 
                 moduleB = TMath::Sqrt(B_x * B_x + B_y * B_y + B_z * B_z); // in [V ns cm^-2]
                 cteMod = 1 / (1 + mu * mu * moduleB * moduleB);           // adimensional
@@ -353,8 +353,8 @@ void R3BGTPCLangevin::Exec(Option_t*)
                                       mu * mu * productEB *
                                           B_z); // cte * (Ez + mu*(E_x*B_y-E_y*B_x) + mu*mu*productEB*B_z); [cm/ns]
 
-                LOG(debug) << "R3BGTPCLangevin::Exec, DRIFT VELOCITIES: vDrift_x=" << vDrift_x << " vDrift_y=" << vDrift_y
-                           << " vDrift_z=" << vDrift_z << " [cm/ns]";
+                LOG(debug) << "R3BGTPCLangevin::Exec, DRIFT VELOCITIES: vDrift_x=" << vDrift_x
+                           << " vDrift_y=" << vDrift_y << " vDrift_z=" << vDrift_z << " [cm/ns]";
                 // adjusting the last step before the pad plane
                 if (ele_y - vDrift_y * fDriftTimeStep < -fHalfSizeTPC_Y)
                 {
@@ -394,18 +394,20 @@ void R3BGTPCLangevin::Exec(Option_t*)
             projZ = ele_z;
             projTime = accDriftTime;
 
-            //Removing electrons out of pad plane limits
-            if (projZ < fOffsetZ || projZ > fOffsetZ + 2 * fHalfSizeTPC_Z || projX < fOffsetX || projX > fOffsetX + 2 * fHalfSizeTPC_X)
+            // Removing electrons out of pad plane limits
+            if (projZ < fOffsetZ || projZ > fOffsetZ + 2 * fHalfSizeTPC_Z || projX < fOffsetX ||
+                projX > fOffsetX + 2 * fHalfSizeTPC_X)
                 continue;
 
-            //Adding -1 to get padID between 0 - 5631
-            Int_t padID = fPadPlane->Fill((projZ - fOffsetZ) * 10.0, (projX - fOffsetX) * 10.0) - 1; // in mm for the padID
+            // Adding -1 to get padID between 0 - 5631
+            Int_t padID =
+                fPadPlane->Fill((projZ - fOffsetZ) * 10.0, (projX - fOffsetX) * 10.0) - 1; // in mm for the padID
 
-            //If returns negative padID means its filling overflow/underflow bins
-            //Maybe error in the conditionals projX and projZ above
+            // If returns negative padID means its filling overflow/underflow bins
+            // Maybe error in the conditionals projX and projZ above
             if (padID < 0 || padID > 5631)
             {
-                LOG(warn)<<"R3BGTPCLangevin::Exec No-valid padID" << endl;
+                LOG(warn) << "R3BGTPCLangevin::Exec No-valid padID" << endl;
                 continue;
             }
 
@@ -426,7 +428,6 @@ void R3BGTPCLangevin::Exec(Option_t*)
                         padFound = kTRUE;
                         break;
                     }
-
                 }
                 if (!padFound)
                 {

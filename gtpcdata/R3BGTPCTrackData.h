@@ -39,16 +39,19 @@ class R3BGTPCTrackData : public TObject
 
     // Getters
     Int_t GetTrackId() { return fTrackId; }
-    std::vector<R3BGTPCHitData> &GetHitArray() { return fHitArray; }
-    std::vector<R3BGTPCHitClusterData> *GetHitClusterArray() { return &fHitClusterArray; }
+    std::vector<R3BGTPCHitData>& GetHitArray() { return fHitArray; }
+    std::vector<R3BGTPCHitClusterData>* GetHitClusterArray() { return &fHitClusterArray; }
 
-    //Setters
-    void SetTrackId(Int_t val) { fTrackId   = val; }
+    // Setters
+    void SetTrackId(Int_t val) { fTrackId = val; }
     void AddHit(R3BGTPCHitData& hit) { fHitArray.push_back(hit); }
-    void AddClusterHit(std::shared_ptr<R3BGTPCHitClusterData> hitCluster) {fHitClusterArray.push_back(std::move(*hitCluster));}
+    void AddClusterHit(std::shared_ptr<R3BGTPCHitClusterData> hitCluster)
+    {
+        fHitClusterArray.push_back(std::move(*hitCluster));
+    }
 
   protected:
-    Int_t fTrackId{-1};                  // Track Id
+    Int_t fTrackId{ -1 };                  // Track Id
     std::vector<R3BGTPCHitData> fHitArray; // Track Hit Array
     std::vector<R3BGTPCHitClusterData> fHitClusterArray;
 
