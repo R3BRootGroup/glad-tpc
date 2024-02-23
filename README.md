@@ -1,19 +1,26 @@
-# Purpose
+# GLAD-TPC Software
+
+[![static analysis](https://github.com/R3BRootGroup/glad-tpc/actions/workflows/static_analysis.yml/badge.svg)](https://github.com/R3BRootGroup/glad-tpc/actions/workflows/static_analysis.yml) [![CI-CD](https://github.com/R3BRootGroup/glad-tpc/actions/workflows/main.yml/badge.svg)](https://github.com/R3BRootGroup/glad-tpc/actions/workflows/main.yml)
+
+## The GLAD-TPC Framework
 
 GLAD-TPC (HYDRA) is part of the R3BRoot software, the Monte Carlo simulation and experimental data analysis of the R3B (Reactions with Relativistic Radioactive Beams) nuclear physics experiments at the FAIR research center (Facility for Antiproton and Ion Research).
 
 For the software-related user support you can post a new topic on our [forum](https://forum.gsi.de/index.php?t=index&cat=40&).
 
-# Download
+## Release Information
+Please visit [releases](https://github.com/R3BRootGroup/glad-tpc/releases)
 
+## Contributing
+Please ask your questions, request features, and report issues by [creating a github issue](https://github.com/R3BRootGroup/glad-tpc/issues/new/choose).
+
+## Code Formatting
+The GLAD-TPC project (as part of R3BRoot) uses clang-format-15 to ensure a common code formatting. The script "apply-format.sh" can be used for this purpose: 
 ~~~bash
-git clone https://github.com/R3BRootGroup/R3BRoot.git
-cd R3BRoot
-git clone https://github.com/R3BRootGroup/glad-tpc.git
-cd glad-tpc
+source apply-format.sh
 ~~~
 
-# Install
+## Step by Step Installation
 
 ### Required software
 
@@ -24,12 +31,12 @@ Newer versions will not work properly with the simulation.
 
 ### Configure and compile
 
-Follow the instructions in the [R3BRoot README](https://github.com/R3BRootGroup/R3BRoot/blob/master/README.md).
+Follow the instructions in the [R3BRoot README](https://github.com/R3BRootGroup/R3BRoot/blob/dev/README.md).
 
 
-# Simulations
+## Simulations
 
-For the general R3BRoot simulations, follow the instructions in [R3BRoot README](https://github.com/R3BRootGroup/R3BRoot/blob/master/README.md).
+For the general R3BRoot simulations, follow the instructions in [R3BRoot README](https://github.com/R3BRootGroup/R3BRoot/blob/dev/README.md).
 
 The steps to properly run the glad-tpc simulation:
 
@@ -54,11 +61,11 @@ The steps to properly run the glad-tpc simulation:
 
 6. Electronics response, in the folder `/glad-tpc/macro/electronics` there is the macro `Electronics_MT.C`: This macro simulate the electronics response.
 
-#How to run the simulations
+## How to run the simulations
 
 It is possible to use the bash script `run_full.sh` to run all these steps at once. BE CAREFUL, set first the wanted parameters in the different folders.
 
 
-# Data Analysis
+## Data Analysis
 
 > ...Under development...
