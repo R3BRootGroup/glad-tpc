@@ -1,4 +1,4 @@
-# GLAD-TPC Software
+# GLAD-TPC Software [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14291537.svg)](https://doi.org/10.5281/zenodo.14291537)
 
 [![static analysis](https://github.com/R3BRootGroup/glad-tpc/actions/workflows/static_analysis.yml/badge.svg)](https://github.com/R3BRootGroup/glad-tpc/actions/workflows/static_analysis.yml) [![CI-CD](https://github.com/R3BRootGroup/glad-tpc/actions/workflows/main.yml/badge.svg)](https://github.com/R3BRootGroup/glad-tpc/actions/workflows/main.yml)
 
