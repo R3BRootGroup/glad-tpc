@@ -9,26 +9,23 @@
             "orcid": "0000-0001-8604-4976"
         },
         {
+            "name": "Duer, Meytal",
+            "orcid": "0000-0002-4241-1938"
+        },
+        {
+            "name": "Rodriguez Sanchez, Jose Luis",
+            "orcid": "0000-0002-4702-5294"
+        },
+        {
             "name": "Velardita, Simone"
         }
     ],
     "contributors": [
         {
-            "type": "Other",
-            "name": "Duer, Meytal"
-        },
-        {
-            "type": "Other",
-            "name": "Rodriguez Sanchez, Jose Luis",
-            "orcid": "0000-0002-4702-5294"
-        },
-        {
-            "type": "Other",
             "name": "Wang, Yanzhao",
             "orcid": "0000-0002-7006-7986"
         }
     ],
-    "title": "glad-tpc",
     "description": "GLAD-TPC (HYDRA) is part of the R3BRoot software, the Monte Carlo simulation and experimental data analysis of the R3B (Reactions with Relativistic Radioactive Beams) nuclear physics experiments at the FAIR research center (Facility for Antiproton and Ion Research).",
     "related_identifiers": [
         {
@@ -37,5 +34,20 @@
             "resource_type": "software",
             "scheme": "url"
         }
+    ],
+    "title": "GLAD-TPC Software",
+    "upload_type": "software",
+    "keywords": [
+        "Geant4",
+        "c-plus-plus",
+        "cmake",
+        "vmc",
+        "modular",
+        "Event reconstruction",
+        "Simulation",
+        "Data analysis",
+        "Structure and dynamics of nuclei",
+        "Nuclear reactions",
+        "Hypernuclei"
     ]
 }

@@ -69,3 +69,10 @@ It is possible to use the bash script `run_full.sh` to run all these steps at on
 ## Data Analysis
 
 > ...Under development...
+
+
+## More Information
+
+* [Static analyzer using Clang-tidy](config/clang_tidy/README.md)
+* [CMake build system for R3BRoot/glad-tpc](doc/cmake_usage.md)
+* [How to use an unmerged pull request](doc/git_usage.md#fetch-the-update-from-an-unmerged-pull-request-pr)

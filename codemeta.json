@@ -57,6 +57,18 @@
     },
     {
       "@type": "Person",
+      "@id": "https://orcid.org/0000-0002-4241-1938",
+      "givenName": "Meytal",
+      "familyName": "Duer"
+    },
+    {
+      "@type": "Person",
+      "@id": "https://orcid.org/0000-0002-4702-5294",
+      "givenName": "Jose Luis",
+      "familyName": "Rodriguez Sanchez"
+    },
+    {
+      "@type": "Person",
       "givenName": "Simone",
       "familyName": "Velardita"
     }
