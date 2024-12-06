@@ -5,8 +5,8 @@
   "contIntegration": "https://github.com/R3BRootGroup/glad-tpc/actions",
   "dateCreated": "2018-01-21",
   "datePublished": "2018-01-21",
-  "dateModified": "2024-12-05",
-  "downloadUrl": "https://github.com/R3BRootGroup/glad-tpc/archive/refs/tags/nov23.tar.gz",
+  "dateModified": "2024-12-06",
+  "downloadUrl": "https://github.com/R3BRootGroup/glad-tpc/archive/refs/tags/dec24.tar.gz",
   "issueTracker": "https://github.com/R3BRootGroup/glad-tpc/issues",
   "name": "glad-tpc",
   "softwareVersion": "dec24",
@@ -15,9 +15,15 @@
   "releaseNotes": "",
   "applicationCategory": "Nuclear physics",
   "developmentStatus": "active",
-  "referencePublication": "https://doi.org/10.1088/1742-6596/523/1/012034",
   "keywords": [
-    "MC simulation",
+    "Geant4",
+    "c-plus-plus",
+    "cmake",
+    "vmc",
+    "modular",
+    "Event reconstruction",
+    "Simulation",
+    "Data analysis",
     "Structure and dynamics of nuclei",
     "Nuclear reactions",
     "Hypernuclei"
@@ -74,17 +80,6 @@
     }
   ],
   "contributor": [
-    {
-      "@type": "Person",
-      "givenName": "Meytal",
-      "familyName": "Duer"
-    },
-    {
-      "@type": "Person",
-      "@id": "https://orcid.org/0000-0002-4702-5294",
-      "givenName": "Jose Luis",
-      "familyName": "Rodriguez Sanchez"
-    },
     {
       "@type": "Person",
       "@id": "https://orcid.org/0000-0002-7006-7986",
