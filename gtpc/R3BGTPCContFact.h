@@ -1,9 +1,9 @@
 /******************************************************************************
- *   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2019 Members of R3B Collaboration                          *
+ *   Copyright (C) 2018 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
+ *   Copyright (C) 2018-2025 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
- *                 GNU General Public Licence (GPL) version 3,                *
+ *                 GNU Lesser General Public Licence (LGPL) version 3,        *
  *                    copied verbatim in the file "LICENSE".                  *
  *                                                                            *
  * In applying this license GSI does not waive the privileges and immunities  *
@@ -11,8 +11,7 @@
  * or submit itself to any jurisdiction.                                      *
  ******************************************************************************/
 
-#ifndef R3BGTPCCONTFACT_H
-#define R3BGTPCCONTFACT_H
+#pragma once
 
 #include "FairContFact.h"
 
@@ -33,5 +32,3 @@ class R3BGTPCContFact : public FairContFact
     FairParSet* createContainer(FairContainer*) override;
     ClassDefOverride(R3BGTPCContFact, 0)
 };
-
-#endif // R3BGTPCCONTFACT_H

@@ -47,11 +47,13 @@ class R3BGTPCPoint : public FairMCPoint
      *@param detCopyID          Detector Copy ID ???how to get it???
      *@param particleName       Name of the particle specified by pdg
      *@param volName            Volume name for a given volume identifier id
-     *@param processName        Process that has produced the secondary particles in the current step
+     *@param processName        Process that has produced the secondary particles
+     *in the current step
      *@param charge             Charge of the track currently transported
      *@param mass               Mass of the track currently transported
      *@param kineticEnergy      ???
-     *@param trackStep          Length in centimeters of the current step (in cm) ???
+     *@param trackStep          Length in centimeters of the current step (in cm)
+     *???
      *@param isAccepted         ???
      **/
     R3BGTPCPoint(Int_t trackID,
@@ -127,7 +129,8 @@ class R3BGTPCPoint : public FairMCPoint
     Int_t fDetCopyID;         ///< Detector Copy ID
     TString fParticleName;    ///< Name of the particle specified by pdg
     TString fVolName;         ///< Volume name for a given volume identifier id
-    TString fProcessName;     ///< Process that has produced the secondary particles in the current step
+    TString fProcessName;     ///< Process that has produced the secondary particles
+                              ///< in the current step
     Double_t fCharge;         ///< Charge of the track currently transported
     Double_t fMass;           ///< Mass of the track currently transported
     Double_t fKineticEnergy;  ///< ???

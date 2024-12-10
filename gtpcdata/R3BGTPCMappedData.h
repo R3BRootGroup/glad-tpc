@@ -45,7 +45,8 @@ class R3BGTPCMappedData : public TObject
     UShort_t fPadId;              // Pad unique identifier
     std::vector<UShort_t> fADC;   // ADC measurements, variable time bucket
     Bool_t fIsValid;              // Valid check NEEDED??
-    Bool_t fIsPedestalSubtracted; // Needed? REMOVE ME IF IT IS A CTE. CHARACTERISTIC OF DATA
+    Bool_t fIsPedestalSubtracted; // Needed? REMOVE ME IF IT IS A CTE.
+                                  // CHARACTERISTIC OF DATA
 
   public:
     ClassDef(R3BGTPCMappedData, 1)

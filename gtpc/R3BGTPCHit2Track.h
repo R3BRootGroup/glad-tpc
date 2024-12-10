@@ -1,9 +1,9 @@
 /******************************************************************************
-0;136;0c *   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2019 Members of R3B Collaboration                          *
+ *   Copyright (C) 2018 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
+ *   Copyright (C) 2018-2025 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
- *                 GNU General Public Licence (GPL) version 3,                *
+ *                 GNU Lesser General Public Licence (LGPL) version 3,        *
  *                    copied verbatim in the file "LICENSE".                  *
  *                                                                            *
  * In applying this license GSI does not waive the privileges and immunities  *
@@ -11,13 +11,12 @@
  * or submit itself to any jurisdiction.                                      *
  ******************************************************************************/
 
-#ifndef R3BGTPCHIT2TRACK_H
-#define R3BGTPCHIT2TRACK_H
+#pragma once
 
 #include "FairTask.h"
 #include "R3BGTPCHitData.h"
 #include "R3BGTPCTrackData.h"
-//#include "R3BGTPCHitPar.h" TrackPar?
+// #include "R3BGTPCHitPar.h" TrackPar?
 #include "R3BGTPCTrackFinder.h"
 
 class R3BGTPCHit2Track : public FairTask
@@ -65,11 +64,11 @@ class R3BGTPCHit2Track : public FairTask
 
     /** Private method AddTrackData**/
     //** Adds a Track to the TrackCollection
-    // R3BGTPCTrackData* AddTrackData(std::size_t trackId, std::vector<R3BGTPCHitData>&
-    // hitArray,std::vector<R3BGTPCHitData>* hitClusterArray);
+    // R3BGTPCTrackData* AddTrackData(std::size_t trackId,
+    // std::vector<R3BGTPCHitData>& hitArray,std::vector<R3BGTPCHitData>*
+    // hitClusterArray);
 
-    R3BGTPCTrackFinder *fTrackFinder{};
+    R3BGTPCTrackFinder* fTrackFinder{};
 
     ClassDef(R3BGTPCHit2Track, 1);
 };
-#endif

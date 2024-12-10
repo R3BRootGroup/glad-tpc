@@ -1,7 +1,7 @@
 #include "R3BGTPCTrackFinder.h"
 
-#include <Math/Point3D.h> // for PositionVector3D
 #include "TMath.h"
+#include <Math/Point3D.h> // for PositionVector3D
 
 #include <boost/core/checked_delete.hpp>  // for checked_delete
 #include <boost/smart_ptr/shared_ptr.hpp> // for shared_ptr
@@ -14,9 +14,9 @@
 
 #include "dnn.h"
 #include "graph.h"
+#include "option.h"
 #include "output.h"
 #include "pointcloud.h"
-#include "option.h"
 
 #include <Math/Point3D.h>
 #include <Math/Point3Dfwd.h>
@@ -30,16 +30,14 @@ constexpr auto cYELLOW = "\033[1;33m";
 constexpr auto cNORMAL = "\033[0m";
 constexpr auto cGREEN = "\033[1;32m";
 
-R3BGTPCTrackFinder::R3BGTPCTrackFinder()
-{
-}
+R3BGTPCTrackFinder::R3BGTPCTrackFinder() {}
 
 void R3BGTPCTrackFinder::eventToClusters(TClonesArray* hitCA, PointCloud& cloud)
 {
 
     Int_t nHits = hitCA->GetEntries();
     R3BGTPCHitData** hitData;
-    hitData = new R3BGTPCHitData* [nHits];
+    hitData = new R3BGTPCHitData*[nHits];
 
     if (hitData)
     {
@@ -72,7 +70,6 @@ std::unique_ptr<R3BGTPCTrackData> R3BGTPCTrackFinder::clustersToTrack(PointCloud
     {
 
         R3BGTPCTrackData track; // One track per cluster
-     
 
         const std::vector<size_t>& point_indices = clusters[cluster_index];
         if (point_indices.size() == 0)
@@ -85,17 +82,17 @@ std::unique_ptr<R3BGTPCTrackData> R3BGTPCTrackFinder::clustersToTrack(PointCloud
             const Point& point = cloud[*it];
 
             Int_t nHits = hitCA->GetEntries();
-	    
+
             R3BGTPCHitData** hitData;
             hitData = new R3BGTPCHitData*[nHits];
 
-	    if (hitData){
-	      
-	      hitData[point.GetID()] = (R3BGTPCHitData*)(hitCA->At(point.GetID()));	      
-	      track.AddHit(*hitData[point.GetID()]);	           
-	      delete hitData;
+            if (hitData)
+            {
 
-	    }
+                hitData[point.GetID()] = (R3BGTPCHitData*)(hitCA->At(point.GetID()));
+                track.AddHit(*hitData[point.GetID()]);
+                delete hitData;
+            }
 
             // remove current point from vector points
             for (std::vector<Point>::iterator p = points.begin(); p != points.end(); p++)
@@ -105,7 +102,7 @@ std::unique_ptr<R3BGTPCTrackData> R3BGTPCTrackFinder::clustersToTrack(PointCloud
                     points.erase(p);
                     break;
                 }
-	    }
+            }
 
         } // Point indices
 
@@ -115,7 +112,7 @@ std::unique_ptr<R3BGTPCTrackData> R3BGTPCTrackFinder::clustersToTrack(PointCloud
         tracks.push_back(track);
 
     } // Clusters loop
-    
+
     std::cout << cRED << " Tracks found " << tracks.size() << cNORMAL << "\n";
 
     // TODO
@@ -175,10 +172,10 @@ void R3BGTPCTrackFinder::Clusterize(R3BGTPCTrackData& track, Float_t distance, F
                              hitArray.end(),
                              std::back_inserter(hitTBArray),
                              [&refPos, radius](R3BGTPCHitData& hitIn)
-                {
-                    ROOT::Math::XYZVector hitInPos{ hitIn.GetX(), hitIn.GetY(), hitIn.GetZ() };
-                    return TMath::Sqrt((hitInPos - refPos).Mag2()) < radius;
-                });
+                             {
+                                 ROOT::Math::XYZVector hitInPos{ hitIn.GetX(), hitIn.GetY(), hitIn.GetZ() };
+                                 return TMath::Sqrt((hitInPos - refPos).Mag2()) < radius;
+                             });
 
                 if (hitTBArray.size() > 0)
                 {
@@ -191,15 +188,15 @@ void R3BGTPCTrackFinder::Clusterize(R3BGTPCTrackData& track, Float_t distance, F
                     std::for_each(hitTBArray.begin(),
                                   hitTBArray.end(),
                                   [&x, &y, &z, &hitQ, &timeStamp](R3BGTPCHitData& hitInQ)
-                    {
-                        ROOT::Math::XYZPoint pos{ hitInQ.GetX(), hitInQ.GetY(), hitInQ.GetZ() };
-                        x += pos.X() * hitInQ.GetEnergy();
-                        y += pos.Y() * hitInQ.GetEnergy();
-                        z += pos.Z();
-                        hitQ += hitInQ.GetEnergy();
-                        // TODO
-                        // timeStamp += hitInQ.GetTimeStamp();
-                    });
+                                  {
+                                      ROOT::Math::XYZPoint pos{ hitInQ.GetX(), hitInQ.GetY(), hitInQ.GetZ() };
+                                      x += pos.X() * hitInQ.GetEnergy();
+                                      y += pos.Y() * hitInQ.GetEnergy();
+                                      z += pos.Z();
+                                      hitQ += hitInQ.GetEnergy();
+                                      // TODO
+                                      // timeStamp += hitInQ.GetTimeStamp();
+                                  });
                     x /= hitQ;
                     y /= hitQ;
                     z /= hitTBArray.size();
@@ -211,11 +208,13 @@ void R3BGTPCTrackFinder::Clusterize(R3BGTPCTrackData& track, Float_t distance, F
                     // Check distance with respect to existing clusters
                     for (auto iClusterHit : *track.GetHitClusterArray())
                     {
-                        ROOT::Math::XYZPoint iclusterHitPos{ iClusterHit.GetX(), iClusterHit.GetY(),
+                        ROOT::Math::XYZPoint iclusterHitPos{ iClusterHit.GetX(),
+                                                             iClusterHit.GetY(),
                                                              iClusterHit.GetZ() };
                         if (TMath::Sqrt((iclusterHitPos - clustPos).Mag2()) < distance)
                         {
-                            // std::cout<<" Cluster with less than  : "<<distance<<" found "<<"\n";
+                            // std::cout<<" Cluster with less than  : "<<distance<<" found
+                            // "<<"\n";
                             checkDistance = kFALSE;
                             continue;
                         }
@@ -237,12 +236,13 @@ void R3BGTPCTrackFinder::Clusterize(R3BGTPCTrackData& track, Float_t distance, F
 
             } // if distance
 
-            ROOT::Math::XYZVector refPosBuff{ hitArray.at(iHit).GetX(), hitArray.at(iHit).GetY(),
+            ROOT::Math::XYZVector refPosBuff{ hitArray.at(iHit).GetX(),
+                                              hitArray.at(iHit).GetY(),
                                               hitArray.at(iHit).GetZ() };
 
             refPos = refPosBuff;
 
         } // for Hit array
-    
-    }//if array size
+
+    } // if array size
 }

@@ -2,7 +2,7 @@
 
 #include "R3BGTPCFitter.h"
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
 
     Bool_t fInteractiveMode = 1;
@@ -25,13 +25,13 @@ int main(int argc, char *argv[])
     // Paths
     TString dir = getenv("VMCWORKDIR");
 
-    TString geoManFile =
-        "/mnt/simulations/attpcroot/fair_install_2020/R3BRoot/glad-tpc/geometry/HYDRA_Prototype.geoMan.root";
+    TString geoManFile = "/mnt/simulations/attpcroot/fair_install_2020/R3BRoot/"
+                         "glad-tpc/geometry/HYDRA_Prototype.geoMan.root";
 
     std::cout << " Geometry file : " << geoManFile.Data() << "\n";
 
-    TString fileName =
-        "/mnt/simulations/attpcroot/fair_install_2020/R3BRoot/glad-tpc/macros/tracking/output_tracking.root";
+    TString fileName = "/mnt/simulations/attpcroot/fair_install_2020/R3BRoot/"
+                       "glad-tpc/macros/tracking/output_tracking.root";
     TFile* file = new TFile(fileName.Data(), "READ");
 
     // GENFIT geometry
@@ -54,189 +54,191 @@ int main(int argc, char *argv[])
     fTargetPlane = genfit::SharedPlanePtr(new genfit::DetPlane(posTargetIni, normalTarget));
 
     // event display
-   genfit::EventDisplay *display;
-   if (fInteractiveMode)
-      display = genfit::EventDisplay::getInstance();
+    genfit::EventDisplay* display;
+    if (fInteractiveMode)
+        display = genfit::EventDisplay::getInstance();
 
-   R3BGTPCFitter *fitter = new R3BGTPCFitter();
+    R3BGTPCFitter* fitter = new R3BGTPCFitter();
 
-   TTree *tree = (TTree *)file->Get("evt");
-   Int_t nEvents = tree->GetEntries();
-   std::cout << " Number of events : " << nEvents << std::endl;
+    TTree* tree = (TTree*)file->Get("evt");
+    Int_t nEvents = tree->GetEntries();
+    std::cout << " Number of events : " << nEvents << std::endl;
 
     TTreeReader Reader1("evt", file);
     TTreeReaderValue<TClonesArray> trackArray(Reader1, "GTPCTrackData");
-    //Reader1.SetEntriesRange(0, nEvents);
+    // Reader1.SetEntriesRange(0, nEvents);
 
-  for (Int_t i = 0; i < nEvents; i++) {
-
-    //Reset variables
-
-    std::cout << cGREEN << " ------ Event Number : " << i << cNORMAL << "\n";
-
-    Reader1.Next();
-
-    Int_t nTracks = trackArray->GetEntries();
-    std::cout<<" Number of tracks "<<nTracks<<"\n";
-
-    R3BGTPCTrackData** trackData;
-    trackData = new R3BGTPCTrackData*[nTracks];
-
-    for(auto iTrack = 0;iTrack<nTracks;++iTrack)
+    for (Int_t i = 0; i < nEvents; i++)
     {
-       trackData[iTrack] = (R3BGTPCTrackData*)(trackArray->At(iTrack));
 
-       fitter->Init();
-       genfit::Track* fitTrack;
+        // Reset variables
 
-       fitTrack = fitter->FitTrack(trackData[iTrack]);
+        std::cout << cGREEN << " ------ Event Number : " << i << cNORMAL << "\n";
 
-       TVector3 pos_res;
-       TVector3 mom_res;
-       TMatrixDSym cov_res;
-       Double_t pVal = 0;
-       Double_t bChi2 = 0, fChi2 = 0, bNdf = 0, fNdf = 0;
+        Reader1.Next();
 
-       try
-       {
+        Int_t nTracks = trackArray->GetEntries();
+        std::cout << " Number of tracks " << nTracks << "\n";
 
-           if (fitTrack && fitTrack->hasKalmanFitStatus())
-           {
-               genfit::MaterialEffects::getInstance()->setNoEffects(false);
-               auto KalmanFitStatus = fitTrack->getKalmanFitStatus();
-               auto trackRep = fitTrack->getTrackRep(0); // Only one representation is sved for the moment.
+        R3BGTPCTrackData** trackData;
+        trackData = new R3BGTPCTrackData*[nTracks];
 
-               if (KalmanFitStatus->isFitConverged())
-               {
-                   // KalmanFitStatus->Print();
-                   genfit::MeasuredStateOnPlane fitState = fitTrack->getFittedState();
-                   fitState.Print();
-                   fitState.getPosMomCov(pos_res, mom_res, cov_res);
-                   fChi2 = KalmanFitStatus->getForwardChi2();
-                   bChi2 = KalmanFitStatus->getBackwardChi2();
-                   fNdf = KalmanFitStatus->getForwardNdf();
-                   bNdf = KalmanFitStatus->getBackwardNdf();
+        for (auto iTrack = 0; iTrack < nTracks; ++iTrack)
+        {
+            trackData[iTrack] = (R3BGTPCTrackData*)(trackArray->At(iTrack));
 
-                   if (fInteractiveMode)
-                       display->addEvent(fitTrack);
+            fitter->Init();
+            genfit::Track* fitTrack;
 
-                   momentum->Fill(mom_res.Mag());
-                   Double_t E = TMath::Sqrt(TMath::Power(mom_res.Mag(), 2) + TMath::Power(M_Ener, 2)) - M_Ener;
-                   energy->Fill(E);
+            fitTrack = fitter->FitTrack(trackData[iTrack]);
 
-                   thetaIniH->Fill(mom_res.Theta() * TMath::RadToDeg());
-                   phiIniH->Fill(mom_res.Phi() * TMath::RadToDeg());
-                   Double_t phiIni = mom_res.Phi() * TMath::RadToDeg();
+            TVector3 pos_res;
+            TVector3 mom_res;
+            TMatrixDSym cov_res;
+            Double_t pVal = 0;
+            Double_t bChi2 = 0, fChi2 = 0, bNdf = 0, fNdf = 0;
 
-                   TVector3 momTarget(-99999, -99999, -99999);
-                   TVector3 posTarget(-99999, -99999, -99999);
-                   Float_t stepXtr = -1.0;
+            try
+            {
 
-                   // Extrapolation
-                   std::cout << " -------- Extrapolation -------- "
-                             << "\n";
+                if (fitTrack && fitTrack->hasKalmanFitStatus())
+                {
+                    genfit::MaterialEffects::getInstance()->setNoEffects(false);
+                    auto KalmanFitStatus = fitTrack->getKalmanFitStatus();
+                    auto trackRep = fitTrack->getTrackRep(0); // Only one representation is sved for the moment.
 
-                   try
-                   {
+                    if (KalmanFitStatus->isFitConverged())
+                    {
+                        // KalmanFitStatus->Print();
+                        genfit::MeasuredStateOnPlane fitState = fitTrack->getFittedState();
+                        fitState.Print();
+                        fitState.getPosMomCov(pos_res, mom_res, cov_res);
+                        fChi2 = KalmanFitStatus->getForwardChi2();
+                        bChi2 = KalmanFitStatus->getBackwardChi2();
+                        fNdf = KalmanFitStatus->getForwardNdf();
+                        bNdf = KalmanFitStatus->getBackwardNdf();
 
-                       genfit::MaterialEffects::getInstance()->setNoEffects(true);
-                       trackRep->extrapolateToPoint(fitState, posTargetIni);
-                       // trackRep -> extrapolateToPlane(fitState, fTargetPlane);
-                       momTarget = fitState.getMom();
-                       posTarget = fitState.getPos();
+                        if (fInteractiveMode)
+                            display->addEvent(fitTrack);
 
-                       std::cout << " Position: ";
-                       posTarget.Print();
-                       std::cout << " Momentum: ";
-                       momTarget.Print();
+                        momentum->Fill(mom_res.Mag());
+                        Double_t E = TMath::Sqrt(TMath::Power(mom_res.Mag(), 2) + TMath::Power(M_Ener, 2)) - M_Ener;
+                        energy->Fill(E);
 
-                       // posTarget.Print();
+                        thetaIniH->Fill(mom_res.Theta() * TMath::RadToDeg());
+                        phiIniH->Fill(mom_res.Phi() * TMath::RadToDeg());
+                        Double_t phiIni = mom_res.Phi() * TMath::RadToDeg();
 
-                       /*for (auto iStep = 0; iStep < 50; ++iStep) {
+                        TVector3 momTarget(-99999, -99999, -99999);
+                        TVector3 posTarget(-99999, -99999, -99999);
+                        Float_t stepXtr = -1.0;
 
-                         //std::cout<<" Step length : "<<stepXtr*iStep<<"\n";
-                         trackRep->extrapolateBy(fitState, stepXtr );
-                                   momTarget = fitState.getMom();
-                                   posTarget = fitState.getPos();
-                       std::cout<<" Position: ";
-                       posTarget.Print();
-                       std::cout<<" Momentum: ";
-                       momTarget.Print();
+                        // Extrapolation
+                        std::cout << " -------- Extrapolation -------- "
+                                  << "\n";
 
-                       }*/
+                        try
+                        {
 
-                       thetaH->Fill(momTarget.Theta() * TMath::RadToDeg());
-                       phiH->Fill(momTarget.Phi() * TMath::RadToDeg());
-                       Double_t phiEnd = momTarget.Phi() * TMath::RadToDeg();
-                       phiDeltaH->Fill(phiIni - phiEnd);
-                       XYVertex->Fill(posTarget.X(), posTarget.Y());
-                       XZVertex->Fill(posTarget.X(), posTarget.Z());
-                       xVertexH->Fill(posTarget.X());
-                       yVertexH->Fill(posTarget.Y());
-                       zVertexH->Fill(posTarget.Z());
-                   }
-                   catch (genfit::Exception& e)
-                   {
-                   }
+                            genfit::MaterialEffects::getInstance()->setNoEffects(true);
+                            trackRep->extrapolateToPoint(fitState, posTargetIni);
+                            // trackRep -> extrapolateToPlane(fitState, fTargetPlane);
+                            momTarget = fitState.getMom();
+                            posTarget = fitState.getPos();
 
-               } // Fit converged
-           }
-       }
-       catch (std::exception& e)
-       {
-           std::cout << " " << e.what() << "\n";
-           continue;
-       }
+                            std::cout << " Position: ";
+                            posTarget.Print();
+                            std::cout << " Momentum: ";
+                            momTarget.Print();
 
-    } // Tracks
+                            // posTarget.Print();
 
-     if (trackData)
-        delete trackData;
-  }
+                            /*for (auto iStep = 0; iStep < 50; ++iStep) {
 
-   if (fInteractiveMode) {
+                              //std::cout<<" Step length : "<<stepXtr*iStep<<"\n";
+                              trackRep->extrapolateBy(fitState, stepXtr );
+                                        momTarget = fitState.getMom();
+                                        posTarget = fitState.getPos();
+                            std::cout<<" Position: ";
+                            posTarget.Print();
+                            std::cout<<" Momentum: ";
+                            momTarget.Print();
 
-       TCanvas* c1 = new TCanvas();
-       c1->Divide(2, 2);
-       c1->Draw();
-       c1->cd(1);
-       momentum->Draw();
-       c1->cd(2);
-       energy->Draw();
-       c1->cd(3);
-       XYVertex->Draw("zcol");
-       c1->cd(4);
-       XZVertex->Draw("zcol");
+                            }*/
 
-       TCanvas* c2 = new TCanvas();
-       c2->Divide(2, 3);
-       c2->cd(1);
-       thetaIniH->Draw();
-       c2->cd(2);
-       phiIniH->Draw();
-       c2->Draw();
-       c2->cd(3);
-       thetaH->Draw();
-       c2->cd(4);
-       phiH->Draw();
-       c2->cd(5);
-       phiDeltaH->Draw();
+                            thetaH->Fill(momTarget.Theta() * TMath::RadToDeg());
+                            phiH->Fill(momTarget.Phi() * TMath::RadToDeg());
+                            Double_t phiEnd = momTarget.Phi() * TMath::RadToDeg();
+                            phiDeltaH->Fill(phiIni - phiEnd);
+                            XYVertex->Fill(posTarget.X(), posTarget.Y());
+                            XZVertex->Fill(posTarget.X(), posTarget.Z());
+                            xVertexH->Fill(posTarget.X());
+                            yVertexH->Fill(posTarget.Y());
+                            zVertexH->Fill(posTarget.Z());
+                        }
+                        catch (genfit::Exception& e)
+                        {
+                        }
 
-       TCanvas* c3 = new TCanvas();
-       c3->Divide(2, 2);
-       c3->cd(1);
-       xVertexH->Draw();
-       c3->cd(2);
-       yVertexH->Draw();
-       c3->cd(3);
-       zVertexH->Draw();
+                    } // Fit converged
+                }
+            }
+            catch (std::exception& e)
+            {
+                std::cout << " " << e.what() << "\n";
+                continue;
+            }
 
-       // open event display
-       display->open();
+        } // Tracks
 
-   } // Interactive mode
+        if (trackData)
+            delete trackData;
+    }
 
-  return 0;
+    if (fInteractiveMode)
+    {
+
+        TCanvas* c1 = new TCanvas();
+        c1->Divide(2, 2);
+        c1->Draw();
+        c1->cd(1);
+        momentum->Draw();
+        c1->cd(2);
+        energy->Draw();
+        c1->cd(3);
+        XYVertex->Draw("zcol");
+        c1->cd(4);
+        XZVertex->Draw("zcol");
+
+        TCanvas* c2 = new TCanvas();
+        c2->Divide(2, 3);
+        c2->cd(1);
+        thetaIniH->Draw();
+        c2->cd(2);
+        phiIniH->Draw();
+        c2->Draw();
+        c2->cd(3);
+        thetaH->Draw();
+        c2->cd(4);
+        phiH->Draw();
+        c2->cd(5);
+        phiDeltaH->Draw();
+
+        TCanvas* c3 = new TCanvas();
+        c3->Divide(2, 2);
+        c3->cd(1);
+        xVertexH->Draw();
+        c3->cd(2);
+        yVertexH->Draw();
+        c3->cd(3);
+        zVertexH->Draw();
+
+        // open event display
+        display->open();
+
+    } // Interactive mode
+
+    return 0;
 }
 
 HelixTrackModel::HelixTrackModel(const TVector3& pos, const TVector3& mom, double charge)

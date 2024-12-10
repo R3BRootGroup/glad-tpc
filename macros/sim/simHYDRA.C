@@ -66,7 +66,7 @@ void simHYDRA(Int_t nEvents = 1000, TString GEOTAG = "Prototype",
 
   // GLAD
   run->AddModule(new R3BGladMagnet(
-      "glad_v17_flange.geo.root")); // GLAD should not be moved or rotated
+      "glad_s455_v2023.1.geo.root")); // GLAD should not be moved or rotated
 
   // --- GLAD-TPC detectors
   if (GEOTAG.CompareTo("Prototype") == 0) {
@@ -87,7 +87,7 @@ void simHYDRA(Int_t nEvents = 1000, TString GEOTAG = "Prototype",
   magField->SetScale(fieldScale);
 
   // Constant Magnetic field
-  FairConstField *constField = new FairConstField();
+  R3BFieldConst *constField = new R3BFieldConst();
   double B_y = 20.; //[kG]
   constField->SetField(0., B_y, 0.);
   constField->SetFieldRegion(-200.0, // x_min

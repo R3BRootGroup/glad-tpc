@@ -12,7 +12,8 @@
  ******************************************************************************/
 /**  R3BGTPCProjPoint.h
  **  A R3BGTPCProjPoint is the projected information on a virtual
- **  pad plane. Contains the number and time information of the produced primary electrons
+ **  pad plane. Contains the number and time information of the produced primary
+ *electrons
  **  and the virtual pad identifier.
  **/
 

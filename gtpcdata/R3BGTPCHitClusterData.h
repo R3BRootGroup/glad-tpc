@@ -7,30 +7,29 @@
 #include <TMatrixDfwd.h>
 #include <TMatrixT.h>
 
-class R3BGTPCHitClusterData : public R3BGTPCHitData {
- 
-protected:
+class R3BGTPCHitClusterData : public R3BGTPCHitData
+{
 
-  TMatrixD fCovMatrix; 
+  protected:
+    TMatrixD fCovMatrix;
 
-  Double_t fLength = -999;
-  Int_t fClusterID = -1;
+    Double_t fLength = -999;
+    Int_t fClusterID = -1;
 
-public:
+  public:
+    R3BGTPCHitClusterData();
+    R3BGTPCHitClusterData(const R3BGTPCHitClusterData& cluster) = default;
+    virtual ~R3BGTPCHitClusterData() = default;
 
-  R3BGTPCHitClusterData();
-  R3BGTPCHitClusterData(const R3BGTPCHitClusterData &cluster) = default;
-  virtual ~R3BGTPCHitClusterData() = default;
+    void SetCovMatrix(const TMatrixD& matrix) { fCovMatrix = matrix; }
+    void SetLength(Double_t length) { fLength = length; }
+    void SetClusterID(Int_t id) { fClusterID = id; }
 
-  void SetCovMatrix(const TMatrixD &matrix) { fCovMatrix = matrix; }
-  void SetLength(Double_t length) { fLength = length; }
-  void SetClusterID(Int_t id) { fClusterID = id; }
+    Double_t GetLength() const { return fLength; }
+    const TMatrixD& GetCovMatrix() const { return fCovMatrix; }
+    Int_t GetClusterID() const { return fClusterID; }
 
-  Double_t GetLength() const { return fLength; }
-  const TMatrixD &GetCovMatrix() const { return fCovMatrix; }
-  Int_t GetClusterID() const { return fClusterID; }
-
-  ClassDef(R3BGTPCHitClusterData, 1);
+    ClassDef(R3BGTPCHitClusterData, 1);
 };
 
 #endif

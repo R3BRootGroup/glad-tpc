@@ -1,17 +1,17 @@
 /******************************************************************************
- *   Copyright (C) 2020 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2020 Members of R3B Collaboration                          *
+ *   Copyright (C) 2018 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
+ *   Copyright (C) 2018-2025 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
- *                 GNU General Public Licence (GPL) version 3,                *
+ *                 GNU Lesser General Public Licence (LGPL) version 3,        *
  *                    copied verbatim in the file "LICENSE".                  *
  *                                                                            *
  * In applying this license GSI does not waive the privileges and immunities  *
- * granted to it by virtue of its status as an Int_tergovernmental Organization *
+ * granted to it by virtue of its status as an Intergovernmental Organization *
  * or submit itself to any jurisdiction.                                      *
  ******************************************************************************/
-#ifndef R3BGTPCGEOPAR_H
-#define R3BGTPCGEOPAR_H 1
+
+#pragma once
 
 #include "FairLogger.h"
 #include "FairParGenericSet.h"
@@ -50,9 +50,9 @@ class R3BGTPCGeoPar : public FairParGenericSet
     const Double_t GetTargetLength() { return TargetLength; }
     const Double_t GetTargetRadius() { return TargetRadius; }
     const Double_t GetTargetAngle() { return TargetAngle; }
-   /* const Double_t GetTargetX() { return TargetX; }
-    const Double_t GetTargetY() { return TargetY; }
-    const Double_t GetTargetZ() { return TargetZ; }*/
+    /* const Double_t GetTargetX() { return TargetX; }
+     const Double_t GetTargetY() { return TargetY; }
+     const Double_t GetTargetZ() { return TargetZ; }*/
     const Double_t GetTargetOffsetX() { return TargetOffsetX; }
     const Double_t GetTargetOffsetY() { return TargetOffsetY; }
     const Double_t GetTargetOffsetZ() { return TargetOffsetZ; }
@@ -63,9 +63,9 @@ class R3BGTPCGeoPar : public FairParGenericSet
     const Double_t GetTPCLx() { return TPCLx; }
     const Double_t GetTPCLy() { return TPCLy; }
     const Double_t GetTPCLz() { return TPCLz; }
-   /* const Double_t GetTPCCenterX() { return TPCCenterX; }
-    const Double_t GetTPCCenterY() { return TPCCenterY; }
-    const Double_t GetTPCCenterZ() { return TPCCenterZ; }*/
+    /* const Double_t GetTPCCenterX() { return TPCCenterX; }
+     const Double_t GetTPCCenterY() { return TPCCenterY; }
+     const Double_t GetTPCCenterZ() { return TPCCenterZ; }*/
     const Double_t GetFrameThickness() { return FrameThickness; }
     const Double_t GetWindowx() { return Windowx; }
     const Double_t GetWindowy() { return Windowy; }
@@ -86,9 +86,9 @@ class R3BGTPCGeoPar : public FairParGenericSet
     void SetTargetLength(Double_t value) { TargetLength = value; }
     void SetTargetRadius(Double_t value) { TargetRadius = value; }
     void SetTargetAngle(Double_t value) { TargetAngle = value; }
-   /* void SetTargetX(Double_t value) { TargetX = value; }
-    void SetTargetY(Double_t value) { TargetY = value; }
-    void SetTargetZ(Double_t value) { TargetZ = value; }*/
+    /* void SetTargetX(Double_t value) { TargetX = value; }
+     void SetTargetY(Double_t value) { TargetY = value; }
+     void SetTargetZ(Double_t value) { TargetZ = value; }*/
     void SetTargetOffsetX(Double_t value) { TargetOffsetX = value; }
     void SetTargetOffsetY(Double_t value) { TargetOffsetY = value; }
     void SetTargetOffsetZ(Double_t value) { TargetOffsetZ = value; }
@@ -99,9 +99,9 @@ class R3BGTPCGeoPar : public FairParGenericSet
     void SetTPCLx(Double_t value) { TPCLx = value; }
     void SetTPCLy(Double_t value) { TPCLy = value; }
     void SetTPCLz(Double_t value) { TPCLz = value; }
-   /* void SetTPCCenterX(Double_t value) { TPCCenterX = value; }
-    void SetTPCCenterY(Double_t value) { TPCCenterY = value; }
-    void SetTPCCenterZ(Double_t value) { TPCCenterZ = value; }*/
+    /* void SetTPCCenterX(Double_t value) { TPCCenterX = value; }
+     void SetTPCCenterY(Double_t value) { TPCCenterY = value; }
+     void SetTPCCenterZ(Double_t value) { TPCCenterZ = value; }*/
     void SetFrameThickness(Double_t value) { FrameThickness = value; }
     void SetWindowx(Double_t value) { Windowx = value; }
     void SetWindowy(Double_t value) { Windowy = value; }
@@ -120,18 +120,18 @@ class R3BGTPCGeoPar : public FairParGenericSet
     void SetDetectorType(Int_t value) { DetectorType = value; }
 
   private:
-    Double_t ActiveRegionx;                               // [cm]
-    Double_t ActiveRegiony;                               // [cm]
-    Double_t ActiveRegionz;                               // [cm]
-    Double_t TPCLx, TPCLy, TPCLz;                         // [cm]
-   // Double_t TPCCenterX, TPCCenterY, TPCCenterZ;          // [cm]
+    Double_t ActiveRegionx;       // [cm]
+    Double_t ActiveRegiony;       // [cm]
+    Double_t ActiveRegionz;       // [cm]
+    Double_t TPCLx, TPCLy, TPCLz; // [cm]
+    // Double_t TPCCenterX, TPCCenterY, TPCCenterZ;          // [cm]
     Double_t FrameThickness;                              // [cm]
     Double_t Windowx, Windowy, Windowz;                   // [cm]
     Int_t PadSize;                                        // virtual: 1 means pads of 1cm^2, 10 means pads of 1mm^2, ...
     Double_t TargetRadius;                                // [cm]
     Double_t TargetLength;                                // [cm]
     Double_t TargetAngle;                                 // [cm]
-    Double_t TargetX, TargetY, TargetZ; 									// [cm]
+    Double_t TargetX, TargetY, TargetZ;                   // [cm]
     Double_t TargetOffsetX, TargetOffsetY, TargetOffsetZ; // [cm]
     Double_t GladAngle;                                   // [deg]
     Double_t GladOffsetX, GladOffsetY, GladOffsetZ;       // [cm]
@@ -144,5 +144,3 @@ class R3BGTPCGeoPar : public FairParGenericSet
 
     ClassDef(R3BGTPCGeoPar, 1)
 };
-
-#endif

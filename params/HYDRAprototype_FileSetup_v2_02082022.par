@@ -43,11 +43,11 @@ GTPCDetectorType:   Int_t  1
 ##############################################################################
 [GTPCGasPar]
 //----------------------------------------------------------------------------
-GTPCLongDiff:   Double_t  0.000001
-GTPCTransDiff:   Double_t  0.0000001
-GTPCFanoFactor:   Double_t  0.2
+GTPCLongDiff:   Double_t  0.1623E-5
+GTPCTransDiff:   Double_t  0.4522E-5
+GTPCFanoFactor:   Double_t  2.
 GTPCEIonization:   Double_t  15.e-9
-GTPCDriftVelocity:   Double_t  0.005
+GTPCDriftVelocity:   Double_t  7.e-3
 ##############################################################################
 ##############################################################################
 # Class:   GTPCElecPar
@@ -61,6 +61,6 @@ GTPCNoiseRMS:   Double_t  700.
 GTPCTimeBinSize:   Double_t  20.0
 GTPCShapingTime:   Double_t  300.
 GTPCThreshold:   Double_t  5.
-GTPCDriftEField:   Double_t  1000.
-GTPCDriftTimeStep:   Double_t  500.
+GTPCDriftEField:   Double_t  250.
+GTPCDriftTimeStep:   Double_t  100.
 ##############################################################################

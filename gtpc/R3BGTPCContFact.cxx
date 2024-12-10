@@ -1,9 +1,9 @@
 /******************************************************************************
- *   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2019 Members of R3B Collaboration                          *
+ *   Copyright (C) 2018 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
+ *   Copyright (C) 2018-2025 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
- *                 GNU General Public Licence (GPL) version 3,                *
+ *                 GNU Lesser General Public Licence (LGPL) version 3,        *
  *                    copied verbatim in the file "LICENSE".                  *
  *                                                                            *
  * In applying this license GSI does not waive the privileges and immunities  *
@@ -51,8 +51,8 @@ void R3BGTPCContFact::setAllContainers()
 FairParSet* R3BGTPCContFact::createContainer(FairContainer* c)
 {
     /** Calls the constructor of the corresponding parameter container.
-     * For an actual context, which is not an empty string and not the default context
-     * of this container, the name is concatenated with the context.
+     * For an actual context, which is not an empty string and not the default
+     * context of this container, the name is concatenated with the context.
      */
 
     const char* name = c->GetName();

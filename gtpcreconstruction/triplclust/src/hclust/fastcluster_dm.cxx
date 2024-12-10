@@ -47,10 +47,10 @@
 #define NO_INCLUDE_FENV
 #endif
 #ifdef NO_INCLUDE_FENV
-//#pragma message("Do not use fenv header.")
+// #pragma message("Do not use fenv header.")
 #else
-//#pragma message("Use fenv header. If there is a warning about unknown #pragma STDC FENV_ACCESS, this can be ignored.")
-//#pragma STDC FENV_ACCESS on
+// #pragma message("Use fenv header. If there is a warning about unknown #pragma
+// STDC FENV_ACCESS, this can be ignored.") #pragma STDC FENV_ACCESS on
 #include <fenv.h>
 #endif
 
@@ -626,7 +626,8 @@ static void NN_chain_core(const t_index N, t_float* const D, t_members* const me
         D: condensed distance matrix N*(N-1)/2
         Z2: output data structure
 
-        This is the NN-chain algorithm, described on page 86 in the following book:
+        This is the NN-chain algorithm, described on page 86 in the following
+       book:
 
         Fionn Murtagh, Multidimensional Clustering Algorithms,
         Vienna, Würzburg: Physica-Verlag, 1985.
@@ -878,7 +879,8 @@ class binary_min_heap
         , size(size_)
         , I(size)
         , R(size)
-    { // Allocate memory and initialize the lists I and R to the identity. This
+    { // Allocate memory and initialize the lists I and R to the
+      // identity. This
         // does not make it a heap. Call heapify afterwards!
         for (t_index i = 0; i < size; ++i)
             R[i] = I[i] = i;
@@ -889,7 +891,8 @@ class binary_min_heap
         , size(size1)
         , I(size1)
         , R(size2)
-    { // Allocate memory and initialize the lists I and R to the identity. This
+    { // Allocate memory and initialize the lists I and R to the
+      // identity. This
         // does not make it a heap. Call heapify afterwards!
         for (t_index i = 0; i < size; ++i)
         {
@@ -1804,9 +1807,11 @@ static void generic_linkage_vector_alternative(const t_index N, t_dissimilarity&
     auto_array_ptr<t_float> mindist(2 * N - 2); // distances to the nearest neighbors
 
     doubly_linked_list active_nodes(N + N_1);
-    binary_min_heap nn_distances(
-        &*mindist, N_1, 2 * N - 2, 1); // minimum heap
-                                       // structure for the distance to the nearest neighbor of each point
+    binary_min_heap nn_distances(&*mindist,
+                                 N_1,
+                                 2 * N - 2,
+                                 1); // minimum heap
+                                     // structure for the distance to the nearest neighbor of each point
 
     t_float min; // minimum for nearest-neighbor searches
 

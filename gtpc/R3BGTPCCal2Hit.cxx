@@ -1,15 +1,16 @@
 /******************************************************************************
- *   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2019 Members of R3B Collaboration                          *
+ *   Copyright (C) 2018 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
+ *   Copyright (C) 2018-2025 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
- *                 GNU General Public Licence (GPL) version 3,                *
+ *                 GNU Lesser General Public Licence (LGPL) version 3,        *
  *                    copied verbatim in the file "LICENSE".                  *
  *                                                                            *
  * In applying this license GSI does not waive the privileges and immunities  *
  * granted to it by virtue of its status as an Intergovernmental Organization *
  * or submit itself to any jurisdiction.                                      *
  ******************************************************************************/
+
 #include "FairLogger.h"
 #include "FairRootManager.h"
 #include "FairRunAna.h"
@@ -21,7 +22,6 @@
 #include "R3BGTPCCal2Hit.h"
 #include "R3BGladFieldMap.h"
 
-// R3BGTPCCal2Hit: Constructor
 R3BGTPCCal2Hit::R3BGTPCCal2Hit()
     : PadCoordArr(boost::extents[5632][4][2])
     , FairTask("R3B GTPC Cal to Hit")
@@ -86,9 +86,11 @@ void R3BGTPCCal2Hit::SetParameter()
     fHalfSizeTPC_Y = fGTPCGeoPar->GetActiveRegiony() / 2.; //[cm]
     fHalfSizeTPC_Z = fGTPCGeoPar->GetActiveRegionz() / 2.; //[cm]
     fSizeOfVirtualPad = fGTPCGeoPar->GetPadSize();         // 1 means pads of 1cm^2, 10 means pads of 1mm^2, ...
-    fDetectorType = fGTPCGeoPar->GetDetectorType();
-    fOffsetX = fGTPCGeoPar->GetGladOffsetX();           //X offset [cm]
-    fOffsetZ = fGTPCGeoPar->GetGladOffsetZ();           //Z offset [cm]
+    fOffsetX = fGTPCGeoPar->GetTargetOffsetX();            // X offset [cm]
+    fOffsetZ = fGTPCGeoPar->GetTargetOffsetZ();            // Z offset [cm]
+    fTargetOffsetX = fGTPCGeoPar->GetGladOffsetX();
+    fTargetOffsetY = fGTPCGeoPar->GetGladOffsetY();
+    fTargetOffsetZ = fGTPCGeoPar->GetGladOffsetZ();
     // From electronic properties
     fDriftEField = fGTPCElecPar->GetDriftEField();     // [V/cm]
     fDriftTimeStep = fGTPCElecPar->GetDriftTimeStep(); // [ns]
@@ -154,6 +156,9 @@ void R3BGTPCCal2Hit::Exec(Option_t* opt)
     }
 
     Double_t x = 0, y = 0, z = 0, lW = 0, ene = 0;
+    Double_t xold = 0, yold = 0, zold = 0;
+    Double_t xnew = 0, ynew = 0, znew = 0;
+
     R3BGladFieldMap* gladField = (R3BGladFieldMap*)FairRunAna::Instance()->GetField(); // B Field
     if (!gladField)
     {
@@ -163,6 +168,18 @@ void R3BGTPCCal2Hit::Exec(Option_t* opt)
     R3BGTPCCalData** calData;
     calData = new R3BGTPCCalData*[nCals];
 
+    // from create_tpc_geo_test.C (geo in file
+    // R3BRoot/glad-tpc/geometry/gladTPC_test.geo.root)
+    Double_t TargetOffsetX = fTargetOffsetX;
+    Double_t TargetOffsetY = fTargetOffsetY;
+    Double_t TargetOffsetZ = fTargetOffsetZ; // USING INSTEAD THE FIELD MAP DESPLACEMENT! MISMATCH
+    Double_t TargetOffsetZ_FM = fTargetOffsetZ;
+
+    // Those values seem not to be anywhere
+    Double_t TargetAngle = 14. * TMath::Pi() / 180;
+    fOffsetX = 0;
+    fOffsetZ = 0;
+
     for (Int_t i = 0; i < nCals; i++)
     {
         calData[i] = (R3BGTPCCalData*)(fCalCA->At(i));
@@ -171,18 +188,17 @@ void R3BGTPCCal2Hit::Exec(Option_t* opt)
 
         Double_t counts = 0;
         Double_t time = 0;
-        Double_t cloudLong = 0; //step by step
+        Double_t cloudLong = 0; // step by step
         Double_t cloudTransv = 0;
-        Double_t sigmaLong = 0; //aprox for the whole time of reconstruction
+        Double_t sigmaLong = 0; // aprox for the whole time of reconstruction
         Double_t sigmaTransv = 0;
 
-        //To store all the hit weighted mean variables
+        // To store all the hit weighted mean variables
         Double_t pad_counts = 0;
         Double_t hitx = 0;
         Double_t hity = 0;
         Double_t hitz = 0;
         Double_t hitlW = 0;
-
 
         for (auto iadc = 0; iadc < adc_cal.size(); iadc++)
         {
@@ -196,26 +212,38 @@ void R3BGTPCCal2Hit::Exec(Option_t* opt)
             }
 
             auto PadCenterCoord = fTPCMap->CalcPadCenter(pad);
-            // Invalid ID condition PadCenterCoord[0]=-9999 (Should be solved in R3BGTPCLangevin)
+            // Invalid ID condition PadCenterCoord[0]=-9999 (Should be solved in
+            // R3BGTPCLangevin)
             if (PadCenterCoord[0] < -9000)
             {
-                LOG(warn)<<"R3BGTPCCal2Hit::Exec Invalid padID";
+                LOG(warn) << "R3BGTPCCal2Hit::Exec Invalid padID";
                 continue;
             }
 
             z = PadCenterCoord[0] / 10.0; //[cm] (PadCenterCoord on mm)
             x = PadCenterCoord[1] / 10.0;
-            y = -fHalfSizeTPC_Y; //Start at pad plane
+            y = -fHalfSizeTPC_Y; // Start at pad plane
 
             x = x + fOffsetX; //[cm]
             z = z + fOffsetZ; //[cm]
-            time = time * fTimeBinSize + 0.5 * fTimeBinSize; //[ns] moving from TimeBuckets to ns; adding the half of
-                                                             //the size of the bin to take the center of the bin
+
+            xold = x;
+            yold = y;
+            zold = z;
+
+            // Transformation from tcp coordinates to glad coordinates
+            x = cos(-TargetAngle) * (xold) + sin(-TargetAngle) * (zold);
+            z = (TargetOffsetZ_FM - fHalfSizeTPC_Z) - sin(-TargetAngle) * (xold) + cos(-TargetAngle) * (zold);
+
+            time = time * fTimeBinSize + 0.5 * fTimeBinSize; //[ns] moving from TimeBuckets to ns; adding the
+                                                             // half of
+                                                             // the size of the bin to take the center of the bin
 
             // Reconstruction without Langevin
             if (fLangevinBack == kFALSE)
             {
-                y = y + time * fDriftVelocity; // [cm] Simple projection case -> Same x,z just moving in coord y
+                y = y + time * fDriftVelocity; // [cm] Simple projection case -> Same
+                                               // x,z just moving in coord y
             }
             // Reconstruction with Langevin
             if (fLangevinBack == kTRUE)
@@ -244,7 +272,8 @@ void R3BGTPCCal2Hit::Exec(Option_t* opt)
 
                 Double_t mu = fDriftVelocity / E_y; // [cm^2 ns^-1 V^-1]
 
-                //Auxiliar values to obtain the velocities after the first callback to make the second and definitive callback
+                // Auxiliar values to obtain the velocities after the first callback to
+                // make the second and definitive callback
                 Double_t auxx;
                 Double_t auxy;
                 Double_t auxz;
@@ -271,7 +300,8 @@ void R3BGTPCCal2Hit::Exec(Option_t* opt)
                         fDriftTimeStep = accDriftTime;
                     }
 
-                    B_x = 1e4 * gladField->GetBx(x, y, z); // Field components return in [kG], moved to [V ns cm^-2]
+                    B_x = 1e4 * gladField->GetBx(x, y,
+                                                 z); // Field components return in [kG], moved to [V ns cm^-2]
                     B_y = 1e4 * gladField->GetBy(x, y, z);
                     B_z = 1e4 * gladField->GetBz(x, y, z);
 
@@ -305,7 +335,8 @@ void R3BGTPCCal2Hit::Exec(Option_t* opt)
                     vDrift_y = cteMult * (E_y + mu * mu * productEB * B_y);               //[cm/ns]
                     vDrift_z = cteMult * (mu * (-E_y * B_x) + mu * mu * productEB * B_z); //[cm/ns]
 
-                    //Use vector velocity (reversed) in the initial point to move backwards
+                    // Use vector velocity (reversed) in the initial point to move
+                    // backwards
                     x = x - vDrift_x * fDriftTimeStep;
                     y = y + vDrift_y * fDriftTimeStep;
                     z = z - vDrift_z * fDriftTimeStep;
@@ -314,10 +345,11 @@ void R3BGTPCCal2Hit::Exec(Option_t* opt)
                     cloudLong += fDriftTimeStep * 2 * fLongDiff;
                     cloudTransv += fDriftTimeStep * 2 * fTransDiff * cteMod;
 
-                    //Resting time update
+                    // Resting time update
                     accDriftTime = accDriftTime - fDriftTimeStep;
                     LOG(debug) << "R3BGTPCCal2Hit::Exec, NEW VALUES: accDriftTime=" << accDriftTime << " [ns]"
-                               << " x=" << x << " y=" << y << " z=" << z << " [cm]" << " Drift_v "<<vDrift_x<<" fDriftTimeStep "<<fDriftTimeStep;
+                               << " x=" << x << " y=" << y << " z=" << z << " [cm]"
+                               << " Drift_v " << vDrift_x << " fDriftTimeStep " << fDriftTimeStep;
                 }
                 // Once the last step adjust is done, reset the variables.
                 if (recoverDriftTimeStep)
@@ -326,17 +358,27 @@ void R3BGTPCCal2Hit::Exec(Option_t* opt)
                     recoverDriftTimeStep = 0.;
                     recoverStep = kTRUE;
                 }
-                //Comparing sigmas obtained in both ways
-                LOG(debug)<<"Comparing sigmas... Approx: "<<sigmaLong<<" "<<sigmaTransv<<";  Step by step: "<<TMath::Sqrt(cloudLong)<<" "<<TMath::Sqrt(cloudTransv);
+                // Comparing sigmas obtained in both ways
+                LOG(debug) << "Comparing sigmas... Approx: " << sigmaLong << " " << sigmaTransv
+                           << ";  Step by step: " << TMath::Sqrt(cloudLong) << " " << TMath::Sqrt(cloudTransv);
             }
             // Adding the hit relevant info for the mean
+
+            xnew = x;
+            ynew = y;
+            znew = z;
+
+            // Back to tpc coordinates
+            x = +cos(TargetAngle) * xnew + sin(TargetAngle) * (znew - (TargetOffsetZ_FM - fHalfSizeTPC_Z));
+            z = -sin(TargetAngle) * xnew + cos(TargetAngle) * (znew - (TargetOffsetZ_FM - fHalfSizeTPC_Z));
+
             hitx += x * counts;
             hity += y * counts;
             hitz += z * counts;
             hitlW += sigmaLong * counts;
             pad_counts += counts;
         }
-        //Final Hit values calculated by weighted mean
+        // Final Hit values calculated by weighted mean
         hitx = hitx / pad_counts;
         hity = hity / pad_counts;
         hitz = hitz / pad_counts;

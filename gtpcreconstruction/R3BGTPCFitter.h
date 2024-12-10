@@ -16,42 +16,39 @@
 class R3BGTPCTrackData;
 class R3BGTPCHitClusterData;
 
-namespace genfit {
-class Track;
-class AbsKalmanFitter;
-class AbsMeasurement;
-class R3BGTPCSpacepointMeasurement;
-template <class hit_T, class measurement_T>
-class MeasurementProducer;
-template <class measurement_T>
-class MeasurementFactory;
+namespace genfit
+{
+    class Track;
+    class AbsKalmanFitter;
+    class AbsMeasurement;
+    class R3BGTPCSpacepointMeasurement;
+    template <class hit_T, class measurement_T>
+    class MeasurementProducer;
+    template <class measurement_T>
+    class MeasurementFactory;
 } // namespace genfit
 
+class R3BGTPCFitter
+{
 
-class R3BGTPCFitter{
+  public:
+    R3BGTPCFitter();
+    ~R3BGTPCFitter();
 
- public:
-  R3BGTPCFitter();
-  ~R3BGTPCFitter();
+    void Init();
+    genfit::Track* FitTrack(R3BGTPCTrackData* track);
 
-  void Init();
-  genfit::Track *FitTrack(R3BGTPCTrackData *track);
+  private:
+    Int_t fTPCDetID{ 0 };
+    Int_t fPDGCode{ 211 };
 
-  
- private:
+    TClonesArray* fHitClusterArray;
+    TClonesArray* fGenfitTrackArray;
 
-  Int_t fTPCDetID{0};
-  Int_t fPDGCode{211};
-  
-  TClonesArray *fHitClusterArray;
-  TClonesArray *fGenfitTrackArray;
-  
-  std::shared_ptr<genfit::AbsKalmanFitter> fKalmanFitter;
+    std::shared_ptr<genfit::AbsKalmanFitter> fKalmanFitter;
 
-  genfit::MeasurementProducer<R3BGTPCHitClusterData, genfit::R3BGTPCSpacepointMeasurement> *fMeasurementProducer;
-  genfit::MeasurementFactory<genfit::AbsMeasurement> *fMeasurementFactory;
-
-  
+    genfit::MeasurementProducer<R3BGTPCHitClusterData, genfit::R3BGTPCSpacepointMeasurement>* fMeasurementProducer;
+    genfit::MeasurementFactory<genfit::AbsMeasurement>* fMeasurementFactory;
 };
 
 #endif

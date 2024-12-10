@@ -1,21 +1,22 @@
 /******************************************************************************
- *   Copyright (C) 2020 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2020 Members of R3B Collaboration                          *
+ *   Copyright (C) 2018 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
+ *   Copyright (C) 2018-2025 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
- *                 GNU General Public Licence (GPL) version 3,                *
+ *                 GNU Lesser General Public Licence (LGPL) version 3,        *
  *                    copied verbatim in the file "LICENSE".                  *
  *                                                                            *
  * In applying this license GSI does not waive the privileges and immunities  *
  * granted to it by virtue of its status as an Intergovernmental Organization *
  * or submit itself to any jurisdiction.                                      *
  ******************************************************************************/
+
 /**  R3BGTPCProjector.h
  * Projects the electrons derived from the energy loss in the gas into
  * a virtual pad plane of variable size pads, including time information
  **/
-#ifndef R3BGTPCPROJECTOR_H
-#define R3BGTPCPROJECTOR_H
+
+#pragma once
 
 #include "FairTask.h"
 #include "R3BGTPCCalData.h"
@@ -31,9 +32,9 @@
  * GTPC point projector task
  * @author Héctor Alvarez Pol
  *
- * For each event, get the R3BGTPCPoints and determine the projection on the pad plane
- *   Input:  Branch GTPCPoints = TClonesArray("R3BGTPCPoint")
- *   Output: Branch GTPCProjPoint = TClonesArray("R3BGTPCProjPoint")
+ * For each event, get the R3BGTPCPoints and determine the projection on the pad
+ * plane Input:  Branch GTPCPoints = TClonesArray("R3BGTPCPoint") Output: Branch
+ * GTPCProjPoint = TClonesArray("R3BGTPCProjPoint")
  *
  * Updated (@author Yassid Ayyad)
  *  Added R3BGTPCMap as map manager
@@ -95,7 +96,8 @@ class R3BGTPCProjector : public FairTask
     Double_t fHalfSizeTPC_Z;    //!< Half size Z of the TPC drift volume [cm]
     Double_t fSizeOfVirtualPad; //!< Number of virtual pad division per cm (default 1)
     Double_t fTimeBinSize;      //!< Time size of each bin in the time vector [ns]
-    Int_t fDetectorType;        //!< Detector type: 1 for prototype, 2 for FullBeamIn, 3 for FullBeamOut
+    Int_t fDetectorType;        //!< Detector type: 1 for prototype, 2 for FullBeamIn, 3
+                                //!< for FullBeamOut
     Int_t outputMode;           //!< Selects Cal(0) or ProjPoint(1) as output level. Default 0
 
     R3BGTPCGeoPar* fGTPCGeoPar;   //!< Geometry parameter container
@@ -107,5 +109,3 @@ class R3BGTPCProjector : public FairTask
 
     ClassDef(R3BGTPCProjector, 1)
 };
-
-#endif // R3BGTPCPROJECTOR_H

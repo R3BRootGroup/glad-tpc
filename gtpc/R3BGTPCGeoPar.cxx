@@ -1,9 +1,9 @@
 /******************************************************************************
- *   Copyright (C) 2020 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2020 Members of R3B Collaboration                          *
+ *   Copyright (C) 2018 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
+ *   Copyright (C) 2018-2025 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
- *                 GNU General Public Licence (GPL) version 3,                *
+ *                 GNU Lesser General Public Licence (LGPL) version 3,        *
  *                    copied verbatim in the file "LICENSE".                  *
  *                                                                            *
  * In applying this license GSI does not waive the privileges and immunities  *
@@ -51,9 +51,9 @@ void R3BGTPCGeoPar::putParams(FairParamList* list)
     list->add("GTPCTPCLx", TPCLx);
     list->add("GTPCTPCLy", TPCLy);
     list->add("GTPCTPCLz", TPCLz);
-   /* list->add("GTPCTPCCenterX", TPCCenterX);
-    list->add("GTPCTPCCenterY", TPCCenterY);
-    list->add("GTPCTPCCenterZ", TPCCenterZ);*/
+    /* list->add("GTPCTPCCenterX", TPCCenterX);
+     list->add("GTPCTPCCenterY", TPCCenterY);
+     list->add("GTPCTPCCenterZ", TPCCenterZ);*/
     list->add("GTPCFrameThickness", FrameThickness);
     list->add("GTPCWindowx", Windowx);
     list->add("GTPCWindowy", Windowy);
@@ -116,21 +116,21 @@ Bool_t R3BGTPCGeoPar::getParams(FairParamList* list)
         LOG(info) << "---Could not initialize GTPCTPCLz";
         return kFALSE;
     }
-   /* if (!(list->fill("GTPCTPCCenterX", &TPCCenterX)))
-    {
-        LOG(info) << "---Could not initialize GTPCTPCCenterX";
-        return kFALSE;
-    }    
-    if (!(list->fill("GTPCTPCCenterY", &TPCCenterY)))
-    {
-        LOG(info) << "---Could not initialize GTPCTPCCenterY";
-        return kFALSE;
-    }    
-    if (!(list->fill("GTPCTPCCenterZ", &TPCCenterZ)))
-    {
-        LOG(info) << "---Could not initialize GTPCTPCCenterZ";
-        return kFALSE;
-    }*/
+    /* if (!(list->fill("GTPCTPCCenterX", &TPCCenterX)))
+     {
+         LOG(info) << "---Could not initialize GTPCTPCCenterX";
+         return kFALSE;
+     }
+     if (!(list->fill("GTPCTPCCenterY", &TPCCenterY)))
+     {
+         LOG(info) << "---Could not initialize GTPCTPCCenterY";
+         return kFALSE;
+     }
+     if (!(list->fill("GTPCTPCCenterZ", &TPCCenterZ)))
+     {
+         LOG(info) << "---Could not initialize GTPCTPCCenterZ";
+         return kFALSE;
+     }*/
     if (!(list->fill("GTPCTargetOffsetX", &TargetOffsetX)))
     {
         LOG(info) << "---Could not initialize GTPCTargetOffsetX";
@@ -261,10 +261,11 @@ void R3BGTPCGeoPar::printParams()
               << "GTPCTPCLz " << TPCLz << " cm,  "
               << "GTPCTargetOffsetX " << TargetOffsetX << " cm,  "
               << "GTPCTargetOffsetY " << TargetOffsetY << " cm,  "
-              << "GTPCTargetOffsetZ " << TargetOffsetZ << " cm,	 " 
-             /* << "GTPCTPCCenterX " << TPCCenterX << " cm,  "
-              << "GTPCTPCCenterY " << TPCCenterY << " cm,  "
-              << "GTPCTPCCenterZ " << TPCCenterZ << " cm,  "*/
+              << "GTPCTargetOffsetZ " << TargetOffsetZ
+              << " cm,	 "
+              /* << "GTPCTPCCenterX " << TPCCenterX << " cm,  "
+               << "GTPCTPCCenterY " << TPCCenterY << " cm,  "
+               << "GTPCTPCCenterZ " << TPCCenterZ << " cm,  "*/
               << "GTPCFrameThickness " << FrameThickness << " cm" << endl;
     LOG(info) << "GTPCWindowx " << Windowx << " cm,  "
               << "GTPCWindowy " << Windowy << " cm,  "
@@ -272,11 +273,12 @@ void R3BGTPCGeoPar::printParams()
               << "GTPCPadSize " << PadSize << " arbitrary units (virtual)" << endl;
     LOG(info) << "GTPCTargetRadius " << TargetRadius << " cm,  "
               << "GTPCTargetLength " << TargetLength << " cm,  "
-              << "GTPCTargetAngle " << TargetAngle << " deg,  "
-             /* << "GTPCTargetX " << TargetX << " cm,  "
-              << "GTPCTargetY " << TargetY << " cm,  "
-              << "GTPCTargetZ " << TargetZ << " cm"*/
-	      << endl;
+              << "GTPCTargetAngle " << TargetAngle
+              << " deg,  "
+              /* << "GTPCTargetX " << TargetX << " cm,  "
+               << "GTPCTargetY " << TargetY << " cm,  "
+               << "GTPCTargetZ " << TargetZ << " cm"*/
+              << endl;
     LOG(info) << "GTPCGladAngle " << GladAngle << " deg,  "
               << "GTPCGladOffsetX " << GladOffsetX << " cm,  "
               << "GTPCGladOffsetY " << GladOffsetY << " cm,  "

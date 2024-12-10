@@ -1,15 +1,16 @@
 /******************************************************************************
- *   Copyright (C) 2020 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2020 Members of R3B Collaboration                          *
+ *   Copyright (C) 2018 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
+ *   Copyright (C) 2018-2025 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
- *                 GNU General Public Licence (GPL) version 3,                *
+ *                 GNU Lesser General Public Licence (LGPL) version 3,        *
  *                    copied verbatim in the file "LICENSE".                  *
  *                                                                            *
  * In applying this license GSI does not waive the privileges and immunities  *
  * granted to it by virtue of its status as an Intergovernmental Organization *
  * or submit itself to any jurisdiction.                                      *
  ******************************************************************************/
+
 #include "R3BGTPC.h"
 #include "FairRootManager.h"
 #include "FairRun.h"
@@ -154,10 +155,11 @@ Bool_t R3BGTPC::ProcessHits(FairVolume* vol)
                          pos.Vect(),                               // pos from gMC->TrackPosition(pos);
                          mom.Vect(),                               // mom from gMC->TrackMomentum(pos);
                          gMC->TrackTime(),                         // time in ns
-                         gMC->TrackLength(),  // Return the length of the current track from its origin (in cm)
-                         gMC->Edep(),         // eloss
-                         gMC->CurrentEvent(), // EventID
-                         parentTrackID,       // parentTrackID
+                         gMC->TrackLength(),                       // Return the length of the current track from its
+                                                                   // origin (in cm)
+                         gMC->Edep(),                              // eloss
+                         gMC->CurrentEvent(),                      // EventID
+                         parentTrackID,                            // parentTrackID
                          gMC->GetStack()->GetCurrentTrack()->GetMother(0), // primaryParticleID
                          theTrackStatus,                                   // trackStatus from GetTrackStatus(...)
                          gMC->TrackPid(),                                  // PDGCode
@@ -169,8 +171,9 @@ Bool_t R3BGTPC::ProcessHits(FairVolume* vol)
                          gMC->TrackCharge(),                               // charge
                          gMC->TrackMass(),                 // Return the mass of the track currently transported.
                          (gMC->Etot() - gMC->TrackMass()), // kineticEnergy
-                         gMC->TrackStep(), // Return the length in centimeters of the current step (in cm)
-                         kTRUE);           // isAccepted
+                         gMC->TrackStep(),                 // Return the length in centimeters of the current
+                                                           // step (in cm)
+                         kTRUE);                           // isAccepted
     }
 
     // Increment number of LandPoints for this track
@@ -180,7 +183,7 @@ Bool_t R3BGTPC::ProcessHits(FairVolume* vol)
     return kTRUE;
 }
 
-// ----    Public method BeginOfEvent   -----------------------------------------
+// ----    Public method BeginOfEvent -----------------------------------------
 void R3BGTPC::BeginEvent() { ; }
 
 // -----   Public method EndOfEvent   -----------------------------------------

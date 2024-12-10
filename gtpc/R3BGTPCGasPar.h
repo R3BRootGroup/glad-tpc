@@ -1,17 +1,17 @@
 /******************************************************************************
- *   Copyright (C) 2020 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2020 Members of R3B Collaboration                          *
+ *   Copyright (C) 2018 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
+ *   Copyright (C) 2018-2025 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
- *                 GNU General Public Licence (GPL) version 3,                *
+ *                 GNU Lesser General Public Licence (LGPL) version 3,        *
  *                    copied verbatim in the file "LICENSE".                  *
  *                                                                            *
  * In applying this license GSI does not waive the privileges and immunities  *
- * granted to it by virtue of its status as an Int_tergovernmental Organization *
+ * granted to it by virtue of its status as an Intergovernmental Organization *
  * or submit itself to any jurisdiction.                                      *
  ******************************************************************************/
-#ifndef R3BGTPCGASPAR_H
-#define R3BGTPCGASPAR_H 1
+
+#pragma once
 
 #include "FairLogger.h"
 #include "FairParGenericSet.h"
@@ -69,5 +69,3 @@ class R3BGTPCGasPar : public FairParGenericSet
 
     ClassDef(R3BGTPCGasPar, 1)
 };
-
-#endif

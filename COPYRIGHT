@@ -5,9 +5,6 @@ Source: https://github.com/R3BRootGroup/glad-tpc
 
 Files: *
 Copyright: 2018-2025, GSI Helmholtzzentrum fuer Schwerionenforschung GmbH
-Copyright: 2018-2025, [see AUTHORS file]
-Copyright: 2018-2025, [see CONTRIBUTORS file]
-License: LGPL-3.0-only
-
-License: LGPL-3.0-only
-  [see LICENSE file]
+Copyright: 2018-2025,  [see AUTHORS file]
+Copyright: 2018-2025,  [see CONTRIBUTORS file]
+License: LGPL-3.0-only [see LICENSE file]

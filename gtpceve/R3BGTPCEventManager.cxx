@@ -252,12 +252,13 @@ void R3BGTPCEventManager::make_gui()
 
     /*TGHorizontalFrame *fThres = new TGHorizontalFrame(frmMain);
     TGLabel *lThres = new TGLabel(fThres, "3D threshold:");
-    fThres->AddFrame(lThres, new TGLayoutHints(kLHintsLeft | kLHintsCenterY, 1, 2, 1, 1));
-    f3DThresDisplay = new TGNumberEntry(fThres, 0., 6, -1, TGNumberFormat::kNESInteger, TGNumberFormat::kNEANonNegative,
+    fThres->AddFrame(lThres, new TGLayoutHints(kLHintsLeft | kLHintsCenterY, 1, 2,
+    1, 1)); f3DThresDisplay = new TGNumberEntry(fThres, 0., 6, -1,
+    TGNumberFormat::kNESInteger, TGNumberFormat::kNEANonNegative,
                         TGNumberFormat::kNELLimitMinMax, 0, Entries);
     fThres->AddFrame(f3DThresDisplay, new TGLayoutHints(kLHintsLeft, 1, 1, 1, 1));
-    f3DThresDisplay->Connect("ValueSet(Long_t)", "R3BGTPCEventManager", fInstance, "Select3DThres()");
-    frmMain->AddFrame(fThres);*/
+    f3DThresDisplay->Connect("ValueSet(Long_t)", "R3BGTPCEventManager", fInstance,
+    "Select3DThres()"); frmMain->AddFrame(fThres);*/
 
     frmMain->MapSubwindows();
     frmMain->Resize();

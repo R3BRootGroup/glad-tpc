@@ -312,7 +312,7 @@ int DecayHyper(double BRatio, int A[], int Z[], double Masses[], int PDGCode[],
   return multiplicity;
 }
 //-----------------------DECAY
-//LENGTH--------------------------------------------------
+// LENGTH--------------------------------------------------
 double flight_length(double beta, double tau) {
   double Gamma = 1 / sqrt(1 - (beta * beta));
   TF1 *f1 = new TF1("f1", "exp(-x/[0])", 0, 11 * tau);

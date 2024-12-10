@@ -13,56 +13,65 @@
 
 #include <SpacepointMeasurement.h>
 
-namespace genfit {
-class AbsMeasurement;
+namespace genfit
+{
+    class AbsMeasurement;
 } // namespace genfit
 
 ClassImp(genfit::R3BGTPCSpacepointMeasurement)
 
-namespace genfit
+    namespace genfit
 {
 
-   R3BGTPCSpacepointMeasurement::R3BGTPCSpacepointMeasurement() : SpacepointMeasurement() {}
+    R3BGTPCSpacepointMeasurement::R3BGTPCSpacepointMeasurement()
+        : SpacepointMeasurement()
+    {
+    }
 
-   R3BGTPCSpacepointMeasurement::R3BGTPCSpacepointMeasurement(const R3BGTPCHitClusterData *detHit, const TrackCandHit *hit)
-      : SpacepointMeasurement(), fCharge(detHit->GetEnergy())
-   {
-    
-      TMatrixD mat = detHit->GetCovMatrix();
+    R3BGTPCSpacepointMeasurement::R3BGTPCSpacepointMeasurement(const R3BGTPCHitClusterData* detHit,
+                                                               const TrackCandHit* hit)
+        : SpacepointMeasurement()
+        , fCharge(detHit->GetEnergy())
+    {
 
-      //std::cout<<detHit->GetX()<<" "<<detHit->GetY()<<" "<<detHit->GetZ()<<"\n";
-	
-      rawHitCoords_(0) = detHit->GetX();
-      rawHitCoords_(1) = detHit->GetY();
-      rawHitCoords_(2) = detHit->GetZ();
+        TMatrixD mat = detHit->GetCovMatrix();
 
-      TMatrixDSym cov(3);
+        // std::cout<<detHit->GetX()<<" "<<detHit->GetY()<<"
+        // "<<detHit->GetZ()<<"\n";
 
-      /*cov(0,0) = detHit -> GetDx();
-      cov(1,1) = detHit -> GetDy();
-      cov(2,2) = detHit -> GetDz();*/  //TODO: Compute position variance
+        rawHitCoords_(0) = detHit->GetX();
+        rawHitCoords_(1) = detHit->GetY();
+        rawHitCoords_(2) = detHit->GetZ();
 
-      cov(0, 1) = 0.0;
-      cov(1, 2) = 0.0;
-      cov(2, 0) = 0.0;
+        TMatrixDSym cov(3);
 
-      // Forced covariance matrix to be constant. Need to study later.
-      cov(0, 0) = 0.1;
-      cov(1, 1) = 0.4;
-      cov(2, 2) = 0.1;
+        /*cov(0,0) = detHit -> GetDx();
+        cov(1,1) = detHit -> GetDy();
+        cov(2,2) = detHit -> GetDz();*/  //TODO: Compute position variance
 
-      rawHitCov_ = cov;
-      detId_ = hit->getDetId();
-      hitId_ = hit->getHitId();
+        cov(0, 1) = 0.0;
+        cov(1, 2) = 0.0;
+        cov(2, 0) = 0.0;
 
-      // std::cout<<" AtSpacepointMeasurement::AtSpacepointMeasurement "<<"\n";
-      // std::cout<<rawHitCoords_(0)<<"	"<<rawHitCoords_(1)<<"	  "<<rawHitCoords_(2)<<"	"<<fCharge<<" "<<detId_<<"  "<<hitId_<<"\n";
+        // Forced covariance matrix to be constant. Need to study later.
+        cov(0, 0) = 0.1;
+        cov(1, 1) = 0.4;
+        cov(2, 2) = 0.1;
 
-      this->initG();
-   }
+        rawHitCov_ = cov;
+        detId_ = hit->getDetId();
+        hitId_ = hit->getHitId();
 
-   AbsMeasurement *R3BGTPCSpacepointMeasurement::clone() const { return new R3BGTPCSpacepointMeasurement(*this); }
+        // std::cout<<" AtSpacepointMeasurement::AtSpacepointMeasurement "<<"\n";
+        // std::cout<<rawHitCoords_(0)<<"	"<<rawHitCoords_(1)<<"
+        // "<<rawHitCoords_(2)<<"	"<<fCharge<<"
+        // "<<detId_<<"  "<<hitId_<<"\n";
 
-   Double_t R3BGTPCSpacepointMeasurement::GetCharge() { return fCharge; }
+        this->initG();
+    }
+
+    AbsMeasurement* R3BGTPCSpacepointMeasurement::clone() const { return new R3BGTPCSpacepointMeasurement(*this); }
+
+    Double_t R3BGTPCSpacepointMeasurement::GetCharge() { return fCharge; }
 
 } /* End of namespace genfit */

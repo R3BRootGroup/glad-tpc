@@ -42,22 +42,22 @@ class R3BGTPCHitData : public TObject
     inline const Double_t GetZ() const { return fZ; }
     inline const Double_t GetLongWidth() const { return fLongWidth; }
     inline const Double_t GetEnergy() const { return fEnergy; }
-    inline const Int_t    GetTime() const {return fTime;}
+    inline const Int_t GetTime() const { return fTime; }
 
     // Setters
-    inline void SetX(Double_t x) { fX = x;}
-    inline void SetY(Double_t y) { fY = y;}
-    inline void SetZ(Double_t z) { fZ = z;}
-    inline void SetEnergy(Double_t E) { fEnergy = E;}
-    inline void SetTime(Double_t T) { fTime = T;}
-  
+    inline void SetX(Double_t x) { fX = x; }
+    inline void SetY(Double_t y) { fY = y; }
+    inline void SetZ(Double_t z) { fZ = z; }
+    inline void SetEnergy(Double_t E) { fEnergy = E; }
+    inline void SetTime(Double_t T) { fTime = T; }
+
   protected:
     Double_t fX;         // X position of the hit in the gas
     Double_t fY;         // Y position of the hit in the gas
     Double_t fZ;         // Z position of the hit in the gas
     Double_t fLongWidth; // Longitudinal width of electron cloud
     Double_t fEnergy;    // Total energy atributed to the hit
-    Int_t    fTime;       // Time bucket
+    Int_t fTime;         // Time bucket
 
   public:
     ClassDef(R3BGTPCHitData, 1)
