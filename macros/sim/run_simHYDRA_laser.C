@@ -1,6 +1,6 @@
 {
-  gROOT->ProcessLine(".L simHYDRA.C");
-  simHYDRA(1, "Prototype", "good_evt");
+    gROOT->ProcessLine(".L simHYDRA.C");
+    simHYDRA(1, "Prototype", "good_evt");
 }
 // The purpose of this macro is to simply generate the event structure
 // that will later be filled with the run_laser_gen.C macro. (This is

@@ -16,9 +16,9 @@ void eventDisplay()
     fMan->AddTask(Track);
     fMan->AddTask(GTPCPoints);
     fMan->Init();
-    auto eve= gEve->GetDefaultGLViewer();
-    eve->GetClipSet()->SetClipType(TGLClip::EType(1));// kClipNone==0, kClipPlane==1, kClipBox==2
+    auto eve = gEve->GetDefaultGLViewer();
+    eve->GetClipSet()->SetClipType(TGLClip::EType(1)); // kClipNone==0, kClipPlane==1, kClipBox==2
     eve->ColorSet().Background().SetColor(kBlack);
-    eve->CurrentCamera().RotateRad(-14,0);
-    eve->DoDraw();    
+    eve->CurrentCamera().RotateRad(-14, 0);
+    eve->DoDraw();
 }

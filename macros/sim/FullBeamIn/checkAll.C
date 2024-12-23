@@ -33,7 +33,7 @@ void checkAll()
     Bool_t textOutput = kFALSE;
     Bool_t DEBUG = kFALSE;
 
-    Bool_t checkPoints = kTRUE;   // Defines Histogram for Points
+    Bool_t checkPoints = kTRUE; // Defines Histogram for Points
 
     sprintf(title1, "%s", "sim.root"); // INPUT FILE
     TFile* file1 = TFile::Open(title1);
@@ -62,7 +62,7 @@ void checkAll()
         h1_Point_Mult = new TH1F("h1_Point_Mult", "Point Multiplicity", 400, 0, 400);
         h1_Point_Time = new TH1F("h1_Point_Time", "Point Time", 4000, 0, 0.000001);
         h1_Point_Length = new TH1F("h1_Point_Length", "Point Length", 400, 0, 400);
-        h1_Point_ELoss = new TH1F("h1_Point_ELoss", "Point ELoss (keV)", 500, 0, 20 ); // 0.01 cm
+        h1_Point_ELoss = new TH1F("h1_Point_ELoss", "Point ELoss (keV)", 500, 0, 20); // 0.01 cm
         h1_Point_TrackStatus = new TH1F("h1_Point_TrackStatus", "Point TrackStatus", 8, 0, 7);
         h1_Point_PDG = new TH1F("h1_Point_PDG", "Point PDG", 2300, 0, 2300);
         h1_Point_Charge = new TH1F("h1_Point_Charge", "Point Charge", 40, 0, 39);
@@ -237,5 +237,5 @@ void checkAll()
         c4->Print("output.ps");
         c3->Print("output.ps)");
     }
-    cout<<"OK"<<endl;
+    cout << "OK" << endl;
 }

@@ -105,9 +105,9 @@ void residues(TString simFilename = "sim.root", TString recoFilename = "output_r
     TH3D* testt1 = new TH3D("testt1", "points Histogram", 300, -10, 40, 300, -25, 25, 300, 250, 300);
     TH3D* testt2 = new TH3D("testt2", "  hits Histogram", 300, -10, 40, 300, -25, 25, 300, 250, 300);
 
-    TH2D* testt1xz= new TH2D("testt1xz", "points Histogram", 1000, 4, 13.2, 1000, 260, 286);
+    TH2D* testt1xz = new TH2D("testt1xz", "points Histogram", 1000, 4, 13.2, 1000, 260, 286);
     TH2D* testt2xz = new TH2D("testt2xz", "  hits Histogram", 1000, 4, 13.2, 1000, 260, 286);
-    TH2D* testt1yz= new TH2D("testt1yz", "points Histogram", 1000, -15.2, 15.2, 1000, 260, 286);
+    TH2D* testt1yz = new TH2D("testt1yz", "points Histogram", 1000, -15.2, 15.2, 1000, 260, 286);
     TH2D* testt2yz = new TH2D("testt2yz", "  hits Histogram", 1000, -15.2, 15.2, 1000, 260, 286);
     Int_t eventForplot1 = 10;
     Int_t eventForplot2 = 20;
@@ -165,8 +165,13 @@ void residues(TString simFilename = "sim.root", TString recoFilename = "output_r
             x = points[j]->GetX();
             y = points[j]->GetY();
             z = points[j]->GetZ();
-            //cout << "point: X, Y, Z: " << x << " " << y << " "<< z << endl;
-            if(i>eventForplot1 && i<eventForplot2) {testt1->Fill(x,y,z); testt1xz->Fill(x,z);testt1yz->Fill(y,z);}
+            // cout << "point: X, Y, Z: " << x << " " << y << " "<< z << endl;
+            if (i > eventForplot1 && i < eventForplot2)
+            {
+                testt1->Fill(x, y, z);
+                testt1xz->Fill(x, z);
+                testt1yz->Fill(y, z);
+            }
             trackID = points[j]->GetTrackID();
             if (trackID == primaryTrackID)
             {
@@ -198,8 +203,13 @@ void residues(TString simFilename = "sim.root", TString recoFilename = "output_r
             x = hits[j]->GetX();
             y = hits[j]->GetY();
             z = hits[j]->GetZ();
-            //cout << "hits: X, Y, Z: " << x << " " << y << " "<< z << endl;
-            if(i>eventForplot1 && i<eventForplot2) {testt2->Fill(x,y,z); testt2xz->Fill(x,z);testt2yz->Fill(y,z);}
+            // cout << "hits: X, Y, Z: " << x << " " << y << " "<< z << endl;
+            if (i > eventForplot1 && i < eventForplot2)
+            {
+                testt2->Fill(x, y, z);
+                testt2xz->Fill(x, z);
+                testt2yz->Fill(y, z);
+            }
 
             energy = hits[j]->GetEnergy();
             distance = GetMinDistance(x, z, fit_x, fit_z);
@@ -207,7 +217,7 @@ void residues(TString simFilename = "sim.root", TString recoFilename = "output_r
         }
 
         // Plot and info for one event -> Delete all between the ## when finished
-        //######################################################################################
+        // ######################################################################################
 
         if (i == (sim_events - 1))
         {
@@ -355,10 +365,9 @@ void residues(TString simFilename = "sim.root", TString recoFilename = "output_r
             testt2xz->SetMarkerSize(2);
             testt2xz->SetMarkerColor(4);
             testt2xz->Draw("SAME");
-
         }
 
-        //####################################################################################
+        // ####################################################################################
 
         // Event i finishes ==> Deleting the arrays
         if (eventPoints)

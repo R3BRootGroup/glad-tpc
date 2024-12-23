@@ -37,12 +37,14 @@ void reader(const char* inputSimFile)
 
     FairRuntimeDb* rtdb = FairRuntimeDb::instance();
     R3BGTPCGeoPar* geoPar = (R3BGTPCGeoPar*)rtdb->getContainer("GTPCGeoPar");
-    if (!geoPar) {
+    if (!geoPar)
+    {
         cout << "No R3BGTPCGeoPar can be loaded from the rtdb";
         return;
     }
     R3BGTPCGasPar* gasPar = (R3BGTPCGasPar*)rtdb->getContainer("GTPCGasPar");
-    if (!gasPar) {
+    if (!gasPar)
+    {
         cout << "No R3BGTPCGasPar can be loaded from the rtdb";
         return;
     }
@@ -51,7 +53,7 @@ void reader(const char* inputSimFile)
     parIo1->open(GTPCGeoParamsFile, "in");
     rtdb->setFirstInput(parIo1);
     rtdb->initContainers(0);
-    
+
     Double_t fHalfSizeTPC_X = geoPar->GetActiveRegionx() / 2.; // X (row)
     Double_t fHalfSizeTPC_Y = geoPar->GetActiveRegiony() / 2.; // Y (time)
     Double_t fHalfSizeTPC_Z = geoPar->GetActiveRegionz() / 2.; // Z (column)

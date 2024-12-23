@@ -45,7 +45,8 @@ void create_tpc_geo(const char* geoTag = "Target")
 
     FairRuntimeDb* rtdb = FairRuntimeDb::instance();
     R3BGTPCGeoPar* geoPar = (R3BGTPCGeoPar*)rtdb->getContainer("GTPCGeoPar");
-    if (!geoPar) {
+    if (!geoPar)
+    {
         cout << "No R3BGTPCGeoPar can be loaded from the rtdb";
         return;
     }

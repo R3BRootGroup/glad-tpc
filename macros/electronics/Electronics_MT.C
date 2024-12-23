@@ -58,17 +58,20 @@ int main(int argc, char** argv)
 
     FairRuntimeDb* rtdb = FairRuntimeDb::instance();
     R3BGTPCGeoPar* geoPar = (R3BGTPCGeoPar*)rtdb->getContainer("GTPCGeoPar");
-    if (!geoPar) {
+    if (!geoPar)
+    {
         cout << "No R3BGTPCGeoPar can be loaded from the rtdb";
         return;
     }
     R3BGTPCGasPar* gasPar = (R3BGTPCGasPar*)rtdb->getContainer("GTPCGasPar");
-    if (!gasPar) {
+    if (!gasPar)
+    {
         cout << "No R3BGTPCGasPar can be loaded from the rtdb";
         return;
     }
     R3BGTPCElecPar* elecPar = (R3BGTPCElecPar*)rtdb->getContainer("GTPCElecPar");
-    if (!elecPar) {
+    if (!elecPar)
+    {
         cout << "No R3BGTPCElecPar can be loaded from the rtdb";
         return;
     }
@@ -89,13 +92,13 @@ int main(int argc, char** argv)
 
     // Electronics
 
-    Double_t channels = 4096;                               // 12 bits electronics
-    Double_t dynamic_range = 1.2e-13;                       // 120fC to detect particle at MIP
-    Double_t ADC_Offset = 100;                              // To avoid negative ADC values
-    Double_t ADC_conv = channels / (dynamic_range / e_equ); // converter from n. of e- to ADC value
-    Double_t shapingtime = elecPar->GetShapingTime();   //[ns]
-    Double_t TimeBinSize = elecPar->GetTimeBinSize();   //[ns]
-    Double_t NoiseRMS = elecPar->GetNoiseRMS();         //[n.e-]
+    Double_t channels = 4096;                                                    // 12 bits electronics
+    Double_t dynamic_range = 1.2e-13;                                            // 120fC to detect particle at MIP
+    Double_t ADC_Offset = 100;                                                   // To avoid negative ADC values
+    Double_t ADC_conv = channels / (dynamic_range / e_equ);                      // converter from n. of e- to ADC value
+    Double_t shapingtime = elecPar->GetShapingTime();                            //[ns]
+    Double_t TimeBinSize = elecPar->GetTimeBinSize();                            //[ns]
+    Double_t NoiseRMS = elecPar->GetNoiseRMS();                                  //[n.e-]
     Double_t thr = (elecPar->GetThreshold()) * NoiseRMS * ADC_conv + ADC_Offset; //[n.e-]
     Double_t Gain = elecPar->GetGain();
     Double_t Theta = elecPar->GetTheta();

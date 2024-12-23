@@ -31,9 +31,9 @@ double tau_4LH = 0.208;
 double tau_k0short = 0.08954;
 double tau_lambda = 0.263;
 
-void Variables() {
-  char tmp[256];
-  getcwd(tmp, 256);
-  std::cout << "Variables to be used for the decay are defined in :\n"
-            << tmp << "/Variables_decay.C" << std::endl;
+void Variables()
+{
+    char tmp[256];
+    getcwd(tmp, 256);
+    std::cout << "Variables to be used for the decay are defined in :\n" << tmp << "/Variables_decay.C" << std::endl;
 }

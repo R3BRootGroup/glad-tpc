@@ -11,14 +11,14 @@ void run_reconstruction(TString fileName = "lang.root")
     TString outFile;
 
     // Input and outup file according to the GEOTAG
-    //TString GTPCHitParamsFile;
+    // TString GTPCHitParamsFile;
     TString GTPCGeoParamsFile;
     TString workDir = gSystem->Getenv("VMCWORKDIR");
 
     cout << "\033[1;31m Warning\033[0m: The detector is: Prototype" << endl;
     inFile = workDir + "/glad-tpc/macros/proj/Prototype/" + fileName;
     outFile = workDir + "/glad-tpc/macros/reco/output_reco.root";
-    //GTPCHitParamsFile = workDir + "/glad-tpc/params/Hit_FileSetup.par";
+    // GTPCHitParamsFile = workDir + "/glad-tpc/params/Hit_FileSetup.par";
     parFile = "../sim/Prototype/par.root";
     GTPCGeoParamsFile = workDir + "/glad-tpc/params/HYDRAprototype_FileSetup_v2_02082022.par";
 
@@ -39,12 +39,15 @@ void run_reconstruction(TString fileName = "lang.root")
 
     R3BGTPCCal2Hit* cal2hit = new R3BGTPCCal2Hit();
     //(David)
-    if (fileName == "proj.root"){cal2hit->SetRecoFlag(kFALSE);}
+    if (fileName == "proj.root")
+    {
+        cal2hit->SetRecoFlag(kFALSE);
+    }
 
     fRun->AddTask(cal2hit);
 
     fRun->Init();
-    fRun->Run(0,0);
+    fRun->Run(0, 0);
     delete fRun;
 
     timer.Stop();

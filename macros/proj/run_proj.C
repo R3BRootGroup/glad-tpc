@@ -15,9 +15,9 @@ void run_proj(TString GEOTAG = "Prototype")
     TString geoPath = gSystem->Getenv("VMCWORKDIR");
 
     cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
-    inFile = "../sim/"+GEOTAG+"/sim.root";
-    parFile = "../sim/"+GEOTAG+"/par.root";
-    outFile = "./"+GEOTAG+"/proj.root";
+    inFile = "../sim/" + GEOTAG + "/sim.root";
+    parFile = "../sim/" + GEOTAG + "/par.root";
+    outFile = "./" + GEOTAG + "/proj.root";
     GTPCGeoParamsFile = geoPath + "/glad-tpc/params/HYDRAprototype_FileSetup.par";
 
     GTPCGeoParamsFile.ReplaceAll("//", "/");
@@ -38,12 +38,14 @@ void run_proj(TString GEOTAG = "Prototype")
     rtdb->print();
 
     R3BGTPCGeoPar* geoPar = (R3BGTPCGeoPar*)rtdb->getContainer("GTPCGeoPar");
-    if (!geoPar) {
+    if (!geoPar)
+    {
         cout << "No R3BGTPCGeoPar can be loaded from the rtdb";
         return;
     }
     R3BGTPCGasPar* gasPar = (R3BGTPCGasPar*)rtdb->getContainer("GTPCGasPar");
-    if (!gasPar) {
+    if (!gasPar)
+    {
         cout << "No R3BGTPCGasPar can be loaded from the rtdb";
         return;
     }
@@ -59,7 +61,7 @@ void run_proj(TString GEOTAG = "Prototype")
     fRun->AddTask(pro);
 
     fRun->Init();
-    fRun->Run(0,0);
+    fRun->Run(0, 0);
     delete fRun;
 
     timer.Stop();

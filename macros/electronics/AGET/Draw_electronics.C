@@ -34,35 +34,38 @@ void reader(int evtnumber = 9)
     string geoTag = "Prototype";
     const char* inputSimFile = "ele_output.root";
 
-  TString GTPCGeoParamsFile;
-  GTPCGeoParamsFile = geoPath + "/glad-tpc/params/HYDRAprototype_FileSetup.par";
-  GTPCGeoParamsFile2 = geoPath + "/glad-tpc/params/Electronic_FileSetup.par";
-  GTPCGeoParamsFile.ReplaceAll("//", "/");
-  GTPCGeoParamsFile2.ReplaceAll("//", "/");
+    TString GTPCGeoParamsFile;
+    GTPCGeoParamsFile = geoPath + "/glad-tpc/params/HYDRAprototype_FileSetup.par";
+    GTPCGeoParamsFile2 = geoPath + "/glad-tpc/params/Electronic_FileSetup.par";
+    GTPCGeoParamsFile.ReplaceAll("//", "/");
+    GTPCGeoParamsFile2.ReplaceAll("//", "/");
 
-  FairRuntimeDb* rtdb = FairRuntimeDb::instance();
-  R3BGTPCGeoPar* geoPar = (R3BGTPCGeoPar*)rtdb->getContainer("GTPCGeoPar");
-  if (!geoPar) {
-      cout << "No R3BGTPCGeoPar can be loaded from the rtdb";
-      return;
-  }
-  R3BGTPCGasPar* gasPar = (R3BGTPCGasPar*)rtdb->getContainer("GTPCGasPar");
-  if (!gasPar) {
-      cout << "No R3BGTPCGasPar can be loaded from the rtdb";
-      return;
-  }
-  R3BGTPCElecPar* elecPar = (R3BGTPCElecPar*)rtdb->getContainer("GTPCElecPar");
-  if (!elecPar) {
-      cout << "No R3BGTPCElecPar can be loaded from the rtdb";
-      return;
-  }
+    FairRuntimeDb* rtdb = FairRuntimeDb::instance();
+    R3BGTPCGeoPar* geoPar = (R3BGTPCGeoPar*)rtdb->getContainer("GTPCGeoPar");
+    if (!geoPar)
+    {
+        cout << "No R3BGTPCGeoPar can be loaded from the rtdb";
+        return;
+    }
+    R3BGTPCGasPar* gasPar = (R3BGTPCGasPar*)rtdb->getContainer("GTPCGasPar");
+    if (!gasPar)
+    {
+        cout << "No R3BGTPCGasPar can be loaded from the rtdb";
+        return;
+    }
+    R3BGTPCElecPar* elecPar = (R3BGTPCElecPar*)rtdb->getContainer("GTPCElecPar");
+    if (!elecPar)
+    {
+        cout << "No R3BGTPCElecPar can be loaded from the rtdb";
+        return;
+    }
 
-  FairParAsciiFileIo* parIo1 = new FairParAsciiFileIo(); // Ascii file
-  parIo1->open(GTPCGeoParamsFile, "in");
-  parIo2->open(GTPCGeoParamsFile2, "in");
-  rtdb->setFirstInput(parIo1);
-  rtdb->setSecondInput(parIo2);
-  rtdb->initContainers(0);
+    FairParAsciiFileIo* parIo1 = new FairParAsciiFileIo(); // Ascii file
+    parIo1->open(GTPCGeoParamsFile, "in");
+    parIo2->open(GTPCGeoParamsFile2, "in");
+    rtdb->setFirstInput(parIo1);
+    rtdb->setSecondInput(parIo2);
+    rtdb->initContainers(0);
 
     Double_t fHalfSizeTPC_X = geoPar->GetActiveRegionx() / 2.; // X (row) 		[cm]
     Double_t fHalfSizeTPC_Y = geoPar->GetActiveRegiony() / 2.; // Y (time) 	[cm]
@@ -72,13 +75,13 @@ void reader(int evtnumber = 9)
     Int_t NPads = 128 * 44;
 
     // ELECTRONICS
-    Double_t channels = 4096;                               // 12 bits electronics
-    Double_t dynamic_range = 1.2e-13;                       // 120fC to detect particle at MIP
-    Double_t ADC_Offset = 100;                              // To avoid negative ADC values
-    Double_t ADC_conv = channels / (dynamic_range / e_equ); // converter from n. of e- to ADC value
-    Double_t shapingtime = elecPar->GetShapingTime();   //[ns]
-    Double_t TimeBinSize = elecPar->GetTimeBinSize();   //[ns]
-    Double_t NoiseRMS = elecPar->GetNoiseRMS();         //[n.e-]
+    Double_t channels = 4096;                                                    // 12 bits electronics
+    Double_t dynamic_range = 1.2e-13;                                            // 120fC to detect particle at MIP
+    Double_t ADC_Offset = 100;                                                   // To avoid negative ADC values
+    Double_t ADC_conv = channels / (dynamic_range / e_equ);                      // converter from n. of e- to ADC value
+    Double_t shapingtime = elecPar->GetShapingTime();                            //[ns]
+    Double_t TimeBinSize = elecPar->GetTimeBinSize();                            //[ns]
+    Double_t NoiseRMS = elecPar->GetNoiseRMS();                                  //[n.e-]
     Double_t thr = (elecPar->GetThreshold()) * NoiseRMS * ADC_conv + ADC_Offset; //[n.e-]
     Double_t Gain = elecPar->GetGain();
     Double_t Theta = elecPar->GetTheta();

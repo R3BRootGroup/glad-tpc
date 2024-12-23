@@ -33,12 +33,14 @@ void reader(const char* inputSimFile)
 
     FairRuntimeDb* rtdb = FairRuntimeDb::instance();
     R3BGTPCGeoPar* geoPar = (R3BGTPCGeoPar*)rtdb->getContainer("GTPCGeoPar");
-    if (!geoPar) {
+    if (!geoPar)
+    {
         cout << "No R3BGTPCGeoPar can be loaded from the rtdb";
         return;
     }
     R3BGTPCGasPar* gasPar = (R3BGTPCGasPar*)rtdb->getContainer("GTPCGasPar");
-    if (!gasPar) {
+    if (!gasPar)
+    {
         cout << "No R3BGTPCGasPar can be loaded from the rtdb";
         return;
     }
@@ -78,7 +80,7 @@ void reader(const char* inputSimFile)
     TH2D* hdepth1InPads = 0;
     TH2D* hdepth2InPads = 0;
     TH2D* Hitmap = 0;
-    TH1S* htime = new TH1S("htime","time",512,0,511);
+    TH1S* htime = new TH1S("htime", "time", 512, 0, 511);
 
     htrackInPads = new TH2D("htrackInPads",
                             "All tracks in the XZ Pads Plane",
@@ -176,8 +178,9 @@ void reader(const char* inputSimFile)
                 xPad = cal->GetPadId() % (Int_t)(45);
                 zPad = (cal->GetPadId() - xPad) / (45);
                 adc = cal->GetADC();
-                for(int i=0;i<512;i++) {
-                    htime->SetBinContent(i,adc[i]);
+                for (int i = 0; i < 512; i++)
+                {
+                    htime->SetBinContent(i, adc[i]);
                 }
                 tPad = htime->GetMean();
                 hdriftTimeInPads->Fill(zPad, xPad, tPad); // NOTE: THAT IS ACCUMULATED TIME!!.

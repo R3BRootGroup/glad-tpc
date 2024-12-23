@@ -67,7 +67,8 @@ void ana_lang(TString GEOTAG = "Prototype")
     // RTDB
     FairRuntimeDb* rtdb = FairRuntimeDb::instance();
     R3BGTPCGeoPar* geoPar = (R3BGTPCGeoPar*)rtdb->getContainer("GTPCGeoPar");
-    if (!geoPar) {
+    if (!geoPar)
+    {
         cout << "No R3BGTPCGeoPar can be loaded from the rtdb";
         return;
     }
@@ -75,7 +76,7 @@ void ana_lang(TString GEOTAG = "Prototype")
     Double_t fHalfSizeTPC_X = geoPar->GetActiveRegionx() / 2; // 50cm in X (row)
     Double_t fHalfSizeTPC_Y = geoPar->GetActiveRegiony() / 2; // 20cm in Y (time)
     Double_t fHalfSizeTPC_Z = geoPar->GetActiveRegionz() / 2; // 100cm in Z (column)
-    Double_t fSizeOfVirtualPad = segeoPartup->GetPadSize();        // 1: pads of 1cm^2 , 10: pads of 1mm^2
+    Double_t fSizeOfVirtualPad = segeoPartup->GetPadSize();   // 1: pads of 1cm^2 , 10: pads of 1mm^2
 
     // END OF SETTINGS
 
