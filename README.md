@@ -1,4 +1,4 @@
-# GLAD-TPC Software [![license](https://alfa-ci.gsi.de/shields/badge/license-GPL--3.0-orange.svg)](COPYRIGHT) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14291537.svg)](https://doi.org/10.5281/zenodo.14291537)
+# GLAD-TPC Software [![license](https://alfa-ci.gsi.de/shields/badge/license-LGPL--3.0-orange.svg)](COPYRIGHT) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14291537.svg)](https://doi.org/10.5281/zenodo.14291537)
 
 [![static analysis](https://github.com/R3BRootGroup/glad-tpc/actions/workflows/static_analysis.yml/badge.svg)](https://github.com/R3BRootGroup/glad-tpc/actions/workflows/static_analysis.yml) [![CI-CD](https://github.com/R3BRootGroup/glad-tpc/actions/workflows/main.yml/badge.svg)](https://github.com/R3BRootGroup/glad-tpc/actions/workflows/main.yml)
 
@@ -12,13 +12,17 @@ For the software-related user support you can post a new topic on our [forum](ht
 
 ## License
 
-GLAD-TPC is distributed under the terms of the GNU Lesser General Public Licence version 3 ([GPLv3](https://github.com/R3BRootGroup/glad-tpc/blob/dev/LICENSE)).
+GLAD-TPC is distributed under the terms of the GNU Lesser General Public Licence version 3 ([LGPLv3](https://github.com/R3BRootGroup/glad-tpc/blob/dev/LICENSE)).
 
 ## Release Information
 Please visit [releases](https://github.com/R3BRootGroup/glad-tpc/releases)
 
 ## Contributing
 Please ask your questions, request features, and report issues by [creating a github issue](https://github.com/R3BRootGroup/glad-tpc/issues/new/choose).
+
+## Using the Project Template
+
+GLAD-TPC as part of R3BRoot delivers various project templates that can be used as a starting point for anybody who would like to build simulation and reconstruction algorithms. The project Templates are located in the [R3BRoot/template](template) directory.
 
 ## Code Formatting
 The GLAD-TPC project (as part of R3BRoot) uses clang-format-15 to ensure a common code formatting. The script "apply-format.sh" can be used for this purpose: 
