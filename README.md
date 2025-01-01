@@ -4,7 +4,7 @@
 
 ## The GLAD-TPC Framework
 
-The GLAD-TPC (Time Projection Chamber) detector, also known as HYDRA, is part of the R3B (Reactions with Relativistic Radioactive Beams) experimental setup at the GSI/FAIR research center (Facility for Antiproton and Ion Research). The GLAD-TPC software allows for Monte Carlo simulations and experimental data analysis, enabling seamless integration with the data analysis workflows of other R3B detectors within the [R3BRoot](https://github.com/R3BRootGroup/R3BRoot) software. GLAD-TPC is a source distribution with recurring releases for macOS and Linux.
+The GLAD-TPC (Time Projection Chamber) detector, also known as HYDRA, is part of the R3B (Reactions with Relativistic Radioactive Beams) experimental setup at the GSI/FAIR research center (Facility for Antiproton and Ion Research). The GLAD-TPC software allows for Monte Carlo simulations and experimental data analysis, enabling seamless integration with the data analysis workflows of other R3B detectors within the [R3BRoot](https://github.com/R3BRootGroup/R3BRoot) software. GLAD-TPC software is a source distribution with recurring releases for macOS and Linux.
 
 ## Discussion Forum
 
@@ -27,16 +27,16 @@ GLAD-TPC as part of R3BRoot delivers various project templates that can be used 
 ## Code Formatting
 The GLAD-TPC project (as part of R3BRoot) uses clang-format-15 to ensure a common code formatting. The script "apply-format.sh" can be used for this purpose: 
 ~~~bash
-source apply-format.sh
+bash apply-format.sh
 ~~~
 
 ## Step by Step Installation
 
 ### Required software
 
-First, you will need to install FairSoft and FairRoot and R3BRoot. For more details: [instructions](https://www.r3broot.gsi.de/installation). 
-FaiSoft version: nov22p1 
-FairROOT version: v18.8.0
+First, you will need to install FairSoft, FairRoot and R3BRoot. For more details: [instructions](https://www.r3broot.gsi.de/installation). 
+FaiSoft version: nov22p1 or later
+FairROOT version: v18.2.1 or later
 Newer versions will not work properly with the simulation.
 
 ### Configure and compile
