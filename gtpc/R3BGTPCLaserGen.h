@@ -58,7 +58,6 @@ class R3BGTPCLaserGen : public FairTask
                             Double_t y_in,
                             Double_t z_in,
                             Double_t maxLength);
-    void SetSizeOfVirtualPad(Double_t size);
     void SetNumberOfGeneratedElectrons(Double_t ele);
     void SetProjPointsAsOutput() { outputMode = 1; }
     void SetCalDataAsOutput() { outputMode = 0; }
@@ -89,16 +88,15 @@ class R3BGTPCLaserGen : public FairTask
 
     std::map<Int_t, R3BGTPCProjPoint*> fProjPointMap;
 
-    Double_t fEIonization;      //!< Effective ionization energy of gas [eV] NOTUSED
-    Double_t fDriftVelocity;    //!< Drift velocity in gas [cm/ns]
-    Double_t fTransDiff;        //!< Transversal diffusion coefficient [cm^2/ns]
-    Double_t fLongDiff;         //!< Longitudinal diffusion coefficient [cm^2/ns]
-    Double_t fFanoFactor;       //!< Fano factor to calculate electron number
-                                //!< fluctuations NOTUSED
-    Double_t fHalfSizeTPC_X;    //!< Half size X of the TPC drift volume [cm]
-    Double_t fHalfSizeTPC_Y;    //!< Half size Y of the TPC drift volume [cm]
-    Double_t fHalfSizeTPC_Z;    //!< Half size Z of the TPC drift volume [cm]
-    Double_t fSizeOfVirtualPad; //!< Number of virtual pad division per cm (default 1)
+    Double_t fEIonization;   //!< Effective ionization energy of gas [eV] NOTUSED
+    Double_t fDriftVelocity; //!< Drift velocity in gas [cm/ns]
+    Double_t fTransDiff;     //!< Transversal diffusion coefficient [cm^2/ns]
+    Double_t fLongDiff;      //!< Longitudinal diffusion coefficient [cm^2/ns]
+    Double_t fFanoFactor;    //!< Fano factor to calculate electron number
+                             //!< fluctuations NOTUSED
+    Double_t fHalfSizeTPC_X; //!< Half size X of the TPC drift volume [cm]
+    Double_t fHalfSizeTPC_Y; //!< Half size Y of the TPC drift volume [cm]
+    Double_t fHalfSizeTPC_Z; //!< Half size Z of the TPC drift volume [cm]
     Double_t fDriftEField;
     Double_t fDriftTimeStep;
     Double_t fTimeBinSize;

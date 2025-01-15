@@ -102,6 +102,12 @@ void reader(const char* inputSimFile, Int_t event)
     Double_t fHalfSizeTPC_Z = geoPar->GetActiveRegionz() / 2.; // 100cm in Z (column)
     Double_t fSizeOfVirtualPad = geoPar->GetPadSize();         // 1: pads of 1cm^2 , 10: pads of 1mm^2
     Double_t fMaxDriftTime = (round)((geoPar->GetActiveRegiony() / gasPar->GetDriftVelocity()) * pow(10, -3)); // us
+    std::shared_ptr<R3BGTPCMap> fTPCMap;
+    TH2* fPadPlane;
+    fTPCMap = std::make_shared<R3BGTPCMap>();
+    fTPCMap->GeneratePadPlane();
+    fPadPlane = fTPCMap->GetPadPlane();
+
     // END OF SETUP
 
     gROOT->SetStyle("Default");
@@ -230,9 +236,14 @@ void reader(const char* inputSimFile, Int_t event)
                 // xPad = ppoint->GetVirtualPadID() % (Int_t)(44);
                 // zPad = (ppoint->GetVirtualPadID() - xPad) / (44);
                 tPad = ((TH1S*)(ppoint->GetTimeDistribution()))->GetMean();
+                /*
                 htrackInPads->GetBinXYZ(ppoint->GetVirtualPadID(), xPad, zPad, yPad);
                 xPad--;
                 zPad--;
+                */
+
+                xPad = fTPCMap->CalcPadCenter(ppoint->GetVirtualPadID())[1] / 2;
+                zPad = fTPCMap->CalcPadCenter(ppoint->GetVirtualPadID())[0] / 2;
 
                 htrackInPads->Fill(xPad, zPad, ppoint->GetCharge());
                 hdriftTimeInPads->Fill(xPad, zPad, tPad);

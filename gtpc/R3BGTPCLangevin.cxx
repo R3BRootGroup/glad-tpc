@@ -39,11 +39,9 @@ R3BGTPCLangevin::R3BGTPCLangevin()
     fTransDiff = 0;
     fLongDiff = 0;
     fFanoFactor = 0;
-    fSizeOfVirtualPad = 0;
     fHalfSizeTPC_X = 0.;
     fHalfSizeTPC_Y = 0.;
     fHalfSizeTPC_Z = 0.;
-    fSizeOfVirtualPad = 0;
     fTimeBinSize = 0;
     fDriftEField = 0.;
     fDriftTimeStep = 0.;
@@ -63,11 +61,6 @@ R3BGTPCLangevin::~R3BGTPCLangevin()
     {
         fGTPCCalDataCA->Delete();
         delete fGTPCCalDataCA;
-    }
-    if (fGTPCProjPointCA)
-    {
-        fGTPCProjPointCA->Delete();
-        delete fGTPCProjPointCA;
     }
     if (fMCTrackCA)
     {
@@ -123,7 +116,6 @@ void R3BGTPCLangevin::SetParameter()
     fHalfSizeTPC_X = fGTPCGeoPar->GetActiveRegionx() / 2.;
     fHalfSizeTPC_Y = fGTPCGeoPar->GetActiveRegiony() / 2.;
     fHalfSizeTPC_Z = fGTPCGeoPar->GetActiveRegionz() / 2.;
-    fSizeOfVirtualPad = fGTPCGeoPar->GetPadSize(); // 1 means pads of 1cm^2, 10 means pads of 1mm^2, ...
     fDetectorType = fGTPCGeoPar->GetDetectorType();
     fOffsetX = fGTPCGeoPar->GetGladOffsetX(); // X offset [cm]
     fOffsetZ = fGTPCGeoPar->GetGladOffsetZ(); // Z offset [cm]

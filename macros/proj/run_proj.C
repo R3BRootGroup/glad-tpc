@@ -18,7 +18,7 @@ void run_proj(TString GEOTAG = "Prototype")
     inFile = "../sim/" + GEOTAG + "/sim.root";
     parFile = "../sim/" + GEOTAG + "/par.root";
     outFile = "./" + GEOTAG + "/proj.root";
-    GTPCGeoParamsFile = geoPath + "/glad-tpc/params/HYDRAprototype_FileSetup.par";
+    GTPCGeoParamsFile = geoPath + "/glad-tpc/params/HYDRAprototype_FileSetup_v2_02082022.par";
 
     GTPCGeoParamsFile.ReplaceAll("//", "/");
 
@@ -57,7 +57,7 @@ void run_proj(TString GEOTAG = "Prototype")
                             gasPar->GetTransDiff(),
                             gasPar->GetFanoFactor());
     pro->SetSizeOfVirtualPad(geoPar->GetPadSize()); // 1 means pads of 1cm^2, 10 means pads of 1mm^2...
-
+    pro->SetProjPointsAsOutput();
     fRun->AddTask(pro);
 
     fRun->Init();

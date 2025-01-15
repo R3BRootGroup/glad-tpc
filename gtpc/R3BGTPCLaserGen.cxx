@@ -123,7 +123,6 @@ void R3BGTPCLaserGen::SetParameter()
     fHalfSizeTPC_X = fGTPCGeoPar->GetActiveRegionx() / 2.; //[cm]
     fHalfSizeTPC_Y = fGTPCGeoPar->GetActiveRegiony() / 2.; //[cm]
     fHalfSizeTPC_Z = fGTPCGeoPar->GetActiveRegionz() / 2.; //[cm]
-    fSizeOfVirtualPad = fGTPCGeoPar->GetPadSize();         // 1 means pads of 1cm^2, 10 means pads of 1mm^2, ...
     fOffsetX = fGTPCGeoPar->GetTargetOffsetX();            // X offset [cm]
     fOffsetZ = fGTPCGeoPar->GetTargetOffsetZ();            // Z offset [cm]
     fTargetOffsetX = fGTPCGeoPar->GetGladOffsetX();
@@ -222,11 +221,6 @@ void R3BGTPCLaserGen::SetLaserParameters(Double_t alpha,
     fZIn = z_in;            // cm
     fMaxLength = maxLength; // cm
                             // fPointDistance = pointDistance; // cm
-}
-
-void R3BGTPCLaserGen::SetSizeOfVirtualPad(Double_t size)
-{
-    fSizeOfVirtualPad = size; // 1 means pads of 1cm^2, 10 means pads of 1mm^2, ...
 }
 
 void R3BGTPCLaserGen::SetNumberOfGeneratedElectrons(Double_t ele)

@@ -37,13 +37,14 @@ R3BGTPCProjector::R3BGTPCProjector()
     fTransDiff = 0;
     fLongDiff = 0;
     fFanoFactor = 0;
-    fSizeOfVirtualPad = 0;
     fTimeBinSize = 0;
     fHalfSizeTPC_X = 0.;
     fHalfSizeTPC_Y = 0.;
     fHalfSizeTPC_Z = 0.;
     fDetectorType = 0;
+    fDriftTimeStep = 0.;
     outputMode = 0;
+    fDriftEField = 0;
     fTPCMap = std::make_shared<R3BGTPCMap>();
 }
 
@@ -60,12 +61,6 @@ R3BGTPCProjector::~R3BGTPCProjector()
         fGTPCCalDataCA->Delete();
         delete fGTPCCalDataCA;
     }
-    /*if (fGTPCProjPoint)
-       {
-
-         fGTPCProjPoint->Delete();
-         delete fGTPCProjPoint;
-     }*/
     if (MCTrackCA)
     {
         MCTrackCA->Delete();
@@ -121,14 +116,14 @@ void R3BGTPCProjector::SetParameter()
     fHalfSizeTPC_Y = fGTPCGeoPar->GetActiveRegiony() / 2.;
     fHalfSizeTPC_Z = fGTPCGeoPar->GetActiveRegionz() / 2.;
     fDetectorType = fGTPCGeoPar->GetDetectorType();
+    fOffsetX = fGTPCGeoPar->GetGladOffsetX(); // X offset [cm]
+    fOffsetZ = fGTPCGeoPar->GetGladOffsetZ(); // Z offset [cm]
 
-    // TODO
-    // From electronic properties
-    // fDriftEField = fGTPCElecPar->GetDriftEField();     // drift E field in V/m
-    // fDriftTimeStep = fGTPCElecPar->GetDriftTimeStep(); // time step for drift
-    // params calculation
-    fTimeBinSize = 1000.0; // fGTPCElecPar->GetTimeBinSize();     // time step for
-                           // drift params calculation
+    fDriftEField = fGTPCElecPar->GetDriftEField();     // drift E field in V/m
+    fDriftTimeStep = fGTPCElecPar->GetDriftTimeStep(); // time step for drift
+
+    fGTPCElecPar->GetTimeBinSize(); // [ns]
+    fGTPCElecPar->GetTimeBinSize(); // drift params calculation
 }
 
 InitStatus R3BGTPCProjector::Init()
@@ -200,11 +195,6 @@ void R3BGTPCProjector::SetDriftParameters(Double_t ion,
     fTransDiff = tDiff;      // [cm^(-1/2)]
     fLongDiff = lDiff;       // [cm^(-1/2)]
     fFanoFactor = fanoFactor;
-}
-
-void R3BGTPCProjector::SetSizeOfVirtualPad(Double_t size)
-{
-    fSizeOfVirtualPad = size; // 1 means pads of 1cm^2, 5 means pads of 2mm^2, ...
 }
 
 void R3BGTPCProjector::Exec(Option_t*)
@@ -335,22 +325,20 @@ void R3BGTPCProjector::Exec(Option_t*)
             // the padID Z is multiplied by 45 and since the size of the pad is 2x2
             // mm^2, X and Z are divided by 0.2 cm ZOffset- z-> the first pad row in
             // the laboratory frame
-            double ZOffset = 272.7;
-            // XOffset-x-> the first pad column in the laboratory frame
-            double XOffset = 5.8;
+            // fOffsetX-x-> the first pad column in the laboratory frame
 
-            if (projZ < ZOffset)
-                projZ = ZOffset;
-            if (projZ > ZOffset + 2 * fHalfSizeTPC_Z)
-                projZ = ZOffset + 2 * fHalfSizeTPC_Z;
-            if (projX < XOffset)
-                projX = XOffset;
-            if (projX > XOffset + 2 * fHalfSizeTPC_X)
-                projX = XOffset + 2 * fHalfSizeTPC_X;
+            if (projZ < fOffsetZ)
+                projZ = fOffsetZ;
+            if (projZ > fOffsetZ + 2 * fHalfSizeTPC_Z)
+                projZ = fOffsetZ + 2 * fHalfSizeTPC_Z;
+            if (projX < fOffsetX)
+                projX = fOffsetX;
+            if (projX > fOffsetX + 2 * fHalfSizeTPC_X)
+                projX = fOffsetX + 2 * fHalfSizeTPC_X;
 
             // std::cout<<" proj Z "<<projZ<<" - proj Y "<<projY<<"\n";
-            Int_t padID = fPadPlane->Fill((projZ - ZOffset) * 10.0,
-                                          (projX - XOffset) * 10.0); // in mm
+            Int_t padID = fPadPlane->Fill((projZ - fOffsetZ) * 10.0,
+                                          (projX - fOffsetX) * 10.0); // in mm
 
             // Deprecated code to remove
             /*(if (fDetectorType == 1)

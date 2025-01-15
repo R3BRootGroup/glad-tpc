@@ -56,8 +56,6 @@ class R3BGTPCProjector : public FairTask
     /** Set parameters -- To be removed when parameter containers are ready **/
     void SetDriftParameters(Double_t ion, Double_t driftv, Double_t tDiff, Double_t lDiff, Double_t fanoFactor);
 
-    void SetSizeOfVirtualPad(Double_t size);
-
     void SetProjPointsAsOutput() { outputMode = 1; }
     void SetCalDataAsOutput() { outputMode = 0; }
 
@@ -96,6 +94,10 @@ class R3BGTPCProjector : public FairTask
     Double_t fHalfSizeTPC_Z;    //!< Half size Z of the TPC drift volume [cm]
     Double_t fSizeOfVirtualPad; //!< Number of virtual pad division per cm (default 1)
     Double_t fTimeBinSize;      //!< Time size of each bin in the time vector [ns]
+    Double_t fOffsetX;          //!< Offset X between the active target and the padplane
+    Double_t fOffsetZ;          //!< Offset Z between the active target and the padplane
+    Double_t fDriftEField;      //!< Drift electric field [V/cm]
+    Double_t fDriftTimeStep;    //!< Time Step between drift parameters calculation [ns]
     Int_t fDetectorType;        //!< Detector type: 1 for prototype, 2 for FullBeamIn, 3
                                 //!< for FullBeamOut
     Int_t outputMode;           //!< Selects Cal(0) or ProjPoint(1) as output level. Default 0
