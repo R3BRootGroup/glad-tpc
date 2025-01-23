@@ -56,7 +56,6 @@ void run_proj(TString GEOTAG = "Prototype")
                             gasPar->GetLongDiff(),
                             gasPar->GetTransDiff(),
                             gasPar->GetFanoFactor());
-    pro->SetSizeOfVirtualPad(geoPar->GetPadSize()); // 1 means pads of 1cm^2, 10 means pads of 1mm^2...
     pro->SetProjPointsAsOutput();
     fRun->AddTask(pro);
 
