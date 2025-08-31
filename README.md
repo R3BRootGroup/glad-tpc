@@ -1,10 +1,11 @@
-# GLAD-TPC Software [![license](https://alfa-ci.gsi.de/shields/badge/license-LGPL--3.0-orange.svg)](COPYRIGHT) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14291537.svg)](https://doi.org/10.5281/zenodo.14291537)
+# GLAD-TPC Software [![license](https://img.shields.io/badge/License-GPLv3-blue.svg)](COPYRIGHT) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14291537.svg)](https://doi.org/10.5281/zenodo.14291537)
 
 [![static analysis](https://github.com/R3BRootGroup/glad-tpc/actions/workflows/static_analysis.yml/badge.svg)](https://github.com/R3BRootGroup/glad-tpc/actions/workflows/static_analysis.yml) [![CI-CD](https://github.com/R3BRootGroup/glad-tpc/actions/workflows/main.yml/badge.svg)](https://github.com/R3BRootGroup/glad-tpc/actions/workflows/main.yml)
+[![dashboard](https://img.shields.io/badge/dashboard-glad--tpc-blue?labelColor=gray&style=flat)](https://cdash.gsi.de/index.php?project=R3BRoot)
 
 ## The GLAD-TPC Framework
 
-The GLAD-TPC (Time Projection Chamber) detector, also known as HYDRA, is part of the R3B (Reactions with Relativistic Radioactive Beams) experimental setup at the GSI/FAIR research center (Facility for Antiproton and Ion Research). The GLAD-TPC software allows for Monte Carlo simulations and experimental data analysis, enabling seamless integration with the data analysis workflows of other R3B detectors within the [R3BRoot](https://github.com/R3BRootGroup/R3BRoot) software. GLAD-TPC software is a source distribution with recurring releases for macOS and Linux.
+The GLAD-TPC (Time Projection Chamber) detector, also known as HYDRA, is part of the R3B (Reactions with Relativistic Radioactive Beams) experimental setup at the GSI/FAIR research center (Facility for Antiproton and Ion Research). The GLAD-TPC software allows for Monte Carlo simulations and experimental data analysis, enabling seamless integration with the data analysis workflows of other R3B detectors within the [R3BRoot](https://github.com/R3BRootGroup/R3BRoot) software. GLAD-TPC software is a source distribution with recurring releases for MacOS and Linux.
 
 ## Discussion Forum
 
@@ -27,14 +28,14 @@ GLAD-TPC as part of R3BRoot delivers various project templates that can be used 
 ## Code Formatting
 The GLAD-TPC project (as part of R3BRoot) uses clang-format-15 to ensure a common code formatting. The script "apply-format.sh" can be used for this purpose: 
 ~~~bash
-bash apply-format.sh
+. apply-format.sh
 ~~~
 
 ## Step by Step Installation
 
 ### Required software
 
-First, you will need to install FairSoft, FairRoot and R3BRoot. For more details: [instructions](https://www.r3broot.gsi.de/installation). 
+First, you will need to install FairSoft, FairRoot and R3BRoot. For more details: [R3BRoot README](https://github.com/R3BRootGroup/R3BRoot/blob/dev/README.md). 
 - FaiSoft version: nov22p1 or later
 - FairROOT version: v18.2.1 or later
 
@@ -80,9 +81,23 @@ It is possible to use the bash script `run_full.sh` to run all these steps at on
 
 > ...Under development...
 
+## Tested systems
+
+The following systems are tested regularly.
+
+| **OS Name** | **Arch** | **OS Version** | **Compiler**  | **CMake**       | **C++ Version** |
+| ----------- | -------- | -------------- | ------------- | --------------- | --------------- |
+| Almalinux   | x86\_64  | 9.3            | GCC 11.4.1    | 3.27.9 / 4.0.3  | C++17 / C++20   |
+| Almalinux   | x86\_64  | 9.4            | GCC 14.2.0    | 3.30.6          | C++17           |
+| RHEL        | x86\_64  | 9.6            | GCC 14.2.0    | 3.30.6          | C++17           |
+| Debian      | x86\_64  | 10             | GCC 8.3.0     | 3.27.4 / 4.0.3  | C++17           |
+| Debian      | x86\_64  | 11             | GCC 10.2.1    | 3.27.4 / 3.30.0 | C++17           |
+| Debian      | x86\_64  | 12             | GCC 12.2.0    | 3.27.4 / 3.30.0 | C++17 / C++20   |
+| Ubuntu      | x86\_64  | 24.04          | GCC 13.3.0    | 3.28.3 / 4.0.3  | C++17 / C++20   |
+| Ubuntu      | x86\_64  | 25.04          | GCC 14.2.0    | 3.31.6 / 4.0.3  | C++17           |
 
 ## More Information
 
-* [Static analyzer using Clang-tidy](config/clang_tidy/README.md)
-* [CMake build system for R3BRoot/glad-tpc](doc/cmake_usage.md)
-* [How to use an unmerged pull request](doc/git_usage.md#fetch-the-update-from-an-unmerged-pull-request-pr)
+* [Static analyzer using Clang-tidy](https://github.com/R3BRootGroup/R3BRoot/blob/dev/config/clang_tidy/README.md)
+* [CMake build system for R3BRoot/glad-tpc](https://github.com/R3BRootGroup/R3BRoot/blob/dev/doc/cmake_usage.md)
+* [How to use an unmerged pull request](https://github.com/R3BRootGroup/R3BRoot/blob/dev/doc/git_usage.md#fetch-the-update-from-an-unmerged-pull-request-pr)

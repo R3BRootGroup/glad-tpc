@@ -60,7 +60,7 @@
             "affiliation": "Universität zu Köln, 50923 Köln, Germany"
         }
     ],
-    "description": "The GLAD-TPC (Time Projection Chamber) detector, also known as HYDRA, is part of the R3B (Reactions with Relativistic Radioactive Beams) experimental setup at the GSI/FAIR research center (Facility for Antiproton and Ion Research). The GLAD-TPC software allows for Monte Carlo simulations and experimental data analysis, enabling seamless integration with the data analysis workflows of other R3B detectors. This state-of-the-art tracking detector is crucial to the R3B research program, supporting detailed investigations into light hypernuclei and the production background of baryonic resonances. The GLAD-TPC software is a source distribution with recurring releases for macOS and Linux.",
+    "description": "The GLAD-TPC (Time Projection Chamber) detector, also known as HYDRA, is part of the R3B (Reactions with Relativistic Radioactive Beams) experimental setup at the GSI/FAIR research center (Facility for Antiproton and Ion Research). The GLAD-TPC software allows for Monte Carlo simulations and experimental data analysis, enabling seamless integration with the data analysis workflows of other R3B detectors. This state-of-the-art tracking detector is crucial to the R3B research program, supporting detailed investigations into light hypernuclei and the production background of baryonic resonances. The GLAD-TPC software is a source distribution with recurring releases for MacOS and Linux.",
     "related_identifiers": [
         {
             "identifier": "https://github.com/FairRootGroup/FairSoft/",
@@ -107,7 +107,7 @@
     ],
     "operatingSystem": [
         "Linux",
-        "macOS"
+        "MacOS"
     ],
     "license": "LGPL-3.0-only",
     "keywords": [
