@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 //    - Macro for study the differences between GTPCPoints and GTPCHitData.
 //
-//    - Author: David García Allo
+//    - Author: David García Allow
 //    - Usage: root -l residues.C
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -81,7 +81,7 @@ void residues(TString simFilename = "sim.root", TString recoFilename = "output_r
     TTree* recoTree;
     TClonesArray* GTPCHitDataCA;
     TBranch* branchGTPCHitData;
-    R3BGTPCHitData** hits;                                  // Posible error as in the simFile
+    R3BGTPCHitData** hits;                                  // Possible error as in the simFile
     recoTree = (TTree*)recoFile->Get("evt");                // Get Tree
     GTPCHitDataCA = new TClonesArray("R3BGTPCHitData", 5);  // Create the array //What arg 5 means? Check it
     branchGTPCHitData = recoTree->GetBranch("GTPCHitData"); // Get the branch of Hits
@@ -380,6 +380,6 @@ void residues(TString simFilename = "sim.root", TString recoFilename = "output_r
 
     // Ending the macro
     timer.Stop();
-    cout << "\n[INFO] Macro finished succesfully !!" << endl;
+    cout << "\n[INFO] Macro finished successfully !!" << endl;
     cout << "Real time: " << timer.RealTime() << "s; CPU time: " << timer.CpuTime() << "s" << endl;
 }

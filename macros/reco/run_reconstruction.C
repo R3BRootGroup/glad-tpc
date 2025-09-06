@@ -52,8 +52,8 @@ void run_reconstruction(TString fileName = "lang.root")
 
     timer.Stop();
 
-    cout << "Macro finished succesfully!" << endl;
-    cout << "Output file writen: " << outFile << endl;
-    cout << "Parameter file writen: " << parFile << endl;
+    cout << "Macro finished successfully!" << endl;
+    cout << "Output file written: " << outFile << endl;
+    cout << "Parameter file written: " << parFile << endl;
     cout << "Real time: " << timer.RealTime() << "s, CPU time: " << timer.CpuTime() << "s" << endl;
 }

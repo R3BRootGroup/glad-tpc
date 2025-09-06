@@ -171,7 +171,7 @@ void simHYDRA(Int_t nEvents = 1000, TString GEOTAG = "Prototype", TString genera
     Double_t rtime = timer.RealTime();
     Double_t ctime = timer.CpuTime();
     cout << endl << endl;
-    cout << "Macro finished succesfully." << endl;
+    cout << "Macro finished successfully." << endl;
     cout << "Output file is " << outFile << endl;
     cout << "Parameter file is " << parFile << endl;
     cout << "Real time " << rtime << " s, CPU time " << ctime << "s" << endl << endl;

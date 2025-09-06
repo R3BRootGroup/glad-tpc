@@ -69,7 +69,7 @@ class R3BGTPCGeoPar : public FairParGenericSet
     const Double_t GetFrameThickness() { return FrameThickness; }
     const Double_t GetWindowx() { return Windowx; }
     const Double_t GetWindowy() { return Windowy; }
-    const Double_t GetWindowz() { return Windowz; }
+    const Double_t GetWindowz() { return Windows; }
     const Int_t GetPadSize() { return PadSize; }
     // GLAD____________________________________________________________________________
     const Double_t GetFieldAngle() { return FieldAngle; }
@@ -105,7 +105,7 @@ class R3BGTPCGeoPar : public FairParGenericSet
     void SetFrameThickness(Double_t value) { FrameThickness = value; }
     void SetWindowx(Double_t value) { Windowx = value; }
     void SetWindowy(Double_t value) { Windowy = value; }
-    void SetWindowz(Double_t value) { Windowz = value; }
+    void SetWindowz(Double_t value) { Windows = value; }
     void SetPadSize(Int_t value) { PadSize = value; }
 
     // GLAD____________________________________________________________________________
@@ -126,7 +126,7 @@ class R3BGTPCGeoPar : public FairParGenericSet
     Double_t TPCLx, TPCLy, TPCLz; // [cm]
     // Double_t TPCCenterX, TPCCenterY, TPCCenterZ;          // [cm]
     Double_t FrameThickness;                              // [cm]
-    Double_t Windowx, Windowy, Windowz;                   // [cm]
+    Double_t Windowx, Windowy, Windows;                   // [cm]
     Int_t PadSize;                                        // virtual: 1 means pads of 1cm^2, 10 means pads of 1mm^2, ...
     Double_t TargetRadius;                                // [cm]
     Double_t TargetLength;                                // [cm]

@@ -1,6 +1,6 @@
 //  -------------------------------------------------------------------------
 //
-//   ----- Macro to check and analize GTPCPoint
+//   ----- Macro to check and analyze GTPCPoint
 //         Author: Simone Velardita
 //  -------------------------------------------------------------------------
 //
@@ -34,7 +34,7 @@ void Analysis(TString GEOTAG = "Prototype")
     Bool_t checkPoints = kTRUE;   // Defines Histogram for Points
 
     TString inFile;
-    cout << "\033[1;31mBE CAREFULL\033[0m:if you change the target position, you need to change as well Z_target in "
+    cout << "\033[1;31mBE CAREFULLY\033[0m:if you change the target position, you need to change as well Z_target in "
             "the code!"
          << endl;
     Double_t Z_target = 222.7; // this value should change with the different target position
@@ -233,7 +233,7 @@ void Analysis(TString GEOTAG = "Prototype")
             h1_MC_Mult->Fill(primaries);
         }
 
-        // GTPC Point information[points inside tha Active Region]
+        // GTPC Point information[points inside the Active Region]
         if (checkPoints)
         {
             double ll = 0, ee = 0;
@@ -393,7 +393,7 @@ void Analysis(TString GEOTAG = "Prototype")
         Double_t rtime = timer.RealTime();
         Double_t ctime = timer.CpuTime();
         cout << endl << endl;
-        cout << "Macro finished succesfully." << endl;
+        cout << "Macro finished successfully." << endl;
         cout << "Real time " << rtime << " sec, CPU time " << ctime << "sec" << endl << endl;
 
         // OUTPUT FILE

@@ -57,7 +57,7 @@ void R3BGTPCGeoPar::putParams(FairParamList* list)
     list->add("GTPCFrameThickness", FrameThickness);
     list->add("GTPCWindowx", Windowx);
     list->add("GTPCWindowy", Windowy);
-    list->add("GTPCWindowz", Windowz);
+    list->add("GTPCWindowz", Windows);
     list->add("GTPCPadSize", PadSize);
     list->add("GTPCTargetRadius", TargetRadius);
     list->add("GTPCTargetLength", TargetLength);
@@ -161,7 +161,7 @@ Bool_t R3BGTPCGeoPar::getParams(FairParamList* list)
         LOG(info) << "---Could not initialize GTPCWindowy";
         return kFALSE;
     }
-    if (!(list->fill("GTPCWindowz", &Windowz)))
+    if (!(list->fill("GTPCWindowz", &Windows)))
     {
         LOG(info) << "---Could not initialize GTPCWindowz";
         return kFALSE;
@@ -269,7 +269,7 @@ void R3BGTPCGeoPar::printParams()
               << "GTPCFrameThickness " << FrameThickness << " cm" << endl;
     LOG(info) << "GTPCWindowx " << Windowx << " cm,  "
               << "GTPCWindowy " << Windowy << " cm,  "
-              << "GTPCWindowz " << Windowz << " cm,  "
+              << "GTPCWindowz " << Windows << " cm,  "
               << "GTPCPadSize " << PadSize << " arbitrary units (virtual)" << endl;
     LOG(info) << "GTPCTargetRadius " << TargetRadius << " cm,  "
               << "GTPCTargetLength " << TargetLength << " cm,  "

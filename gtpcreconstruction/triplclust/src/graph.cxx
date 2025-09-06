@@ -105,7 +105,7 @@ void mst(const std::vector<Edge>& edges, std::vector<Edge>& mst_edges, size_t vc
 }
 
 // create a cluster of connected components which is returned in *new_cluster*.
-// *vertex* is the index of the start vertex. *visited* is a list of the visted
+// *vertex* is the index of the start vertex. *visited* is a list of the visited
 // states from every vertecy. *cluster* is used to get the original point index
 // of a vertex. *adj* are the adjacent lists of all vertices.
 void dfs_util(std::vector<size_t>& new_cluster,
@@ -134,7 +134,7 @@ void dfs_util(std::vector<size_t>& new_cluster,
 //-------------------------------------------------------------------
 // Split *cluster* in multiple new clusters and return the result in
 // *new_clusters". The mst of the cluster is created and all edges are
-// removed with a wheigth > *dmax*. The connected comonents are computed
+// removed with a wheigth > *dmax*. The connected components are computed
 // and returned as new clusters if their size is >= *min_size*.
 //-------------------------------------------------------------------
 void max_step(std::vector<std::vector<size_t>>& new_clusters,

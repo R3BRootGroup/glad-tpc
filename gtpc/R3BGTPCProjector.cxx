@@ -276,7 +276,7 @@ void R3BGTPCProjector::Exec(Option_t*)
                 break;
             }
             if (aPoint->GetTrackStatus() == 10100 || aPoint->GetTrackStatus() == 1000000)
-            { // exiting the gas volume or dissappearing
+            { // exiting the gas volume or disappearing
                 readyToProject = kFALSE;
             }
 

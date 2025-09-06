@@ -61,7 +61,7 @@ void SignalplusBackgroundGenerator() {
     exit(1);
 
   TTree *t = (TTree *)fopen->Get("tree_input");
-  // Declar and set the branch address
+  // Declare and set the branch address
   Int_t nmax =
       40; // max dimension of the array, value took from TTree::MakeClass
   Short_t nParticles; // number of particles after the collision
@@ -72,7 +72,7 @@ void SignalplusBackgroundGenerator() {
   t->SetBranchAddress("nParticles", &nParticles);
   t->SetBranchAddress("A", A);
   t->SetBranchAddress("Z", Z);
-  t->SetBranchAddress("S", S); // Strangness
+  t->SetBranchAddress("S", S); // Strangeness
   t->SetBranchAddress("PDGCode", PDGCode);
   t->SetBranchAddress("px", px);
   t->SetBranchAddress("py", py);
@@ -273,7 +273,7 @@ void SignalplusBackgroundGenerator() {
                   (px[j] * px[j] + py[j] * py[j] + pz[j] * pz[j] -
                    EKin[j] * EKin[j]) /
                   EKin[j];
-        // cout<<"Theoretical mass Lamda=1115.683 MeV. With the Formula M=
+        // cout<<"Theoretical mass Lambda=1115.683 MeV. With the Formula M=
         // "<<Mass[j]<<" MeV"<<endl;
         Double_t Ebeam = EKin[j] + Mass[j]; // Ekin+Mass
         Double_t Pbeam_abs = sqrt(EKin[j] * (EKin[j] + 2.0 * Mass[j]));
@@ -349,7 +349,7 @@ FROM YELEI's EMAIL
 The scale for the calculation of the cross section is:
 N*inelastic_cross_section/N_collision
 N is the particle produced
-inelastic_cross_section is inelastic cross section, 909.148mb fro 12C+12C
+inelastic_cross_section is inelastic cross section, 909.148mb for 12C+12C
 at 1.9GeV/nculeon N_collision is number of inelastic collisions,  it is 1E8 for
 the current case.
 */

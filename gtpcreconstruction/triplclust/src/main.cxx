@@ -174,7 +174,7 @@ int main(int argc, char** argv)
         std::ofstream of;
         of.open((std::string(outfile_prefix) + ".csv").c_str());
         // replace the stream buffer from cout with the stream buffer from the
-        // opened file, so that everythin printed to cout is printed to the file.
+        // opened file, so that everything printed to cout is printed to the file.
         std::cout.rdbuf(of.rdbuf());
         clusters_to_csv(cloud_xyz);
         of.close();

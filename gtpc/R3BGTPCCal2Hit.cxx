@@ -272,7 +272,7 @@ void R3BGTPCCal2Hit::Exec(Option_t* opt)
 
                 Double_t mu = fDriftVelocity / E_y; // [cm^2 ns^-1 V^-1]
 
-                // Auxiliar values to obtain the velocities after the first callback to
+                // Auxiliary values to obtain the velocities after the first callback to
                 // make the second and definitive callback
                 Double_t auxx;
                 Double_t auxy;
@@ -310,7 +310,7 @@ void R3BGTPCCal2Hit::Exec(Option_t* opt)
                     cteMult = mu * cteMod;                                    // [cm^2 V^-1 ns^-1]
                     productEB = E_y * B_y; // E_x*B_x + E_y*B_y + E_z*B_z; [V^2 ns cm^-3]
 
-                    // Drift velocities for auxiliar point finding
+                    // Drift velocities for auxiliary point finding
                     vDrift_x = cteMult * (mu * (E_y * B_z) + mu * mu * productEB * B_x);  //[cm/ns]
                     vDrift_y = cteMult * (E_y + mu * mu * productEB * B_y);               //[cm/ns]
                     vDrift_z = cteMult * (mu * (-E_y * B_x) + mu * mu * productEB * B_z); //[cm/ns]
@@ -320,7 +320,7 @@ void R3BGTPCCal2Hit::Exec(Option_t* opt)
                     auxy = y + vDrift_y * fDriftTimeStep;
                     auxz = z - vDrift_z * fDriftTimeStep;
 
-                    // Field in the auxiliar point
+                    // Field in the auxiliary point
                     B_x = 1e4 * gladField->GetBx(auxx, auxy, auxz);
                     B_y = 1e4 * gladField->GetBy(auxx, auxy, auxz);
                     B_z = 1e4 * gladField->GetBz(auxx, auxy, auxz);

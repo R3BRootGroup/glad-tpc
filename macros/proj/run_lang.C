@@ -59,7 +59,7 @@ void run_lang(TString GEOTAG = "Prototype")
 
     timer.Stop();
 
-    cout << "Macro finished succesfully!" << endl;
+    cout << "Macro finished successfully!" << endl;
     cout << "Output file written: " << outFile << endl;
     cout << "Parameter file written: " << parFile << endl;
     cout << "Real time: " << timer.RealTime() << "s, CPU time: " << timer.CpuTime() << "s" << endl;

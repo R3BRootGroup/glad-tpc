@@ -157,14 +157,14 @@ void load_csv_file(const char* fname, PointCloud& cloud, const char delimiter, s
     std::ifstream infile(fname);
     std::string line;
     std::vector<std::string> items;
-    size_t count = 0, count2d = 0, skiped = 0, countpoints = 0;
+    size_t count = 0, count2d = 0, skipped = 0, countpoints = 0;
     if (infile.fail())
         throw std::exception();
     for (size_t i = 0; i < skip; ++i)
     {
         // skip the header
         std::getline(infile, line, '\n');
-        skiped++;
+        skipped++;
     }
     while (!infile.eof())
     {
@@ -186,7 +186,7 @@ void load_csv_file(const char* fname, PointCloud& cloud, const char delimiter, s
         if (items.size() < 2)
         {
             std::ostringstream oss;
-            oss << "row " << count + skiped << ": "
+            oss << "row " << count + skipped << ": "
                 << "To few columns!";
             throw std::invalid_argument(oss.str());
         }
@@ -209,7 +209,7 @@ void load_csv_file(const char* fname, PointCloud& cloud, const char delimiter, s
         catch (std::invalid_argument e)
         {
             std::ostringstream oss;
-            oss << "row " << count + skiped << " column " << column << ": " << e.what();
+            oss << "row " << count + skipped << " column " << column << ": " << e.what();
             throw std::invalid_argument(oss.str());
         }
         items.clear();

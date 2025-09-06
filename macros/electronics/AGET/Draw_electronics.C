@@ -261,6 +261,6 @@ void reader(int evtnumber = 9)
     c3->Print("output_readout.ps(");
     c2->Print("output_readout.ps)");
     timer.Stop();
-    cout << "Macro finished succesfully!" << endl;
+    cout << "Macro finished successfully!" << endl;
     cout << "Real time: " << timer.RealTime() << "s, CPU time: " << timer.CpuTime() << "s" << endl;
 }

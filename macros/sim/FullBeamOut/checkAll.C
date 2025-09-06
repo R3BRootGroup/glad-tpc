@@ -1,6 +1,6 @@
 //  -------------------------------------------------------------------------
 //
-//   ----- General Macro for check and analize all results
+//   ----- General Macro for check and analyze all results
 //         Author: Hector Alvarez <hector.alvarez@usc.es>
 //         Comments:
 //			Checks the primary, Points and Hits characteristics.
@@ -73,10 +73,10 @@ void checkAll()
         h1_Point_Mass = new TH1F("h1_Point_Mass", "Point Mass", 400, 0, 10);
         h1_Point_Kine = new TH1F("h1_Point_Kine", "Point KinE (MeV)", 400, 0, 6000);
         h1_Point_trackStep = new TH1F("h1_Point_trackStep", "Point trackStep", 400, 0, 40);
-        h2_Point_XZ = new TH2F("h2_Point_XZ", "Points proyection on XZ plane", 600, -30, 30, 1100, 195, 305);
-        h2_Point_YZ = new TH2F("h2_Point_YZ", "Point proyection on XY plane", 600, -30, 30, 1100, 195, 305);
-        h2_Point_PxPz = new TH2F("h2_Point_PxPz", "Momentum proyection on XZ plane", 600, -1, 1, 600, -1, 7);
-        h2_Point_PyPz = new TH2F("h2_Point_PyPz", "Momentum proyection on XY plane", 600, -1, 1, 600, -1, 7);
+        h2_Point_XZ = new TH2F("h2_Point_XZ", "Points projection on XZ plane", 600, -30, 30, 1100, 195, 305);
+        h2_Point_YZ = new TH2F("h2_Point_YZ", "Point projection on XY plane", 600, -30, 30, 1100, 195, 305);
+        h2_Point_PxPz = new TH2F("h2_Point_PxPz", "Momentum projection on XZ plane", 600, -1, 1, 600, -1, 7);
+        h2_Point_PyPz = new TH2F("h2_Point_PyPz", "Momentum projection on XY plane", 600, -1, 1, 600, -1, 7);
     }
     // END OF HISTOGRMAS DEFINITION
 

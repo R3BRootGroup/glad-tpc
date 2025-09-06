@@ -118,7 +118,7 @@ typedef __int64 int64_t;
 #endif
 
 /* Since the public interface is given by the Python respectively R interface,
- * we do not want other symbols than the interface initalization routines to be
+ * we do not want other symbols than the interface initialization routines to be
  * visible in the shared object file. The "visibility" switch is a GCC concept.
  * Hiding symbols keeps the relocation table small and decreases startup time.
  * See http://gcc.gnu.org/wiki/Visibility
@@ -1866,7 +1866,7 @@ static void generic_linkage_vector_alternative(const t_index N, t_dissimilarity&
 
               mindist[i] ≥ min_{j<i} D(i,j)
 
-          Moreover, new nodes do not re-use one of the old indices, but they are
+          Moreover, new nodes do not reuse one of the old indices, but they are
           given a new, unique index (SciPy convention: initial nodes are 0,…,N−1,
           new nodes are N,…,2N−2).
 
