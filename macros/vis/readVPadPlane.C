@@ -38,7 +38,7 @@ void reader(const char* inputSimFile, Int_t event = 0);
 void guiForPads(Int_t firstEvent = 0)
 {
     // This macro shows one event and the derivative in both sides of
-    // the twon ionization chamber (left and right labels have no meaning)
+    // the town ionization chamber (left and right labels have no meaning)
     //.L readTree.C;
 
     event_g = firstEvent;

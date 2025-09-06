@@ -44,4 +44,4 @@ if (any(z[1:k] < x[1:k])) {
 legend("topright", c(expression(italic("cdist")[i]), expression(italic("cdist")[i-1] + sigma^{(i)})), col=c("black","red"), lty=c(1,1))
 
 # close pdf outfile
-grabage <- dev.off()
+garbage <- dev.off()

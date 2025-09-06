@@ -1,6 +1,6 @@
 //  -------------------------------------------------------------------------
 //
-//   -----  Macro to check and analize langevin macro results
+//   -----  Macro to check and analyze langevin macro results
 //         Author: Hector Alvarez <hector.alvarez@usc.es>
 //         Comments:
 //

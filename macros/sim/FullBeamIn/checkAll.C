@@ -1,6 +1,6 @@
 //  -------------------------------------------------------------------------
 //
-//   ----- General Macro for check and analize all results
+//   ----- General Macro for check and analyze all results
 //         Author: Hector Alvarez <hector.alvarez@usc.es>
 //         Comments:
 //			Checks the primary, Points and Hits characteristics.

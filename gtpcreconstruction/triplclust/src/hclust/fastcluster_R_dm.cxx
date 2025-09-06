@@ -76,7 +76,7 @@ template <const bool sorted>
 void generate_R_dendrogram(int* const merge, double* const height, int* const order, cluster_result& Z2, const int N)
 {
     // The array "nodes" is a union-find data structure for the cluster
-    // identites (only needed for unsorted cluster_result input).
+    // identities (only needed for unsorted cluster_result input).
     union_find nodes(sorted ? 0 : N);
     if (!sorted)
     {

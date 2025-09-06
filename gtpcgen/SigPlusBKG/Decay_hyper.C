@@ -341,7 +341,7 @@ double flight_length(double beta, double tau)
     return l;
 }
 
-// particle progate form O1 to O2
+// particle propagate form O1 to O2
 void flight_in_B(TLorentzVector P1, TVector3 O1, double C1, double tau, TVector3& O2)
 {
     O2.Clear();

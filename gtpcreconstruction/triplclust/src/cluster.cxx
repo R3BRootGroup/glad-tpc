@@ -247,7 +247,7 @@ void cluster_triplets_to_points(const std::vector<triplet>& triplets, cluster_gr
 // Adds the cluster ids to the points in *cloud*
 // *cl_group* contains the clusters with the point indices. For every
 // point the corresponding cluster id is saved. For gnuplot the points
-// which overlap between multiple clusteres are saved in seperate
+// which overlap between multiple clusteres are saved in separate
 // clusters in *cl_group*
 //-------------------------------------------------------------------
 void add_clusters(PointCloud& cloud, cluster_group& cl_group, bool gnuplot)
@@ -267,7 +267,7 @@ void add_clusters(PointCloud& cloud, cluster_group& cl_group, bool gnuplot)
     // the gnuplot output
     if (gnuplot)
     {
-        std::vector<cluster_t> verticies;
+        std::vector<cluster_t> vertices;
         for (size_t i = 0; i < cloud.size(); ++i)
         {
             const Point& p = cloud[i];
@@ -276,7 +276,7 @@ void add_clusters(PointCloud& cloud, cluster_group& cl_group, bool gnuplot)
                 // if the point is in multiple clusters add it to the corresponding
                 // vertex or create one if none exists
                 bool found = false;
-                for (std::vector<cluster_t>::iterator v = verticies.begin(); v != verticies.end(); ++v)
+                for (std::vector<cluster_t>::iterator v = vertices.begin(); v != vertices.end(); ++v)
                 {
                     if (cloud[v->at(0)].cluster_ids == p.cluster_ids)
                     {
@@ -288,7 +288,7 @@ void add_clusters(PointCloud& cloud, cluster_group& cl_group, bool gnuplot)
                 {
                     cluster_t v;
                     v.push_back(i);
-                    verticies.push_back(v);
+                    vertices.push_back(v);
                 }
                 // remove the point from all other clusters
                 for (std::set<size_t>::iterator it = p.cluster_ids.begin(); it != p.cluster_ids.end(); ++it)
@@ -298,8 +298,8 @@ void add_clusters(PointCloud& cloud, cluster_group& cl_group, bool gnuplot)
                 }
             }
         }
-        // extend clusters with verticies
-        cl_group.reserve(cl_group.size() + verticies.size());
-        cl_group.insert(cl_group.end(), verticies.begin(), verticies.end());
+        // extend clusters with vertices
+        cl_group.reserve(cl_group.size() + vertices.size());
+        cl_group.insert(cl_group.end(), vertices.begin(), vertices.end());
     }
 }

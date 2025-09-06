@@ -260,12 +260,12 @@ void R3BGTPCLangevin::Exec(Option_t*)
             }
             if (readyToProject != kTRUE)
             { // track somehow exited the gas volume or
-              // dissappeared in a previous point :‑O
+              // disappeared in a previous point :‑O
                 LOG(fatal) << "R3BGTPCLangevin::Exec: Problem 3 in point logic";
                 break;
             }
             if (aPoint->GetTrackStatus() == 10100 || aPoint->GetTrackStatus() == 1000000)
-            { // exiting the gas volume or dissappearing
+            { // exiting the gas volume or disappearing
                 readyToProject = kFALSE;
             }
             // again from gMC->TrackPosition() for next point position

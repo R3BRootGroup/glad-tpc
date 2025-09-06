@@ -26,7 +26,7 @@ Double_t ActiveRegiony;
 Double_t ActiveRegionz;
 Double_t Windowx;
 Double_t Windowy;
-Double_t Windowz;
+Double_t Windows;
 
 Double_t WorldSizeX;
 Double_t WorldSizeY;
@@ -157,7 +157,7 @@ void create_tpc_geo(string geoTag = "Prototype")
 
     Windowx = geoPar->GetWindowx() / 2.; // cm
     Windowy = geoPar->GetWindowy() / 2.; // cm
-    Windowz = geoPar->GetWindowz() / 2.; // cm
+    Windows = geoPar->GetWindowz() / 2.; // cm
 
     // World definition
 
@@ -215,7 +215,7 @@ void ConstructTPC(TGeoVolume* pWorld)
     // Aluminium frame----------------------------------------------------------
 
     TGeoShape* frame_box = new TGeoBBox("frame_box", TPCLx, TPCLy, TPCLz);
-    TGeoShape* frame_window = new TGeoBBox("frame_window", 2 * FrameThickness, Windowy, Windowz);
+    TGeoShape* frame_window = new TGeoBBox("frame_window", 2 * FrameThickness, Windowy, Windows);
 
     TGeoTranslation* tc1 = new TGeoTranslation("tc1", TPCLx, 0, 0);
     tc1->RegisterYourself();
@@ -242,10 +242,10 @@ void ConstructTPC(TGeoVolume* pWorld)
 
     // Mylar windows------------------------------------------------------------
 
-    solidFWindow = new TGeoBBox("front_window", Windowx, Windowy, Windowz);
+    solidFWindow = new TGeoBBox("front_window", Windowx, Windowy, Windows);
     logicFWindow = new TGeoVolume("front_window", solidFWindow, WindowMaterial);
 
-    solidBWindow = new TGeoBBox("back_window", Windowx, Windowy, Windowz);
+    solidBWindow = new TGeoBBox("back_window", Windowx, Windowy, Windows);
     logicBWindow = new TGeoVolume("back_window", solidBWindow, WindowMaterial);
 
     // Positioning the volumes in the world

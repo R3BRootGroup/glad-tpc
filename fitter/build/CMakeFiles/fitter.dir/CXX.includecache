@@ -2300,7 +2300,7 @@ gatherinterface_deprecated.h
 
 /mnt/simulations/attpcroot/fair_install_18.6/FairSoft/include/Vc/common/generalinterface.h
 
-/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/include/Vc/common/iif.h
+/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/include/Vc/common/if.h
 ../type_traits
 /mnt/simulations/attpcroot/fair_install_18.6/FairSoft/include/Vc/type_traits
 macros.h
@@ -2981,8 +2981,8 @@ common/vectortuple.h
 /mnt/simulations/attpcroot/fair_install_18.6/FairSoft/include/Vc/common/vectortuple.h
 common/where.h
 /mnt/simulations/attpcroot/fair_install_18.6/FairSoft/include/Vc/common/where.h
-common/iif.h
-/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/include/Vc/common/iif.h
+common/if.h
+/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/include/Vc/common/if.h
 
 /mnt/simulations/attpcroot/fair_install_18.6/FairSoft/include/Vc/version.h
 

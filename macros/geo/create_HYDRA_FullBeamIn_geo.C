@@ -26,7 +26,7 @@ Double_t ActiveRegiony;
 Double_t ActiveRegionz;
 Double_t Windowx;
 Double_t Windowy;
-Double_t Windowz;
+Double_t Windows;
 
 Double_t WorldSizeX;
 Double_t WorldSizeY;
@@ -146,7 +146,7 @@ void create_tpc_geo(string geoTag = "FullBeamIn")
 
     Windowx = geoPar->GetWindowx() / 2.; // cm
     Windowy = geoPar->GetWindowy() / 2.; // cm
-    Windowz = geoPar->GetWindowz() / 2.; // cm
+    Windows = geoPar->GetWindowz() / 2.; // cm
 
     /*
       TPCLx 							 	 =22.5
@@ -249,10 +249,10 @@ void ConstructTPC(TGeoVolume* pWorld)
     logicFrame->AddNode(logicGas, 0, new TGeoCombiTrans(0., 0., 0, zeroRot));
 
     // Mylar windows---------------------------------------
-    solidFWindow = new TGeoBBox("front_window", 2 * Windowx, Windowy, Windowz);
+    solidFWindow = new TGeoBBox("front_window", 2 * Windowx, Windowy, Windows);
     logicFWindow = new TGeoVolume("front_window", solidFWindow, WindowMaterial);
 
-    solidBWindow = new TGeoBBox("back_window", 6 * Windowx, 9 * Windowy, Windowz);
+    solidBWindow = new TGeoBBox("back_window", 6 * Windowx, 9 * Windowy, Windows);
     logicBWindow = new TGeoVolume("back_window", solidBWindow, WindowMaterial);
 
     // Placing logicWindows in the Frame

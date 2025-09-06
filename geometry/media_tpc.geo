@@ -20,7 +20,7 @@
 //
 // The variable npckov is 0 for all media except some special media used for the
 // Rich where the tracking of the Cerenkov photons is necessary. These media have
-// additinal parameters
+// additional parameters
 //
 // * float ppckov[npckov] - photon momentum in eV
 // * float absco[npckov]  - absorption length in case of dielectric and of absorption  probabilities in case of a metal

@@ -108,7 +108,7 @@ void create_tpc_geo(const char* geoTag = "Target")
     gGeoMan->SetTopVolume(top);
 
     // --------------------------------------------------------------------------
-    cout << "[INFO]: Bulding the target!!!!!\n" << endl;
+    cout << "[INFO]: Building the target!!!!!\n" << endl;
 
     TargetLength = geoPar->GetTargetLength() / 2.; // cm
     TargetRadius = geoPar->GetTargetRadius();      // cm

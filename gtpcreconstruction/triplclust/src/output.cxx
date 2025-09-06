@@ -95,7 +95,7 @@ bool debug_gnuplot(const PointCloud& cloud, const PointCloud& cloud_smooth, cons
     // Write header
     if (!is2d)
     {
-        // when max and min are the same, the script can't be ploted, so the range
+        // when max and min are the same, the script can't be plotted, so the range
         // must be changed
         if (max.x > min.x)
         {
@@ -201,7 +201,7 @@ void clusters_to_gnuplot(const PointCloud& cloud, const std::vector<cluster_t>& 
     // Write header
     if (!is2d)
     {
-        // when max and min are the same, the script can't be ploted, so the range
+        // when max and min are the same, the script can't be plotted, so the range
         // must be changed
         if (max.x > min.x)
         {

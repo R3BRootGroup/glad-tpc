@@ -4,7 +4,7 @@ project(triplclust)
 
 set (CMAKE_CXX_FLAGS "-O2")
 
-# with MS Visual C++ we must explicity switch on proper exception handling
+# with MS Visual C++ we must explicitly switch on proper exception handling
 if (MSVC)
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc")
 endif (MSVC)

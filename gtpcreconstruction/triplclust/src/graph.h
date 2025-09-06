@@ -17,7 +17,7 @@
 
 // Split *cluster* in multiple new clusters and return the result in
 // *new_clusters". The mst of the cluster is created and all edges are
-// removed with a wheigth > *dmax*. The connected comonents are computed
+// removed with a wheigth > *dmax*. The connected components are computed
 // and returned as new clusters if their size is >= *min_size*.
 void max_step(std::vector<std::vector<size_t>>& new_clusters,
               const std::vector<size_t>& cluster,

@@ -17,7 +17,7 @@ namespace Kdtree
 {
 
     //--------------------------------------------------------------
-    // function object for comparing only dimension d of two vecotrs
+    // function object for comparing only dimension d of two vectors
     //--------------------------------------------------------------
     class compare_dimension
     {

@@ -216,7 +216,7 @@ int Opt::parse_args(int argc, char** argv)
                 }
                 else
                 {
-                    std::cerr << "[Error] " << argv[i] << " is not a valide option!" << std::endl;
+                    std::cerr << "[Error] " << argv[i] << " is not a valid option!" << std::endl;
                     return 1;
                 }
             }

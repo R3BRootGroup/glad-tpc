@@ -274,7 +274,7 @@ int main(int argc, char** argv)
                 char s[10];
                 sprintf(s, "%d", i);
                 int nb_param = 0;
-                // nb_param-> each e- that reachs the pad will increment by 2 the number of parameters:
+                // nb_param-> each e- that reaches the pad will increment by 2 the number of parameters:
                 // 1 parameter for the charge and 1 for the time
                 for (unsigned int j = 0; j < pad.size(); j++)
                 {

@@ -29,7 +29,7 @@ class R3BGTPCHitData : public TObject
      *@param y          Y position of the hit in the gas
      *@param z          Z position of the hit in the gas
      *@param longWidth  Longitudinal width of electron cloud
-     *@param energy     Total energy atributed to the hit
+     *@param energy     Total energy attributed to the hit
      **/
     R3BGTPCHitData(Double_t x, Double_t y, Double_t z, Double_t longWidth, Double_t energy);
 
@@ -56,7 +56,7 @@ class R3BGTPCHitData : public TObject
     Double_t fY;         // Y position of the hit in the gas
     Double_t fZ;         // Z position of the hit in the gas
     Double_t fLongWidth; // Longitudinal width of electron cloud
-    Double_t fEnergy;    // Total energy atributed to the hit
+    Double_t fEnergy;    // Total energy attributed to the hit
     Int_t fTime;         // Time bucket
 
   public:

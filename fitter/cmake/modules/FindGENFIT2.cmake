@@ -1,4 +1,4 @@
-# - Find GENFIT2 instalation
+# - Find GENFIT2 installation
 # This module tries to find the GENFIT2 installation on your system.
 #
 # Variables defined by this module:
