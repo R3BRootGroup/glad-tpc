@@ -1,11 +1,11 @@
 ##############################################################################
 #   Copyright (C) 2018 GSI Helmholtzzentrum für Schwerionenforschung GmbH    #
 #   Copyright (C) 2018 University of Santiago de Compostela                  #
-#   Copyright (C) 2023 University of Coruña                                  #
-#   Copyright (C) 2018-2025 Members of R3B Collaboration                     #
+#   Copyright (C) 2023-2026 University of Coruña                             #
+#   Copyright (C) 2018-2026 Members of R3B Collaboration                     #
 #                                                                            #
 #             This software is distributed under the terms of the            #
-#                 GNU General Public Licence (GPL) version 3,                #
+#              GNU LESSER General Public Licence (LGPL) version 3,           #
 #                    copied verbatim in the file "LICENSE".                  #
 #                                                                            #
 # In applying this license GSI does not waive the privileges and immunities  #
@@ -51,9 +51,23 @@ jobs:
         # Here are the groups of repositories that need to be downloaded inside
         # r3broot. Each group is used by only one job.
         repos: [ glad-tpc ]
-        os: [ debian11, debian12 ]
-        fsv: [ jan24p1 ]
-        cpp: [ 17 ]
+        os: [ debian11, debian12, debian13 ]
+        fsv: [ jan24p5, jan24p6]
+        cpp: [ 17 , 20]
+        exclude:
+          - os: debian11
+            fsv: jan24p6
+          - os: debian12
+            fsv: jan24p6
+          - os: debian13
+            fsv: jan24p5
+          - os: debian13
+            cpp: 20
+          - os: debian12
+            cpp: 20
+            fsv: jan24p6
+          - os: debian11
+            cpp: 20
         include:
           - preset: simple
           - repos: glad-tpc
@@ -81,7 +95,7 @@ jobs:
     # another github repo or a self-defined one in .github/actions.
     steps:
       # Fetch updates from pull request branches using a public github action.
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           # This allows all commits of all branches to be fetched.
           fetch-depth: 0
@@ -118,7 +132,6 @@ jobs:
           mv glad-tpc R3BRoot
           mv R3BRoot glad-tpc
           cd glad-tpc
-          git clone https://github.com/R3BRootGroup/macros.git
           git clone https://github.com/R3BRootGroup/R3BFileSource.git
           mv glad-tpc/ucesb .
           export UCESB_DIR=$GITHUB_WORKSPACE/ucesb/
