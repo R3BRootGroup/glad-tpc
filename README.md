@@ -38,12 +38,11 @@ The GLAD-TPC project (as part of R3BRoot) uses clang-format-16 to ensure a commo
 First, you will need to install FairSoft, FairRoot and R3BRoot. For more details: [R3BRoot README](https://github.com/R3BRootGroup/R3BRoot/blob/dev/README.md). 
 - FaiSoft version: nov22p1 or later
 - FairROOT version: v18.2.1 or later
-
+- R3BROOT version: dec25 or later
 
 ### Configure and compile
 
 Follow the instructions in the [R3BRoot README](https://github.com/R3BRootGroup/R3BRoot/blob/dev/README.md).
-
 
 ## Simulations
 
@@ -81,6 +80,22 @@ It is possible to use the bash script `run_full.sh` to run all these steps at on
 
 > ...Under development...
 
+## Spell Checking
+
+To avoid common typos in the codebase and documentation, we use [codespell](https://github.com/codespell-project/codespell).
+
+Check for spelling mistakes using the ignore list defined in `.codespell-ignorewords`:
+
+~~~bash
+codespell -I .codespell-ignorewords
+~~~
+
+If you want to automatically fix the detected typos:
+
+~~~bash
+codespell -w -I .codespell-ignorewords
+~~~
+
 ## Tested systems
 
 The following systems are tested regularly.
@@ -90,9 +105,9 @@ The following systems are tested regularly.
 | Almalinux   | x86\_64  | 9.3            | GCC 11.4.1    | 3.27.9 / 4.0.3  | C++17 / C++20   |
 | Almalinux   | x86\_64  | 9.4            | GCC 14.2.0    | 3.30.6          | C++17           |
 | RHEL        | x86\_64  | 9.6            | GCC 14.2.0    | 3.30.6          | C++17           |
-| Debian      | x86\_64  | 10             | GCC 8.3.0     | 3.27.4 / 4.0.3  | C++17           |
 | Debian      | x86\_64  | 11             | GCC 10.2.1    | 3.27.4 / 3.30.0 | C++17           |
 | Debian      | x86\_64  | 12             | GCC 12.2.0    | 3.27.4 / 3.30.0 | C++17 / C++20   |
+| Debian      | x86\_64  | 13             | GCC 14.2.0    | 3.31.6 / 4.0.3  | C++17           |
 | Ubuntu      | x86\_64  | 24.04          | GCC 13.3.0    | 3.28.3 / 4.0.3  | C++17 / C++20   |
 | Ubuntu      | x86\_64  | 25.04          | GCC 14.2.0    | 3.31.6 / 4.0.3  | C++17           |
 
