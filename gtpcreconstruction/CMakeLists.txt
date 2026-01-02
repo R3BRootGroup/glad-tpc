@@ -26,7 +26,10 @@ set(SRCS
     triplclust/src/option.cxx
     triplclust/src/util.cxx
     triplclust/src/graph.cxx
-    R3BGTPCTrackFinder.cxx)
+    R3BGTPCTrackFinder.cxx
+    R3BGTPCFitter.cxx
+    R3BGTPCSpacePointMeasurement.cxx
+    GFBField.cxx)
 
 # fill list of header files from list of source files
 # by exchanging the file extension
@@ -45,4 +48,6 @@ add_library_with_dictionary(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/triplclust/src
     DEPENDENCIES
-    R3BGTPCData)
+    R3BGTPCData
+    R3BBase
+    ${GENFIT2_LIBRARY_DIR}/libgenfit2.so  GENFIT2::genfit2) 

@@ -26,7 +26,9 @@ class Point
     int id{ -1 };
     std::set<size_t> cluster_ids;
 
-    Point(){};
+    // clang-format off
+    Point() {};
+    // clang-format on
     Point(const std::vector<double>& point);
     Point(const std::vector<double>& point, const std::set<size_t>& cluster_ids);
     Point(double x, double y, double z);

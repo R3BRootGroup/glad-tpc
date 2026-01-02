@@ -32,6 +32,6 @@ add_library_with_dictionary(
     INCLUDEDIRS
     ${CMAKE_CURRENT_SOURCE_DIR}
     DEPENDENCIES
-    R3BBase)
+    R3BBase Hist Core m)
 
 target_compile_options(R3BGTPCMap PRIVATE -Wno-overloaded-virtual)

@@ -1,0 +1,20 @@
+//____Target
+TargetRadius 0.25
+TargetLength 6.
+TargetAngle 0. 
+//____Plastic wall
+ScintX 0.4
+ScintY 25.3
+ScintZ 37
+//__Fiber 
+FiberX 50.
+FiberY 50.
+FiberZ 0.1
+//__FiberIN
+FibINX 15
+FibINY 15
+FibINZ 0.1
+//__TOFD
+TOFDX 118.8
+TOFDY 100.
+TOFDZ 0.5

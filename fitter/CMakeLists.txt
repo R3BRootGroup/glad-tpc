@@ -3,8 +3,8 @@ project(r3bgtpcfitter)
 
 SET(SIMPATH $ENV{SIMPATH})
 SET(FAIRROOTPATH $ENV{FAIRROOTPATH})
-SET(R3BROOTPATH "/mnt/simulations/attpcroot/fair_install_2020/R3BRoot/")
-    
+SET(R3BROOTPATH $ENV{R3BROOTPATH})
+
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules")
 
 message(${CMAKE_MODULE_PATH})
@@ -26,12 +26,13 @@ include_directories( INCLUDE_DIRECTORIES
                      ${ROOT_INCLUDE_DIR}
                      ${Boost_INCLUDE_DIRS}
                      ${BASE_INCLUDE_DIRECTORIES}
-                     ${R3BROOTPATH}/glad-tpc/gtpcdata
-		     ${R3BROOTPATH}/glad-tpc/gtpcreconstruction
+		     ${R3BROOTPATH}/R3BRoot/glad-tpc/gtpcdata
+		     ${R3BROOTPATH}/R3BRoot/glad-tpc/gtpcreconstruction
                      ${FAIRROOTPATH}/include
                      ${CMAKE_SOURCE_DIR}
-		     ${GENFIT2_INCLUDE_DIR}
+		                 ${GENFIT2_INCLUDE_DIR}
 		     )
+
 
 link_directories(LINK_DIRECTORIES
 		  ${FAIRROOT_LIBRARY_DIR}
@@ -43,7 +44,7 @@ link_directories(LINK_DIRECTORIES
 		  ${Boost_THREAD_LIBRARY}
 		  ${Boost_DAtE_TIME_LIBRARY}
 		  ${Boost_FILESYSTEM_LIBRARY}
-		  ${Boost_SYSTEM_LIBRARY}                  
+		  ${Boost_SYSTEM_LIBRARY}
                   )
 
 message(STATUS ${R3BROOTPATH})

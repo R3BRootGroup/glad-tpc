@@ -3,6 +3,7 @@
 *.log
 gphysi.dat
 core_dump*
+.DS_Store
 build
 fitter/build
 !*/build

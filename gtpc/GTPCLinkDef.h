@@ -1,8 +1,6 @@
-// clang-format off
-
 /******************************************************************************
- *   Copyright (C) 2018 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2018-2025 Members of R3B Collaboration                     *
+ *  Copyright (C) 2019-2026 GSI Helmholtzzentrum für Schwerionenforschung GmbH*
+ *           Copyright (C) 2019-2026 Members of R3B Collaboration             *
  *                                                                            *
  *             This software is distributed under the terms of the            *
  *                 GNU Lesser General Public Licence (LGPL) version 3,        *
@@ -19,27 +17,29 @@
 #pragma link off all classes;
 #pragma link off all functions;
 
-#pragma link C++ class R3BGTPC+;
+#pragma link C++ class R3BGTPC + ;
 #pragma link C++ class R3BGTPCContFact;
 
-#pragma link C++ class R3BGTPCProjector+;
-#pragma link C++ class R3BGTPCLangevin+;
-#pragma link C++ class R3BGTPCLaserGen+;
+#pragma link C++ class R3BGTPCSetup + ;
 
-#pragma link C++ class R3BGTPCGeoPar+;
-#pragma link C++ class R3BGTPCGasPar+;
-#pragma link C++ class R3BGTPCElecPar+;
+#pragma link C++ class R3BGTPCProjector + ;
+#pragma link C++ class R3BGTPCLangevin + ;
+#pragma link C++ class R3BGTPCLaserGen + ;
 
-//#pragma link C++ class R3BGTPCHitPar+;
-#pragma link C++ class R3BGTPCCalPar+;
-//#pragma link C++ class R3BGTPCMappedPar+;
+#pragma link C++ class R3BGTPCGeoPar + ;
+#pragma link C++ class R3BGTPCGasPar + ;
+#pragma link C++ class R3BGTPCElecPar + ;
 
-#pragma link C++ class R3BGTPCCal2Hit+;
-#pragma link C++ class R3BGTPCMapped2Cal+;
+// #pragma link C++ class R3BGTPCHitPar+;
+#pragma link C++ class R3BGTPCCalPar + ;
+// #pragma link C++ class R3BGTPCMappedPar+;
 
-#pragma link C++ class R3BGTPCHit2Track+;
+#pragma link C++ class R3BGTPCCal2Hit + ;
+#pragma link C++ class R3BGTPCMapped2Cal + ;
 
-//#pragma link C++ class R3BGTPCCal2HitPar+;
-//#pragma link C++ class R3BGTPCMapped2CalPar+;
+#pragma link C++ class R3BGTPCHit2Track + ;
+
+// #pragma link C++ class R3BGTPCCal2HitPar+;
+// #pragma link C++ class R3BGTPCMapped2CalPar+;
 
 #endif

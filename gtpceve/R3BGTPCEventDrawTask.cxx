@@ -59,11 +59,11 @@ InitStatus R3BGTPCEventDrawTask::Init()
     // Data
     fHitCA = (TClonesArray*)ioMan->GetObject("GTPCHitData");
     if (fHitCA)
-        LOG(info) << cGREEN << "Hit Array Found in branch GTPCHitData." << cNORMAL << std::endl;
+        LOG(INFO) << cGREEN << "Hit Array Found in branch GTPCHitData." << cNORMAL << std::endl;
 
     fTrackCA = (TClonesArray*)ioMan->GetObject("GTPCTrackData");
     if (fTrackCA)
-        LOG(info) << cGREEN << "Track Array Found in branch GTPCTrackData." << cNORMAL << std::endl;
+        LOG(INFO) << cGREEN << "Track Array Found in branch GTPCTrackData." << cNORMAL << std::endl;
 
     // Canvas
     fCvsPadPlane = fEventManager->GetCvsPadPlane();
@@ -211,6 +211,9 @@ void R3BGTPCEventDrawTask::DrawHitPoints()
     R3BGTPCHitData** hitData;
     hitData = new R3BGTPCHitData*[nHits];
 
+    double ZOffset = 260.2;
+    double XOffset = 4.2;
+
     for (Int_t i = 0; i < nHits; i++)
     {
         hitData[i] = (R3BGTPCHitData*)(fHitCA->At(i));
@@ -221,12 +224,11 @@ void R3BGTPCEventDrawTask::DrawHitPoints()
 
         // std::cout<<x<<" "<<y<<" "<<z<<" "<<"\n";
 
-        fHitSet->SetNextPoint(x / 10.0, y / 10.0, z / 10.0); // cm
+        fHitSet->SetNextPoint(x - XOffset, y, z - ZOffset); // cm
         fHitSet->SetPointId(new TNamed(Form("Hit %d", i), ""));
         // NB: X and Z are swapped in the pad plane
         //    PadPlane frame for visualization
-        double ZOffset = 272.7;
-        double XOffset = 5.8;
+
         fPadPlane->Fill((z - ZOffset) * 10.0, (x - XOffset) * 10.0, E);
     }
 

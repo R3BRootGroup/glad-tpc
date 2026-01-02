@@ -173,7 +173,8 @@ void create_tpc_geo(string geoTag = "Prototype")
     pWorld->SetInvisible();
     ConstructTPC(pWorld);
 
-    top->AddNode(pWorld, 0, zeroRotTrans);
+    // top->AddNode(pWorld,0, zeroRotTrans);
+    top->AddNode(pWorld, 0, new TGeoCombiTrans(8.6, 0, 271, zeroRot));
 
     //____________________________________
     gGeoMan->CloseGeometry();
@@ -232,6 +233,8 @@ void ConstructTPC(TGeoVolume* pWorld)
     // Active region------------------------------------------------------------
 
     solidActiveRegion = new TGeoBBox("Active_region", ActiveRegionx, ActiveRegiony, ActiveRegionz);
+
+    cout << ActiveRegionx << "    " << ActiveRegiony << "    " << ActiveRegionz << endl;
     logicActiveRegion = new TGeoVolume("Active_region", solidActiveRegion, GasMaterial);
 
     TGeoTranslation* tc3 = new TGeoTranslation("tc3",
@@ -250,14 +253,14 @@ void ConstructTPC(TGeoVolume* pWorld)
 
     // Positioning the volumes in the world
     // frame
-    pWorld->AddNode(logicFrame, 0, new TGeoCombiTrans(0., 0., 0, zeroRot));
+    pWorld->AddNode(logicFrame, 0, new TGeoCombiTrans(0., 0., 0., zeroRot));
     // Positioning the volumes in the frame
     // front_window
     logicFrame->AddNode(logicFWindow, 0, new TGeoCombiTrans(-(TPCLx - 2 * FrameThickness + 0.0025), 0, 0, zeroRot));
     // back_window
     logicFrame->AddNode(logicBWindow, 0, new TGeoCombiTrans(TPCLx - 2 * FrameThickness + 0.0025, 0, 0, zeroRot));
     // GAS
-    logicFrame->AddNode(logicGas, 0, new TGeoCombiTrans(0., 0., 0, zeroRot));
+    logicFrame->AddNode(logicGas, 0, new TGeoCombiTrans(0., 0., 0., zeroRot));
     // Positioning the volumes in the gas_box
     // Active_region
     logicGas->AddNode(logicActiveRegion, 0, new TGeoCombiTrans(*tc3, *zeroRot));

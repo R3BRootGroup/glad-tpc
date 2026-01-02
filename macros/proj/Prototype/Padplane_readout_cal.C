@@ -28,7 +28,7 @@ void reader(const char* inputSimFile)
     // -------   Parameters file name (input)   ----------------------------------
     TString geoPath = gSystem->Getenv("VMCWORKDIR");
     TString GTPCGeoParamsFile;
-    GTPCGeoParamsFile = geoPath + "/glad-tpc/params/HYDRAprototype_FileSetup.par";
+    GTPCGeoParamsFile = geoPath + "/glad-tpc/params/HYDRAprototype_FileSetup_v2_02082022.par";
     GTPCGeoParamsFile.ReplaceAll("//", "/");
 
     FairRuntimeDb* rtdb = FairRuntimeDb::instance();
@@ -53,7 +53,9 @@ void reader(const char* inputSimFile)
     Double_t fHalfSizeTPC_Y = geoPar->GetActiveRegiony() / 2.; // Y (time)
     Double_t fHalfSizeTPC_Z = geoPar->GetActiveRegionz() / 2.; // Z (column)
     Double_t fSizeOfVirtualPad = geoPar->GetPadSize();         // 1: pads of 1cm^2 , 10: pads of 1mm^2
-    Double_t fMaxDriftTime = (round)((geoPar->GetActiveRegiony() / gasPar->GetDriftVelocity()) * pow(10, -3)); // us
+    Double_t fMaxDriftTime = 511;
+    //(round)((geoPar->GetActiveRegiony() / gasPar->GetDriftVelocity()) * pow(10, -3)); // us
+
     // root style
     gROOT->SetStyle("Default");
     gStyle->SetOptTitle(0);
@@ -113,7 +115,7 @@ void reader(const char* inputSimFile)
                              0,
                              2 * fHalfSizeTPC_Z * fSizeOfVirtualPad);
     hdepth1InPads->SetYTitle("Z [pad number]");
-    hdepth1InPads->SetXTitle("(drift) time [us]");
+    hdepth1InPads->SetXTitle("(drift) time [TimeBuckets");
 
     hdepth2InPads = new TH2D("hdepth2InPads",
                              "track In the Drift-X Pads Plane",
@@ -124,7 +126,7 @@ void reader(const char* inputSimFile)
                              0,
                              2 * fHalfSizeTPC_X * fSizeOfVirtualPad);
     hdepth2InPads->SetYTitle("X [pad number]");
-    hdepth2InPads->SetXTitle("(drift) time [us]");
+    hdepth2InPads->SetXTitle("(drift) time [TimeBuckets]");
 
     Hitmap = new TH2D("Hitmap",
                       "Hitmap XZ Pads Plane",
@@ -163,6 +165,7 @@ void reader(const char* inputSimFile)
 
     // all events
     for (Int_t i = 0; i < nevents; i++)
+    //	    for (Int_t i=2; i<3; i++)
     {
         double percentage = i / (double)(nevents * 1.);
         loadfunction(percentage);

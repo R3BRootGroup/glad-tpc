@@ -1,6 +1,6 @@
 /******************************************************************************
- *   Copyright (C) 2018 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2018-2025 Members of R3B Collaboration                     *
+ * Copyright (C) 2019-2026 GSI Helmholtzzentrum für Schwerionenforschung GmbH *
+ *            Copyright (C) 2019-2026 Members of R3B Collaboration            *
  *                                                                            *
  *             This software is distributed under the terms of the            *
  *                 GNU Lesser General Public Licence (LGPL) version 3,        *
@@ -10,7 +10,6 @@
  * granted to it by virtue of its status as an Intergovernmental Organization *
  * or submit itself to any jurisdiction.                                      *
  ******************************************************************************/
-
 #include "R3BGTPC.h"
 #include "FairRootManager.h"
 #include "FairRun.h"
@@ -77,16 +76,35 @@ void R3BGTPC::FinishRun() { ; }
 void R3BGTPC::Initialize()
 {
     FairDetector::Initialize();
-    LOG(info) << "R3BGTPC: initialisation";
-    LOG(debug) << "-I- R3BGTPC: Vol (McId) def";
-    LOG(info) << "R3BGTPC: GTPC_box Vol. (McId) " << gMC->VolId("GTPC_box");
-    LOG(info) << "R3BGTPC: Active_region Vol. (McId) " << gMC->VolId("Active_region");
+    LOG(INFO) << "R3BGTPC: initialisation";
+    LOG(DEBUG) << "-I- R3BGTPC: Vol (McId) def";
+    LOG(INFO) << "R3BGTPC: GTPC_box Vol. (McId) " << gMC->VolId("GTPC_box");
+    LOG(INFO) << "R3BGTPC: Active_region Vol. (McId) " << gMC->VolId("Active_region");
+    LOG(INFO) << "R3BGTPC: Plastic_wall Vol. (McId) " << gMC->VolId("Plastic_wall");
+    LOG(INFO) << "R3BGTPC: Fib10 Vol. (McId) " << gMC->VolId("Fib10");
+    LOG(INFO) << "R3BGTPC: Fib11 Vol. (McId) " << gMC->VolId("Fib11");
+    LOG(INFO) << "R3BGTPC: Fib12 Vol. (McId) " << gMC->VolId("Fib12");
+    LOG(INFO) << "R3BGTPC: Fib13 Vol. (McId) " << gMC->VolId("Fib13");
+    LOG(INFO) << "R3BGTPC: FibIN1 Vol. (McId) " << gMC->VolId("FibIN1");
+    LOG(INFO) << "R3BGTPC: FibIN2 Vol. (McId) " << gMC->VolId("FibIN2");
+    LOG(INFO) << "R3BGTPC: FibIN3 Vol. (McId) " << gMC->VolId("FibIN3");
+    LOG(INFO) << "R3BGTPC: FibIN4 Vol. (McId) " << gMC->VolId("FibIN4");
+    LOG(INFO) << "R3BGTPC: TOFD1 Vol. (McId) " << gMC->VolId("TOFD1_HYDRA");
+    LOG(INFO) << "R3BGTPC: TOFD2 Vol. (McId) " << gMC->VolId("TOFD2_HYDRA");
+    LOG(INFO) << "R3BGTPC: TOFD3 Vol. (McId) " << gMC->VolId("TOFD3_HYDRA");
+    LOG(INFO) << "R3BGTPC: TOFD4 Vol. (McId) " << gMC->VolId("TOFD4_HYDRA");
+    LOG(INFO) << "R3BGTPC: FibInc1 Vol. (McId) " << gMC->VolId("FibInc1");
+    LOG(INFO) << "R3BGTPC: FibInc2 Vol. (McId) " << gMC->VolId("FibInc2");
+    LOG(INFO) << "R3BGTPC: Target Vol. (McId)  " << gMC->VolId("Target");
+    LOG(INFO) << "R3BGTPC: RPC Vol. (McId)   " << gMC->VolId("RPC");
+    LOG(INFO) << "R3BGTPC: PW frame Vol. (McId)  " << gMC->VolId("PW_Frame");
+    LOG(INFO) << "RB3GTPC: Frame Vol. (McId)  " << gMC->VolId("Frame");
 }
 
 //____________________________________________________________
 void R3BGTPC::SetSpecialPhysicsCuts()
 {
-    LOG(info) << "-I- R3BGTPC: Adding customized Physics cut ... ";
+    LOG(INFO) << "-I- R3BGTPC: Adding customized Physics cut ... ";
 
     if (gGeoManager)
     { // NOT SURE THIS IS USEFUL
@@ -110,7 +128,7 @@ void R3BGTPC::SetSpecialPhysicsCuts()
             // Setting Energy-CutOff for Gas Only->Ionization energy ~30eV
             Double_t cutE = 1e-6; // GeV-> 1keV
 
-            LOG(info) << "-I- R3BGTPC: Medium Id " << pmix->GetId() << " Energy Cut-Off : " << cutE << " GeV";
+            LOG(INFO) << "-I- R3BGTPC: Medium Id " << pmix->GetId() << " Energy Cut-Off : " << cutE << " GeV";
 
             gMC->Gstpar(pmix->GetId(), "CUTGAM", cutE); /** gammas (GeV)*/
             gMC->Gstpar(pmix->GetId(), "CUTELE", cutE); /** electrons (GeV)*/
@@ -155,11 +173,10 @@ Bool_t R3BGTPC::ProcessHits(FairVolume* vol)
                          pos.Vect(),                               // pos from gMC->TrackPosition(pos);
                          mom.Vect(),                               // mom from gMC->TrackMomentum(pos);
                          gMC->TrackTime(),                         // time in ns
-                         gMC->TrackLength(),                       // Return the length of the current track from its
-                                                                   // origin (in cm)
-                         gMC->Edep(),                              // eloss
-                         gMC->CurrentEvent(),                      // EventID
-                         parentTrackID,                            // parentTrackID
+                         gMC->TrackLength(),  // Return the length of the current track from its origin (in cm)
+                         gMC->Edep(),         // eloss
+                         gMC->CurrentEvent(), // EventID
+                         parentTrackID,       // parentTrackID
                          gMC->GetStack()->GetCurrentTrack()->GetMother(0), // primaryParticleID
                          theTrackStatus,                                   // trackStatus from GetTrackStatus(...)
                          gMC->TrackPid(),                                  // PDGCode
@@ -171,9 +188,8 @@ Bool_t R3BGTPC::ProcessHits(FairVolume* vol)
                          gMC->TrackCharge(),                               // charge
                          gMC->TrackMass(),                 // Return the mass of the track currently transported.
                          (gMC->Etot() - gMC->TrackMass()), // kineticEnergy
-                         gMC->TrackStep(),                 // Return the length in centimeters of the current
-                                                           // step (in cm)
-                         kTRUE);                           // isAccepted
+                         gMC->TrackStep(), // Return the length in centimeters of the current step (in cm)
+                         kTRUE);           // isAccepted
     }
 
     // Increment number of LandPoints for this track
@@ -183,7 +199,7 @@ Bool_t R3BGTPC::ProcessHits(FairVolume* vol)
     return kTRUE;
 }
 
-// ----    Public method BeginOfEvent -----------------------------------------
+// ----    Public method BeginOfEvent   -----------------------------------------
 void R3BGTPC::BeginEvent() { ; }
 
 // -----   Public method EndOfEvent   -----------------------------------------
@@ -214,7 +230,7 @@ TClonesArray* R3BGTPC::GetCollection(Int_t iColl) const
 void R3BGTPC::Print(Option_t* option) const
 {
     Int_t nhits = fGTPCPointCollection->GetEntriesFast();
-    LOG(info) << "R3BGTPC: " << nhits << " points registered in this event";
+    LOG(INFO) << "R3BGTPC: " << nhits << " points registered in this event";
 }
 // ----------------------------------------------------------------------------
 
@@ -224,13 +240,22 @@ void R3BGTPC::Reset() { fGTPCPointCollection->Clear(); }
 //_________________________________________________________
 Bool_t R3BGTPC::CheckIfSensitive(std::string name)
 {
-    LOG(info) << "R3BGTPC::CheckIfSensitive " << name;
+    LOG(INFO) << "R3BGTPC::CheckIfSensitive " << name;
 
-    if (TString(name).Contains("Active_region"))
+    if (TString(name).Contains("Active_region") || TString(name).Contains("PW_Frame") ||
+        TString(name).Contains("Frame") || TString(name).Contains("Plastic_wall") ||
+        TString(name).Contains("front_window") || TString(name).Contains("TOFD1_HYDRA") ||
+        TString(name).Contains("TOFD2_HYDRA") || TString(name).Contains("TOFD3_HYDRA") ||
+        TString(name).Contains("TOFD4_HYDRA") || TString(name).Contains("Fib10") || TString(name).Contains("Fib11") ||
+        TString(name).Contains("Fib12") || TString(name).Contains("Fib13") || TString(name).Contains("FibIN1") ||
+        TString(name).Contains("FibIN2") || TString(name).Contains("FibIN3") || TString(name).Contains("FibIN4") ||
+        TString(name).Contains("FibInc1") || TString(name).Contains("FibInc2") || TString(name).Contains("Target") ||
+        TString(name).Contains("RPC"))
     {
-        LOG(info) << name << " is sensitive";
+        LOG(INFO) << name << " is sensitive";
         return kTRUE;
     }
+
     return kFALSE;
 }
 

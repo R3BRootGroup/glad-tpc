@@ -36,8 +36,7 @@ ClassImp(genfit::R3BGTPCSpacepointMeasurement)
 
         TMatrixD mat = detHit->GetCovMatrix();
 
-        // std::cout<<detHit->GetX()<<" "<<detHit->GetY()<<"
-        // "<<detHit->GetZ()<<"\n";
+        // std::cout<<detHit->GetX()<<" "<<detHit->GetY()<<" "<<detHit->GetZ()<<"\n";
 
         rawHitCoords_(0) = detHit->GetX();
         rawHitCoords_(1) = detHit->GetY();
@@ -54,17 +53,16 @@ ClassImp(genfit::R3BGTPCSpacepointMeasurement)
         cov(2, 0) = 0.0;
 
         // Forced covariance matrix to be constant. Need to study later.
-        cov(0, 0) = 0.1;
-        cov(1, 1) = 0.4;
-        cov(2, 2) = 0.1;
+        cov(0, 0) = 0.1; // 0.1
+        cov(1, 1) = 0.4; // 0.4
+        cov(2, 2) = 0.1; // 0.1
 
         rawHitCov_ = cov;
         detId_ = hit->getDetId();
         hitId_ = hit->getHitId();
 
         // std::cout<<" AtSpacepointMeasurement::AtSpacepointMeasurement "<<"\n";
-        // std::cout<<rawHitCoords_(0)<<"	"<<rawHitCoords_(1)<<"
-        // "<<rawHitCoords_(2)<<"	"<<fCharge<<"
+        // std::cout<<rawHitCoords_(0)<<"	"<<rawHitCoords_(1)<<"	  "<<rawHitCoords_(2)<<"	"<<fCharge<<"
         // "<<detId_<<"  "<<hitId_<<"\n";
 
         this->initG();

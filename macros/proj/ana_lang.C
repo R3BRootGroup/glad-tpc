@@ -39,7 +39,7 @@ void ana_lang(TString GEOTAG = "Prototype")
         cout << "\033[1;31m Warning\033[0m: The detector is: " << GEOTAG << endl;
         title1 = "./Prototype/lang.root";
         title2 = "./Prototype/proj.root";
-        GTPCGeoParamsFile = geoPath + "/glad-tpc/params/HYDRAprototype_FileSetup.par";
+        GTPCGeoParamsFile = geoPath + "/glad-tpc/params/HYDRAprototype_FileSetup_v2_02082022.par";
     }
     if (GEOTAG.CompareTo("FullBeamOut") == 0)
     {

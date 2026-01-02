@@ -8,8 +8,7 @@
 // License: see ../LICENSE
 //
 
-#ifndef MSD_H
-#define MSD_H
+#pragma once
 #include <cstddef>
 #include <vector>
 
@@ -24,5 +23,3 @@ void max_step(std::vector<std::vector<size_t>>& new_clusters,
               const PointCloud& cloud,
               double dmax,
               size_t min_size);
-
-#endif

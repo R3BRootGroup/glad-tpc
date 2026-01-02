@@ -40,6 +40,6 @@ add_library_with_dictionary(
     INCLUDEDIRS
     ${CMAKE_CURRENT_SOURCE_DIR}
     DEPENDENCIES
-    R3BTracking)
+    R3BTracking Core m)
 
 target_compile_options(R3BGTPCData PRIVATE -Wno-overloaded-virtual)

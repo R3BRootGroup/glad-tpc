@@ -1,11 +1,11 @@
-#ifndef R3BGTPCFITTER_H
-#define R3BGTPCFITTER_H
+#pragma once
 
 #define cRED "\033[1;31m"
 #define cYELLOW "\033[1;33m"
 #define cNORMAL "\033[0m"
 #define cGREEN "\033[1;32m"
 
+#include "GFBField.h"
 #include <memory>
 #include <string>
 #include <utility>
@@ -36,7 +36,7 @@ class R3BGTPCFitter
     ~R3BGTPCFitter();
 
     void Init();
-    genfit::Track* FitTrack(R3BGTPCTrackData* track);
+    genfit::Track* FitTrack(R3BGTPCTrackData* track, Double_t TPC_Pin, Double_t TPC_Theta, Double_t TPC_Phi);
 
   private:
     Int_t fTPCDetID{ 0 };
@@ -50,5 +50,3 @@ class R3BGTPCFitter
     genfit::MeasurementProducer<R3BGTPCHitClusterData, genfit::R3BGTPCSpacepointMeasurement>* fMeasurementProducer;
     genfit::MeasurementFactory<genfit::AbsMeasurement>* fMeasurementFactory;
 };
-
-#endif
