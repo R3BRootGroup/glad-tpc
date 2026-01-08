@@ -11,8 +11,7 @@
  * or submit itself to any jurisdiction.                                      *
  ******************************************************************************/
 
-#ifndef R3BGTPCHITDATA_H
-#define R3BGTPCHITDATA_H
+#pragma once
 
 #include "TObject.h"
 #include <stdint.h>
@@ -62,5 +61,3 @@ class R3BGTPCHitData : public TObject
   public:
     ClassDef(R3BGTPCHitData, 1)
 };
-
-#endif

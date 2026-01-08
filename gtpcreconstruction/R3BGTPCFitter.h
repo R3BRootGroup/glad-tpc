@@ -1,5 +1,18 @@
-#ifndef R3BGTPCFITTER_H
-#define R3BGTPCFITTER_H
+
+/*##############################################################################
+# Copyright (C) 2018-2026 GSI Helmholtzzentrum für Schwerionenforschung GmbH #
+#   Copyright (C) 2018-2026 Members of the R3B Collaboration                 #
+#                                                                            #
+#            This software is distributed under the terms of the             #
+#              GNU Lesser General Public Licence (GPL) version 3,            #
+#                    copied verbatim in the file "LICENSE".                  #
+#                                                                            #
+# In applying this license GSI does not waive the privileges and immunities  #
+# granted to it by virtue of its status as an Intergovernmental Organization #
+# or submit itself to any jurisdiction.                                      #
+##############################################################################*/
+
+#pragma once
 
 #define cRED "\033[1;31m"
 #define cYELLOW "\033[1;33m"
@@ -50,5 +63,3 @@ class R3BGTPCFitter
     genfit::MeasurementProducer<R3BGTPCHitClusterData, genfit::R3BGTPCSpacepointMeasurement>* fMeasurementProducer;
     genfit::MeasurementFactory<genfit::AbsMeasurement>* fMeasurementFactory;
 };
-
-#endif

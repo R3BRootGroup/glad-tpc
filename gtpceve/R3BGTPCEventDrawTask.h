@@ -1,5 +1,17 @@
-#ifndef R3BGTPCEVENTDRAWTASK_H
-#define R3BGTPCEVENTDRAWTASK_H
+/******************************************************************************
+ * Copyright (C) 2018-2026 GSI Helmholtzzentrum für Schwerionenforschung GmbH *
+ *         Copyright (C) 2018-2026 Members of R3B Collaboration               *
+ *                                                                            *
+ *             This software is distributed under the terms of the            *
+ *              GNU Lesser General Public Licence (LGPL) version 3,           *
+ *                     copied verbatim in the file "LICENSE".                 *
+ *                                                                            *
+ * In applying this license GSI does not waive the privileges and immunities  *
+ * granted to it by virtue of its status as an Intergovernmental Organization *
+ * or submit itself to any jurisdiction.                                      *
+ ******************************************************************************/
+
+#pragma once
 
 class R3BGTPCEventManager;
 
@@ -78,5 +90,3 @@ class R3BGTPCEventDrawTask : public FairTask
 
     ClassDef(R3BGTPCEventDrawTask, 1);
 };
-
-#endif

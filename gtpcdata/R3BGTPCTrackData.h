@@ -11,8 +11,7 @@
  * or submit itself to any jurisdiction.                                      *
  ******************************************************************************/
 
-#ifndef R3BGTPCTRACKDATA_H
-#define R3BGTPCTRACKDATA_H
+#pragma once
 
 #include "R3BGTPCHitClusterData.h"
 #include "R3BGTPCHitData.h"
@@ -57,5 +56,3 @@ class R3BGTPCTrackData : public TObject
 
     ClassDef(R3BGTPCTrackData, 1)
 };
-
-#endif
