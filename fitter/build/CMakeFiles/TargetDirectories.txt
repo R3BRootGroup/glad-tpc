@@ -1,4 +1,0 @@
-/mnt/simulations/attpcroot/fair_install_2020/R3BRoot/glad-tpc/fitter/build/CMakeFiles/edit_cache.dir
-/mnt/simulations/attpcroot/fair_install_2020/R3BRoot/glad-tpc/fitter/build/CMakeFiles/rebuild_cache.dir
-/mnt/simulations/attpcroot/fair_install_2020/R3BRoot/glad-tpc/fitter/build/CMakeFiles/fitterExe.dir
-/mnt/simulations/attpcroot/fair_install_2020/R3BRoot/glad-tpc/fitter/build/CMakeFiles/fitter.dir

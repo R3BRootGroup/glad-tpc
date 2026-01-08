@@ -1,15 +1,16 @@
 /******************************************************************************
- *   Copyright (C) 2020 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2020 Members of R3B Collaboration                          *
+ * Copyright (C) 2018-2026 GSI Helmholtzzentrum für Schwerionenforschung GmbH *
+ *         Copyright (C) 2018-2026 Members of R3B Collaboration               *
  *                                                                            *
  *             This software is distributed under the terms of the            *
- *                 GNU General Public Licence (GPL) version 3,                *
- *                    copied verbatim in the file "LICENSE".                  *
+ *              GNU Lesser General Public Licence (LGPL) version 3,           *
+ *                     copied verbatim in the file "LICENSE".                 *
  *                                                                            *
  * In applying this license GSI does not waive the privileges and immunities  *
  * granted to it by virtue of its status as an Intergovernmental Organization *
  * or submit itself to any jurisdiction.                                      *
  ******************************************************************************/
+
 /**  R3BGTPCProjPoint.h
  **  A R3BGTPCProjPoint is the projected information on a virtual
  **  pad plane. Contains the number and time information of the produced primary
@@ -17,8 +18,7 @@
  **  and the virtual pad identifier.
  **/
 
-#ifndef R3BGTPCPROJPOINT_H
-#define R3BGTPCPROJPOINT_H
+#pragma once
 
 #include "TH1S.h"
 #include "TObject.h"
@@ -78,5 +78,3 @@ class R3BGTPCProjPoint : public TObject
     Double_t fx0, fy0, fz0, fpx0, fpy0, fpz0;
     ClassDef(R3BGTPCProjPoint, 1)
 };
-
-#endif // R3BGTPCPROJPOINT_H

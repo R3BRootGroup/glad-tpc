@@ -35,6 +35,9 @@ data
 *.la
 *.a
 
+# MacOs files
+*.DS_Store
+
 # Compressed packages
 *.tar.bz2
 *.tar.gz
