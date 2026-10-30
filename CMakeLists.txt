@@ -22,3 +22,6 @@ add_subdirectory (gtpc)
 add_subdirectory (gtpceve)
 add_subdirectory (gtpcreconstruction)
 add_subdirectory (gtpcmap)
+add_subdirectory (Projector)
+add_subdirectory (Digitization)
+
